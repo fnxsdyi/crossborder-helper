@@ -139,17 +139,6 @@ function UpgradeModal({ onClose }: { onClose: () => void }) {
               <ExternalLink size={14} />
             </a>
 
-            <a
-              href="https://your-store.lemonsqueezy.com/checkout"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-yellow-500 text-white rounded-xl hover:bg-yellow-600 transition-colors"
-            >
-              <CreditCard size={18} />
-              {t('premium.lemonSqueezy')}
-              <ExternalLink size={14} />
-            </a>
-
             <div className="relative my-4">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-slate-200" />
