@@ -10,16 +10,19 @@ import {
   ArrowRightLeft,
   Globe,
   Home,
+  LogOut,
 } from 'lucide-react'
 import { useAppStore } from '@/stores/appStore'
 import { ThemeToggle } from './ThemeToggle'
 import { useI18n } from '@/hooks/useI18n'
+import { useAuthStore } from '@/stores/authStore'
 import { useState } from 'react'
 import type { Locale } from '@/lib/i18n'
 
 export function Sidebar() {
   const { currentView, setCurrentView, sidebarOpen, toggleSidebar } = useAppStore()
   const { t, locale, changeLocale, locales } = useI18n()
+  const { signOut } = useAuthStore()
   const [showLangMenu, setShowLangMenu] = useState(false)
 
   const navItems = [
@@ -125,6 +128,14 @@ export function Sidebar() {
           >
             <Home size={16} />
             {t('nav.home')}
+          </button>
+          <button
+            onClick={signOut}
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-slate-800 transition-colors mb-2"
+            style={{ color: 'var(--text-muted)' }}
+          >
+            <LogOut size={16} />
+            {t('nav.signOut')}
           </button>
           <p className="text-xs text-center flex items-center justify-center gap-1 group relative" style={{ color: 'var(--text-muted)' }}>
             v0.1.0 • Local-First 🛡️

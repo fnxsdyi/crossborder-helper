@@ -15,6 +15,7 @@ type TranslationKeys = {
   // Sidebar
   'nav.home': string
   'nav.privacyTooltip': string
+  'nav.signOut': string
   'nav.dashboard': string
   'nav.invoices': string
   'nav.clients': string
@@ -302,6 +303,7 @@ const translations: Record<Locale, TranslationKeys> = {
     // Sidebar
     'nav.home': 'Home',
     'nav.privacyTooltip': 'Your data never leaves your browser. 100% private.',
+    'nav.signOut': 'Sign Out',
     'nav.dashboard': 'Dashboard',
     'nav.invoices': 'Invoices',
     'nav.clients': 'Clients',
@@ -588,6 +590,7 @@ const translations: Record<Locale, TranslationKeys> = {
     // Sidebar
     'nav.home': '首页',
     'nav.privacyTooltip': '您的数据永不离开浏览器，100% 私密安全。',
+    'nav.signOut': '退出登录',
     'nav.dashboard': '仪表盘',
     'nav.invoices': '发票',
     'nav.clients': '客户',
@@ -874,6 +877,7 @@ const translations: Record<Locale, TranslationKeys> = {
     // Sidebar
     'nav.home': 'ホーム',
     'nav.privacyTooltip': 'データはブラウザから外に出ません。100%プライベート。',
+    'nav.signOut': 'ログアウト',
     'nav.dashboard': 'ダッシュボード',
     'nav.invoices': '請求書',
     'nav.clients': 'クライアント',
@@ -1159,6 +1163,7 @@ const translations: Record<Locale, TranslationKeys> = {
   ko: {
     'nav.home': '홈',
     'nav.privacyTooltip': '데이터가 브라우저를 떠나지 않습니다. 100% 비공개.',
+    'nav.signOut': '로그아웃',
     'nav.dashboard': '대시보드',
     'nav.invoices': '송장',
     'nav.clients': '고객',
@@ -1424,6 +1429,7 @@ const translations: Record<Locale, TranslationKeys> = {
   de: {
     'nav.home': 'Startseite',
     'nav.privacyTooltip': 'Ihre Daten verlassen nie Ihren Browser. 100% privat.',
+    'nav.signOut': 'Abmelden',
     'nav.dashboard': 'Dashboard',
     'nav.invoices': 'Rechnungen',
     'nav.clients': 'Kunden',
@@ -1689,6 +1695,7 @@ const translations: Record<Locale, TranslationKeys> = {
   fr: {
     'nav.home': 'Accueil',
     'nav.privacyTooltip': 'Vos données ne quittent jamais votre navigateur. 100% privé.',
+    'nav.signOut': 'Déconnexion',
     'nav.dashboard': 'Tableau de bord',
     'nav.invoices': 'Factures',
     'nav.clients': 'Clients',
@@ -1954,6 +1961,7 @@ const translations: Record<Locale, TranslationKeys> = {
   es: {
     'nav.home': 'Inicio',
     'nav.privacyTooltip': 'Sus datos nunca salen de su navegador. 100% privado.',
+    'nav.signOut': 'Cerrar sesión',
     'nav.dashboard': 'Panel',
     'nav.invoices': 'Facturas',
     'nav.clients': 'Clientes',
@@ -2219,6 +2227,7 @@ const translations: Record<Locale, TranslationKeys> = {
   pt: {
     'nav.home': 'Início',
     'nav.privacyTooltip': 'Seus dados nunca saem do navegador. 100% privado.',
+    'nav.signOut': 'Sair',
     'nav.dashboard': 'Painel',
     'nav.invoices': 'Faturas',
     'nav.clients': 'Clientes',
