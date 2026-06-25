@@ -277,6 +277,41 @@ export function LandingPage({ onEnterApp }: LandingPageProps) {
               </p>
             </div>
           </div>
+
+          {/* Cross-promotion Links */}
+          <div className="border-t border-slate-800 pt-6 mb-6">
+            <h4 className="font-semibold text-white mb-4">{t('landing.ourProjects')}</h4>
+            <div className="flex flex-wrap gap-4">
+              <a
+                href="https://kaki.llc"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors text-sm"
+              >
+                <span className="text-blue-400">🔗</span>
+                kaki.llc
+              </a>
+              <a
+                href="https://hooki.io"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors text-sm"
+              >
+                <span className="text-green-400">🔗</span>
+                hooki.io
+              </a>
+              <a
+                href="https://flowingpulse.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors text-sm"
+              >
+                <span className="text-purple-400">🔗</span>
+                flowingpulse.com
+              </a>
+            </div>
+          </div>
+
           <div className="border-t border-slate-800 pt-8 text-center text-sm">
             <p>&copy; {new Date().getFullYear()} CrossBorder. All rights reserved.</p>
           </div>

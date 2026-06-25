@@ -137,6 +137,8 @@ type TranslationKeys = {
   'currency.convert': string
   'currency.converting': string
   'currency.result': string
+  'currency.rateHistory': string
+  'currency.noHistory': string
 
   // Tax Wizard
   'tax.title': string
@@ -218,7 +220,7 @@ type TranslationKeys = {
   'disclaimer.title': string
   'disclaimer.text': string
 
-  // Premium Gate
+  // Premium
   'premium.unlock': string
   'premium.title': string
   'premium.subtitle': string
@@ -241,7 +243,7 @@ type TranslationKeys = {
   'auth.noAccount': string
   'auth.hasAccount': string
 
-  // Landing Page
+  // Landing
   'landing.openApp': string
   'landing.badge': string
   'landing.heroTitle': string
@@ -296,6 +298,7 @@ type TranslationKeys = {
   'landing.termsSection3': string
   'landing.termsSection4Title': string
   'landing.termsSection4': string
+  'landing.ourProjects': string
 }
 
 const translations: Record<Locale, TranslationKeys> = {
@@ -425,6 +428,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'currency.convert': 'Convert',
     'currency.converting': 'Converting...',
     'currency.result': 'Result',
+    'currency.rateHistory': 'Rate Query History',
+    'currency.noHistory': 'No queries yet. Use the converter above to start.',
 
     // Tax Wizard
     'tax.title': 'W-8BEN Tax Wizard',
@@ -584,6 +589,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection3': 'Premium license is a one-time payment for lifetime access. License keys are non-transferable. We reserve the right to modify pricing for new customers.',
     'landing.termsSection4Title': '4. Limitation of Liability',
     'landing.termsSection4': 'CrossBorder is provided "as is" without warranties. We shall not be liable for any damages arising from the use of this application.',
+    'landing.ourProjects': 'Our Projects',
   },
 
   zh: {
@@ -712,6 +718,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'currency.convert': '转换',
     'currency.converting': '转换中...',
     'currency.result': '结果',
+    'currency.rateHistory': '汇率查询历史',
+    'currency.noHistory': '暂无查询记录，使用上方转换器开始记录。',
 
     // Tax Wizard
     'tax.title': 'W-8BEN 税表向导',
@@ -871,6 +879,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection3': '高级许可是一次性终身访问付费。许可证密钥不可转让。我们保留修改新客户价格的权利。',
     'landing.termsSection4Title': '4. 责任限制',
     'landing.termsSection4': 'CrossBorder 按"原样"提供，不作任何保证。我们不对因使用此应用而产生的任何损害承担责任。',
+    'landing.ourProjects': '我们的项目',
   },
 
   ja: {
@@ -999,6 +1008,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'currency.convert': '変換',
     'currency.converting': '変換中...',
     'currency.result': '結果',
+    'currency.rateHistory': '為替レート履歴',
+    'currency.noHistory': 'まだ查詢がありません。上のコンバーターを使用して開始してください。',
 
     // Tax Wizard
     'tax.title': 'W-8BEN 税務ウィザード',
@@ -1158,6 +1169,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection3': 'プレミアムライセンスは终身アクセスのための一回払いです。ライセンスキーは譲渡不可です。',
     'landing.termsSection4Title': '4. 免責事項',
     'landing.termsSection4': 'CrossBorderは「現状のまま」保証なしで提供されます。アプリの使用により生じる損害について責任を負いません。',
+    'landing.ourProjects': '私たちのプロジェクト',
   },
 
   ko: {
@@ -1275,6 +1287,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'currency.convert': '변환',
     'currency.converting': '변환 중...',
     'currency.result': '결과',
+    'currency.rateHistory': '환율 조회 기록',
+    'currency.noHistory': '아직 조회 기록이 없습니다. 위의 변환기를 사용하여 시작하세요.',
     'tax.title': 'W-8BEN 세금 마법사',
     'tax.subtitle': '미국 세금 양식 대화형 가이드',
     'tax.personalInfo': '개인 정보',
@@ -1424,6 +1438,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection3': '프리미엄 라이선스는 평생 접근을 위한 일회성 결제입니다. 라이선스 키는 양도 불가합니다.',
     'landing.termsSection4Title': '4. 책임 제한',
     'landing.termsSection4': 'CrossBorder는 "있는 그대로" 보증 없이 제공됩니다.',
+    'landing.ourProjects': '우리의 프로젝트',
   },
 
   de: {
@@ -1541,6 +1556,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'currency.convert': 'Umrechnen',
     'currency.converting': 'Umrechnen...',
     'currency.result': 'Ergebnis',
+    'currency.rateHistory': 'Wechselkurs-Verlauf',
+    'currency.noHistory': 'Noch keine Anfragen. Verwenden Sie den Rechner oben.',
     'tax.title': 'W-8BEN Steuer-Assistent',
     'tax.subtitle': 'Interaktiver Leitfaden für US-Steuerformulare',
     'tax.personalInfo': 'Persönliche Daten',
@@ -1690,6 +1707,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection3': 'Die Premium-Lizenz ist eine einmalige Zahlung für lebenslangen Zugang.',
     'landing.termsSection4Title': '4. Haftungsbeschränkung',
     'landing.termsSection4': 'CrossBorder wird "wie besehen" ohne Gewährleistungen bereitgestellt.',
+    'landing.ourProjects': 'Unsere Projekte',
   },
 
   fr: {
@@ -1807,6 +1825,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'currency.convert': 'Convertir',
     'currency.converting': 'Conversion...',
     'currency.result': 'Résultat',
+    'currency.rateHistory': 'Historique des taux',
+    'currency.noHistory': 'Pas encore de requêtes. Utilisez le convertisseur ci-dessus.',
     'tax.title': 'Assistant fiscal W-8BEN',
     'tax.subtitle': 'Guide interactif des formulaires fiscaux américains',
     'tax.personalInfo': 'Informations personnelles',
@@ -1956,6 +1976,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection3': 'La licence Premium est un paiement unique pour un accès à vie.',
     'landing.termsSection4Title': '4. Limitation de responsabilité',
     'landing.termsSection4': 'CrossBorder est fourni "en l\'état" sans garantie.',
+    'landing.ourProjects': 'Nos projets',
   },
 
   es: {
@@ -2073,6 +2094,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'currency.convert': 'Convertir',
     'currency.converting': 'Convirtiendo...',
     'currency.result': 'Resultado',
+    'currency.rateHistory': 'Historial de consultas',
+    'currency.noHistory': 'Aún no hay consultas. Use el convertidor arriba.',
     'tax.title': 'Asistente fiscal W-8BEN',
     'tax.subtitle': 'Guía interactiva de formularios fiscales de EE.UU.',
     'tax.personalInfo': 'Información personal',
@@ -2222,6 +2245,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection3': 'La licencia Premium es un pago único por acceso de por vida.',
     'landing.termsSection4Title': '4. Limitación de responsabilidad',
     'landing.termsSection4': 'CrossBorder se proporciona "tal cual" sin garantías.',
+    'landing.ourProjects': 'Nuestros proyectos',
   },
 
   pt: {
@@ -2339,6 +2363,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'currency.convert': 'Converter',
     'currency.converting': 'Convertendo...',
     'currency.result': 'Resultado',
+    'currency.rateHistory': 'Histórico de consultas',
+    'currency.noHistory': 'Nenhuma consulta ainda. Use o conversor acima.',
     'tax.title': 'Assistente fiscal W-8BEN',
     'tax.subtitle': 'Guia interativo de formulários fiscais dos EUA',
     'tax.personalInfo': 'Informações pessoais',
@@ -2488,6 +2514,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection3': 'A licença Premium é um pagamento único por acesso vitalício.',
     'landing.termsSection4Title': '4. Limitação de responsabilidade',
     'landing.termsSection4': 'CrossBorder é fornecido "como está" sem garantias.',
+    'landing.ourProjects': 'Nossos projetos',
   },
 }
 

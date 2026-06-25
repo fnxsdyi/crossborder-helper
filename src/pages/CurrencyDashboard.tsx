@@ -15,6 +15,8 @@ import { formatCurrency } from '@/lib/utils'
 import { getExchangeRate, CURRENCIES, calculateFXGainLoss } from '@/lib/exchangeRate'
 import { PremiumGate } from '@/components/PremiumGate'
 import { useI18n } from '@/hooks/useI18n'
+import { saveRateQuery, getRateHistory, clearRateHistory, type RateHistory } from '@/lib/rateHistory'
+import { History, Trash2 } from 'lucide-react'
 
 interface CurrencyRevenue {
   currency: string
@@ -63,9 +65,11 @@ export function CurrencyDashboard() {
   const [baseCurrency, setBaseCurrency] = useState('USD')
   const [totalRevenueBase, setTotalRevenueBase] = useState(0)
   const [totalPendingBase, setTotalPendingBase] = useState(0)
+  const [rateHistory, setRateHistory] = useState<RateHistory[]>([])
 
   useEffect(() => {
     loadData()
+    loadRateHistory()
   }, [])
 
   async function loadData() {
@@ -215,18 +219,32 @@ export function CurrencyDashboard() {
     setTotalPendingBase(totalPending)
   }
 
+  async function loadRateHistory() {
+    const history = await getRateHistory(20)
+    setRateHistory(history)
+  }
+
   async function handleConvert() {
     if (!converterAmount || Number(converterAmount) <= 0) return
     setLoadingRate(true)
     try {
       const rate = await getExchangeRate(converterFrom, converterTo)
       if (rate) {
-        setConverterResult(Number(converterAmount) * rate)
+        const amount = Number(converterAmount)
+        const result = amount * rate
+        setConverterResult(result)
+        await saveRateQuery(converterFrom, converterTo, rate, amount, result)
+        await loadRateHistory()
       }
     } catch {
       setConverterResult(null)
     }
     setLoadingRate(false)
+  }
+
+  async function handleClearHistory() {
+    await clearRateHistory()
+    setRateHistory([])
   }
 
   const maxMonthly = Math.max(...monthlyRevenue.map((m) => m.total), 1)
@@ -503,6 +521,56 @@ export function CurrencyDashboard() {
             </div>
           </div>
         </PremiumGate>
+      </div>
+
+      {/* Rate Query History */}
+      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-semibold flex items-center gap-2">
+            <History size={18} />
+            {t('currency.rateHistory')}
+          </h2>
+          {rateHistory.length > 0 && (
+            <button
+              onClick={handleClearHistory}
+              className="flex items-center gap-1 text-sm text-slate-500 hover:text-red-500"
+            >
+              <Trash2 size={14} />
+              {t('common.delete')}
+            </button>
+          )}
+        </div>
+        {rateHistory.length === 0 ? (
+          <p className="text-slate-400 text-center py-6 text-sm">
+            {t('currency.noHistory')}
+          </p>
+        ) : (
+          <div className="space-y-2 max-h-64 overflow-y-auto">
+            {rateHistory.map((item) => (
+              <div
+                key={item.id}
+                className="flex items-center justify-between p-3 rounded-lg bg-slate-50 text-sm"
+              >
+                <div>
+                  <p className="font-medium">
+                    {item.amount} {item.fromCurrency} → {item.toCurrency}
+                  </p>
+                  <p className="text-xs text-slate-400">
+                    1 {item.fromCurrency} = {item.rate.toFixed(4)} {item.toCurrency}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold text-blue-600">
+                    {formatCurrency(item.result, item.toCurrency)}
+                  </p>
+                  <p className="text-xs text-slate-400">
+                    {new Date(item.queriedAt).toLocaleString()}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )
