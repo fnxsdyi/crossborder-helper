@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #2563eb;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f1f5f9;
+  --color-secondary-foreground: #0f172a;
+  --color-muted: #f1f5f9;
+  --color-muted-foreground: #64748b;
+  --color-border: #e2e8f0;
+  --color-input: #e2e8f0;
+  --color-ring: #2563eb;
+  --color-destructive: #ef4444;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --radius: 0.5rem;
+}
+
+/* Light theme (default) */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --border-color: #e2e8f0;
+  --border-hover: #cbd5e1;
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  --input-bg: #ffffff;
+  --input-border: #e2e8f0;
+  --hover-bg: #f1f5f9;
+  --sidebar-bg: #0f172a;
+  --sidebar-text: #e2e8f0;
+  --sidebar-hover: #1e293b;
+  --sidebar-active: #2563eb;
+}
+
+/* Dark theme */
+.dark {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border-color: #334155;
+  --border-hover: #475569;
+  --card-bg: #1e293b;
+  --card-border: #334155;
+  --input-bg: #1e293b;
+  --input-border: #475569;
+  --hover-bg: #334155;
+  --sidebar-bg: #020617;
+  --sidebar-text: #e2e8f0;
+  --sidebar-hover: #0f172a;
+  --sidebar-active: #2563eb;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* Base component styles */
+.bg-white {
+  background-color: var(--card-bg);
+}
+
+.bg-slate-50 {
+  background-color: var(--bg-secondary);
+}
+
+.bg-slate-900 {
+  background-color: var(--sidebar-bg);
+}
+
+.text-slate-900 {
+  color: var(--text-primary);
+}
+
+.text-slate-700 {
+  color: var(--text-secondary);
+}
+
+.text-slate-600 {
+  color: var(--text-secondary);
+}
+
+.text-slate-500 {
+  color: var(--text-muted);
+}
+
+.text-slate-400 {
+  color: var(--text-muted);
+}
+
+.border-slate-200 {
+  border-color: var(--border-color);
+}
+
+.border-slate-700 {
+  border-color: var(--border-color);
+}
+
+.hover\:bg-slate-50:hover {
+  background-color: var(--hover-bg);
+}
+
+.hover\:bg-slate-800:hover {
+  background-color: var(--sidebar-hover);
+}
+
+/* Input styles */
+input, select, textarea {
+  background-color: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text-primary);
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--sidebar-active);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* Table styles */
+thead {
+  background-color: var(--bg-tertiary);
+}
+
+tbody tr:hover {
+  background-color: var(--hover-bg);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hover);
+}
