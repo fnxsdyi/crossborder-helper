@@ -252,12 +252,12 @@ export async function generateInvoicePDF(invoice: Invoice): Promise<void> {
   if (!settings?.isPremium) {
     doc.setFontSize(60)
     doc.setTextColor(200, 200, 200)
-    doc.setGState(new doc.GState({ opacity: 0.15 }))
+    doc.setGState(new (doc as any).GState({ opacity: 0.15 }))
     doc.text('FREE TRIAL', pageWidth / 2, 150, {
       align: 'center',
       angle: 45,
     })
-    doc.setGState(new doc.GState({ opacity: 1 }))
+    doc.setGState(new (doc as any).GState({ opacity: 1 }))
   }
 
   // Save
