@@ -4,7 +4,7 @@ import db from '@/db'
 
 type TemplateConfig = {
   title: string
-  dateFormat: LocaleString
+  dateFormat: string
   currencyFormat: Intl.NumberFormatOptions
   taxLabel: string
   footerText: string
