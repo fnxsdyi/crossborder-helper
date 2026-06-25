@@ -232,6 +232,14 @@ type TranslationKeys = {
   'premium.activating': string
   'premium.oneTime': string
 
+  // Auth
+  'auth.signIn': string
+  'auth.signUp': string
+  'auth.email': string
+  'auth.password': string
+  'auth.noAccount': string
+  'auth.hasAccount': string
+
   // Landing Page
   'landing.openApp': string
   'landing.badge': string
@@ -511,6 +519,14 @@ const translations: Record<Locale, TranslationKeys> = {
     'premium.activating': 'Activating...',
     'premium.oneTime': 'One-time payment. No subscriptions. No data leaves your browser.',
 
+    // Auth
+    'auth.signIn': 'Sign In',
+    'auth.signUp': 'Sign Up',
+    'auth.email': 'Email',
+    'auth.password': 'Password',
+    'auth.noAccount': "Don't have an account? ",
+    'auth.hasAccount': 'Already have an account? ',
+
     // Landing Page
     'landing.openApp': 'Open App',
     'landing.badge': 'For Freelancers & Digital Nomads',
@@ -788,6 +804,14 @@ const translations: Record<Locale, TranslationKeys> = {
     'premium.orEnterKey': '或输入许可证密钥',
     'premium.activating': '激活中...',
     'premium.oneTime': '一次性付款。无订阅。数据不会离开您的浏览器。',
+
+    // Auth
+    'auth.signIn': '登录',
+    'auth.signUp': '注册',
+    'auth.email': '邮箱',
+    'auth.password': '密码',
+    'auth.noAccount': '还没有账号？',
+    'auth.hasAccount': '已有账号？',
 
     // Landing Page
     'landing.openApp': '进入应用',
@@ -1067,6 +1091,14 @@ const translations: Record<Locale, TranslationKeys> = {
     'premium.activating': '有効化中...',
     'premium.oneTime': '一回の支払い。サブスクリプションなし。データはブラウザから外に出ません。',
 
+    // Auth
+    'auth.signIn': 'ログイン',
+    'auth.signUp': '新規登録',
+    'auth.email': 'メールアドレス',
+    'auth.password': 'パスワード',
+    'auth.noAccount': 'アカウントをお持ちでないですか？',
+    'auth.hasAccount': 'アカウントをお持ちですか？',
+
     // Landing Page
     'landing.openApp': 'アプリを開く',
     'landing.badge': 'フリーランス・デジタルノマド向け',
@@ -1323,6 +1355,14 @@ const translations: Record<Locale, TranslationKeys> = {
     'premium.orEnterKey': '또는 라이선스 키 입력',
     'premium.activating': '활성화 중...',
     'premium.oneTime': '일회성 결제. 구독 없음. 데이터가 브라우저를 떠나지 않습니다.',
+
+    // Auth
+    'auth.signIn': '로그인',
+    'auth.signUp': '회원가입',
+    'auth.email': '이메일',
+    'auth.password': '비밀번호',
+    'auth.noAccount': '계정이 없으신가요? ',
+    'auth.hasAccount': '이미 계정이 있으신가요? ',
 
     // Landing Page
     'landing.openApp': '앱 열기',
@@ -1581,6 +1621,14 @@ const translations: Record<Locale, TranslationKeys> = {
     'premium.activating': 'Aktivierung...',
     'premium.oneTime': 'Einmalige Zahlung. Keine Abonnements. Daten verlassen Ihren Browser nicht.',
 
+    // Auth
+    'auth.signIn': 'Anmelden',
+    'auth.signUp': 'Registrieren',
+    'auth.email': 'E-Mail',
+    'auth.password': 'Passwort',
+    'auth.noAccount': 'Noch kein Konto? ',
+    'auth.hasAccount': 'Bereits ein Konto? ',
+
     // Landing Page
     'landing.openApp': 'App öffnen',
     'landing.badge': 'Für Freelancer & Digitale Nomaden',
@@ -1837,6 +1885,14 @@ const translations: Record<Locale, TranslationKeys> = {
     'premium.orEnterKey': 'ou entrer la clé de licence',
     'premium.activating': 'Activation...',
     'premium.oneTime': 'Paiement unique. Pas d abonnement. Les données ne quittent pas votre navigateur.',
+
+    // Auth
+    'auth.signIn': 'Se connecter',
+    'auth.signUp': "S'inscrire",
+    'auth.email': 'E-mail',
+    'auth.password': 'Mot de passe',
+    'auth.noAccount': "Pas encore de compte ? ",
+    'auth.hasAccount': 'Déjà un compte ? ',
 
     // Landing Page
     'landing.openApp': 'Ouvrir l\'app',
@@ -2095,6 +2151,14 @@ const translations: Record<Locale, TranslationKeys> = {
     'premium.activating': 'Activando...',
     'premium.oneTime': 'Pago único. Sin suscripciones. Los datos no salen de su navegador.',
 
+    // Auth
+    'auth.signIn': 'Iniciar sesión',
+    'auth.signUp': 'Registrarse',
+    'auth.email': 'Correo electrónico',
+    'auth.password': 'Contraseña',
+    'auth.noAccount': '¿No tiene cuenta? ',
+    'auth.hasAccount': '¿Ya tiene cuenta? ',
+
     // Landing Page
     'landing.openApp': 'Abrir app',
     'landing.badge': 'Para freelancers y nómadas digitales',
@@ -2351,6 +2415,14 @@ const translations: Record<Locale, TranslationKeys> = {
     'premium.orEnterKey': 'ou insira chave de licença',
     'premium.activating': 'Ativando...',
     'premium.oneTime': 'Pagamento único. Sem assinaturas. Os dados não saem do seu navegador.',
+
+    // Auth
+    'auth.signIn': 'Entrar',
+    'auth.signUp': 'Cadastrar',
+    'auth.email': 'E-mail',
+    'auth.password': 'Senha',
+    'auth.noAccount': 'Não tem conta? ',
+    'auth.hasAccount': 'Já tem conta? ',
 
     // Landing Page
     'landing.openApp': 'Abrir app',

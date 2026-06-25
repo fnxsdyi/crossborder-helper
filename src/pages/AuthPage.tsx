@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
+import { useI18n } from '@/hooks/useI18n'
 import { Mail, Lock, UserPlus, LogIn, Globe } from 'lucide-react'
 
 interface AuthPageProps {
@@ -7,6 +8,7 @@ interface AuthPageProps {
 }
 
 export function AuthPage({ onAuth }: AuthPageProps) {
+  const { t } = useI18n()
   const [isLogin, setIsLogin] = useState(true)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -40,17 +42,17 @@ export function AuthPage({ onAuth }: AuthPageProps) {
             <Globe size={24} className="text-white" />
           </div>
           <h1 className="text-2xl font-bold text-slate-900">CrossBorder</h1>
-          <p className="text-slate-500 mt-1">Invoice & Tax Helper</p>
+          <p className="text-slate-500 mt-1">{t('landing.footerDesc')}</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
           <h2 className="text-xl font-semibold text-center mb-6">
-            {isLogin ? 'Sign In' : 'Create Account'}
+            {isLogin ? t('auth.signIn') : t('auth.signUp')}
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1">{t('auth.email')}</label>
               <div className="relative">
                 <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
@@ -65,7 +67,7 @@ export function AuthPage({ onAuth }: AuthPageProps) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1">{t('auth.password')}</label>
               <div className="relative">
                 <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
@@ -96,12 +98,12 @@ export function AuthPage({ onAuth }: AuthPageProps) {
               ) : isLogin ? (
                 <>
                   <LogIn size={18} />
-                  Sign In
+                  {t('auth.signIn')}
                 </>
               ) : (
                 <>
                   <UserPlus size={18} />
-                  Create Account
+                  {t('auth.signUp')}
                 </>
               )}
             </button>
@@ -109,7 +111,7 @@ export function AuthPage({ onAuth }: AuthPageProps) {
 
           <div className="mt-6 text-center text-sm">
             <span className="text-slate-500">
-              {isLogin ? "Don't have an account? " : "Already have an account? "}
+              {isLogin ? t('auth.noAccount') : t('auth.hasAccount')}
             </span>
             <button
               onClick={() => {
@@ -118,7 +120,7 @@ export function AuthPage({ onAuth }: AuthPageProps) {
               }}
               className="text-blue-600 hover:text-blue-700 font-medium"
             >
-              {isLogin ? 'Sign Up' : 'Sign In'}
+              {isLogin ? t('auth.signUp') : t('auth.signIn')}
             </button>
           </div>
         </div>
