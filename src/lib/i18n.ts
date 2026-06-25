@@ -299,6 +299,7 @@ type TranslationKeys = {
   'landing.termsSection4Title': string
   'landing.termsSection4': string
   'landing.ourProjects': string
+  'landing.contactUs': string
 }
 
 const translations: Record<Locale, TranslationKeys> = {
@@ -590,6 +591,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection4Title': '4. Limitation of Liability',
     'landing.termsSection4': 'CrossBorder is provided "as is" without warranties. We shall not be liable for any damages arising from the use of this application.',
     'landing.ourProjects': 'Our Projects',
+    'landing.contactUs': 'Contact Us',
   },
 
   zh: {
@@ -880,6 +882,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection4Title': '4. 责任限制',
     'landing.termsSection4': 'CrossBorder 按"原样"提供，不作任何保证。我们不对因使用此应用而产生的任何损害承担责任。',
     'landing.ourProjects': '我们的项目',
+    'landing.contactUs': '联系我们',
   },
 
   ja: {
@@ -1170,6 +1173,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection4Title': '4. 免責事項',
     'landing.termsSection4': 'CrossBorderは「現状のまま」保証なしで提供されます。アプリの使用により生じる損害について責任を負いません。',
     'landing.ourProjects': '私たちのプロジェクト',
+    'landing.contactUs': 'お問い合わせ',
   },
 
   ko: {
@@ -1439,6 +1443,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection4Title': '4. 책임 제한',
     'landing.termsSection4': 'CrossBorder는 "있는 그대로" 보증 없이 제공됩니다.',
     'landing.ourProjects': '우리의 프로젝트',
+    'landing.contactUs': '문의하기',
   },
 
   de: {
@@ -1708,6 +1713,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection4Title': '4. Haftungsbeschränkung',
     'landing.termsSection4': 'CrossBorder wird "wie besehen" ohne Gewährleistungen bereitgestellt.',
     'landing.ourProjects': 'Unsere Projekte',
+    'landing.contactUs': 'Kontakt',
   },
 
   fr: {
@@ -1977,6 +1983,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection4Title': '4. Limitation de responsabilité',
     'landing.termsSection4': 'CrossBorder est fourni "en l\'état" sans garantie.',
     'landing.ourProjects': 'Nos projets',
+    'landing.contactUs': 'Contactez-nous',
   },
 
   es: {
@@ -2246,6 +2253,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection4Title': '4. Limitación de responsabilidad',
     'landing.termsSection4': 'CrossBorder se proporciona "tal cual" sin garantías.',
     'landing.ourProjects': 'Nuestros proyectos',
+    'landing.contactUs': 'Contáctenos',
   },
 
   pt: {
@@ -2515,6 +2523,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection4Title': '4. Limitação de responsabilidade',
     'landing.termsSection4': 'CrossBorder é fornecido "como está" sem garantias.',
     'landing.ourProjects': 'Nossos projetos',
+    'landing.contactUs': 'Contate-nos',
   },
 }
 

@@ -10,6 +10,7 @@ import {
   Check,
   ArrowRight,
   X,
+  Mail,
 } from 'lucide-react'
 import type { Locale } from '@/lib/i18n'
 
@@ -278,37 +279,33 @@ export function LandingPage({ onEnterApp }: LandingPageProps) {
             </div>
           </div>
 
-          {/* Cross-promotion Links */}
+          {/* Contact & Cross-promotion */}
           <div className="border-t border-slate-800 pt-6 mb-6">
-            <h4 className="font-semibold text-white mb-4">{t('landing.ourProjects')}</h4>
-            <div className="flex flex-wrap gap-4">
-              <a
-                href="https://kaki.llc"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors text-sm"
-              >
-                <span className="text-blue-400">🔗</span>
-                kaki.llc
-              </a>
-              <a
-                href="https://hooki.io"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors text-sm"
-              >
-                <span className="text-green-400">🔗</span>
-                hooki.io
-              </a>
-              <a
-                href="https://flowingpulse.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors text-sm"
-              >
-                <span className="text-purple-400">🔗</span>
-                flowingpulse.com
-              </a>
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h4 className="font-semibold text-white mb-3">{t('landing.contactUs')}</h4>
+                <a
+                  href="mailto:support@crossborder-helper.com"
+                  className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
+                >
+                  <Mail size={16} />
+                  support@crossborder-helper.com
+                </a>
+              </div>
+              <div>
+                <h4 className="font-semibold text-white mb-3">{t('landing.ourProjects')}</h4>
+                <div className="flex flex-wrap gap-3">
+                  <a href="https://kaki.llc" target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors text-sm">
+                    🔗 kaki.llc
+                  </a>
+                  <a href="https://hooki.io" target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors text-sm">
+                    🔗 hooki.io
+                  </a>
+                  <a href="https://flowingpulse.com" target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors text-sm">
+                    🔗 flowingpulse.com
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
 
