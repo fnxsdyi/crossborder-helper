@@ -129,7 +129,7 @@ function UpgradeModal({ onClose }: { onClose: () => void }) {
 
           <div className="space-y-4">
             <a
-              href="https://www.paypal.com/ncp/payment/your-payment-id"
+              href="https://www.paypal.com/ncp/payment/7CFGKT9FM3ER2"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"

@@ -218,7 +218,7 @@ export function LandingPage({ onEnterApp }: LandingPageProps) {
                 </li>
               </ul>
               <a
-                href="https://www.paypal.com/ncp/payment/your-payment-id"
+                href="https://www.paypal.com/ncp/payment/7CFGKT9FM3ER2"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full py-3 bg-white text-blue-600 rounded-xl font-medium hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"
