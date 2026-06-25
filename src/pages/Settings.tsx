@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react'
 import db, { type Settings as SettingsType } from '@/db'
-import { Settings as SettingsIcon, Save, Key } from 'lucide-react'
+import { Settings as SettingsIcon, Save, LogOut, User } from 'lucide-react'
 import { useI18n } from '@/hooks/useI18n'
+import { useAuthStore } from '@/stores/authStore'
+import { usePremium } from '@/components/PremiumGate'
 
 export function SettingsPage() {
   const { t } = useI18n()
+  const { user, signOut } = useAuthStore()
+  const isPremium = usePremium()
   const [settings, setSettings] = useState<SettingsType | null>(null)
   const [businessName, setBusinessName] = useState('')
   const [businessAddress, setBusinessAddress] = useState('')
@@ -93,16 +97,42 @@ export function SettingsPage() {
         </div>
       </div>
 
+      {/* User Account */}
+      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+              <User size={20} className="text-blue-600" />
+            </div>
+            <div>
+              <p className="font-medium text-slate-900">{user?.email}</p>
+              <p className="text-sm text-slate-500">
+                {isPremium ? t('settings.premiumActive') : t('settings.freePlan')}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={signOut}
+            className="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+          >
+            <LogOut size={16} />
+            Sign Out
+          </button>
+        </div>
+      </div>
+
       {/* Premium Status */}
-      <div className={`rounded-xl p-4 mb-6 ${settings?.isPremium ? 'bg-green-50 border border-green-200' : 'bg-amber-50 border border-amber-200'}`}>
+      <div className={`rounded-xl p-4 mb-6 ${isPremium ? 'bg-green-50 border border-green-200' : 'bg-amber-50 border border-amber-200'}`}>
         <div className="flex items-center gap-3">
-          <Key size={20} className={settings?.isPremium ? 'text-green-600' : 'text-amber-600'} />
+          <div className={`w-5 h-5 rounded-full flex items-center justify-center ${isPremium ? 'bg-green-500' : 'bg-amber-500'}`}>
+            {isPremium && <span className="text-white text-xs">✓</span>}
+          </div>
           <div>
-            <p className={`font-medium ${settings?.isPremium ? 'text-green-800' : 'text-amber-800'}`}>
-              {settings?.isPremium ? t('settings.premiumActive') : t('settings.freePlan')}
+            <p className={`font-medium ${isPremium ? 'text-green-800' : 'text-amber-800'}`}>
+              {isPremium ? t('settings.premiumActive') : t('settings.freePlan')}
             </p>
-            <p className={`text-sm ${settings?.isPremium ? 'text-green-600' : 'text-amber-600'}`}>
-              {settings?.isPremium ? t('settings.premiumDesc') : t('settings.freeDesc')}
+            <p className={`text-sm ${isPremium ? 'text-green-600' : 'text-amber-600'}`}>
+              {isPremium ? t('settings.premiumDesc') : t('settings.freeDesc')}
             </p>
           </div>
         </div>
