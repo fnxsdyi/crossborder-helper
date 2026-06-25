@@ -8,7 +8,11 @@ import { TaxWizard } from '@/pages/TaxWizard'
 import { CurrencyDashboard } from '@/pages/CurrencyDashboard'
 import { SettingsPage } from '@/pages/Settings'
 
-export function Layout() {
+interface LayoutProps {
+  onSignOut?: () => void
+}
+
+export function Layout({ onSignOut }: LayoutProps) {
   const { currentView } = useAppStore()
 
   const renderPage = () => {
@@ -32,7 +36,7 @@ export function Layout() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-secondary)' }}>
-      <Sidebar />
+      <Sidebar onSignOut={onSignOut} />
       <main className="lg:ml-64">
         <div className="p-6 lg:p-8">
           {renderPage()}

@@ -19,7 +19,11 @@ import { useAuthStore } from '@/stores/authStore'
 import { useState } from 'react'
 import type { Locale } from '@/lib/i18n'
 
-export function Sidebar() {
+interface SidebarProps {
+  onSignOut?: () => void
+}
+
+export function Sidebar({ onSignOut }: SidebarProps) {
   const { currentView, setCurrentView, sidebarOpen, toggleSidebar } = useAppStore()
   const { t, locale, changeLocale, locales } = useI18n()
   const { signOut } = useAuthStore()
@@ -130,7 +134,10 @@ export function Sidebar() {
             {t('nav.home')}
           </button>
           <button
-            onClick={signOut}
+            onClick={() => {
+              signOut()
+              onSignOut?.()
+            }}
             className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-slate-800 transition-colors mb-2"
             style={{ color: 'var(--text-muted)' }}
           >

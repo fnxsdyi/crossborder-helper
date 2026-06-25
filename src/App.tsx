@@ -6,7 +6,6 @@ import { useAuthStore } from './stores/authStore'
 
 function App() {
   const [showLanding, setShowLanding] = useState(true)
-  const [showAuth, setShowAuth] = useState(false)
   const { user, loading, initialize } = useAuthStore()
 
   useEffect(() => {
@@ -22,14 +21,18 @@ function App() {
       localStorage.setItem('app_entered', 'true')
       setShowLanding(false)
     } else {
-      setShowAuth(true)
+      setShowLanding(false)
     }
   }
 
   function handleAuth() {
     localStorage.setItem('app_entered', 'true')
     setShowLanding(false)
-    setShowAuth(false)
+  }
+
+  function handleSignOut() {
+    localStorage.removeItem('app_entered')
+    setShowLanding(true)
   }
 
   if (loading) {
@@ -40,15 +43,15 @@ function App() {
     )
   }
 
-  if (showLanding && !showAuth) {
+  if (showLanding) {
     return <LandingPage onEnterApp={handleEnterApp} />
   }
 
-  if (showAuth && !user) {
+  if (!user) {
     return <AuthPage onAuth={handleAuth} />
   }
 
-  return <Layout />
+  return <Layout onSignOut={handleSignOut} />
 }
 
 export default App
