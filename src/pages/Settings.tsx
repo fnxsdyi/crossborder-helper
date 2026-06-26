@@ -7,9 +7,10 @@ import { usePremium } from '@/components/PremiumGate'
 
 interface SettingsPageProps {
   onUpgrade?: () => void
+  isGuest?: boolean
 }
 
-export function SettingsPage({ onUpgrade }: SettingsPageProps) {
+export function SettingsPage({ onUpgrade, isGuest }: SettingsPageProps) {
   const { t } = useI18n()
   const { user, signOut } = useAuthStore()
   const isPremium = usePremium()
@@ -96,13 +97,15 @@ export function SettingsPage({ onUpgrade }: SettingsPageProps) {
               </p>
             </div>
           </div>
-          <button
-            onClick={signOut}
-            className="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
-          >
-            <LogOut size={16} />
-            Sign Out
-          </button>
+          {!isGuest && (
+            <button
+              onClick={signOut}
+              className="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+            >
+              <LogOut size={16} />
+              Sign Out
+            </button>
+          )}
         </div>
       </div>
 

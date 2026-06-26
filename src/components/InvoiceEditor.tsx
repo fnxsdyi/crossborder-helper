@@ -19,9 +19,12 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
   const [issueDate, setIssueDate] = useState(
     invoice?.issueDate ? new Date(invoice.issueDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]
   )
-  const [dueDate, setDueDate] = useState(
-    invoice?.dueDate ? new Date(invoice.dueDate).toISOString().split('T')[0] : ''
-  )
+  const [dueDate, setDueDate] = useState(() => {
+    if (invoice?.dueDate) return new Date(invoice.dueDate).toISOString().split('T')[0]
+    const d = new Date()
+    d.setDate(d.getDate() + 30)
+    return d.toISOString().split('T')[0]
+  })
   const [currency, setCurrency] = useState(invoice?.currency || 'USD')
   const [localCurrency, setLocalCurrency] = useState(invoice?.localCurrency || '')
   const [exchangeRate, setExchangeRate] = useState<number | null>(invoice?.exchangeRate || null)
