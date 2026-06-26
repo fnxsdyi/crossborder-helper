@@ -306,7 +306,7 @@ const translations: Record<Locale, TranslationKeys> = {
   en: {
     // Sidebar
     'nav.home': 'Home',
-    'nav.privacyTooltip': 'Your data never leaves your browser. 100% private.',
+    'nav.privacyTooltip': 'Encrypted & 100% Private.',
     'nav.signOut': 'Sign Out',
     'nav.dashboard': 'Dashboard',
     'nav.invoices': 'Invoices',
@@ -597,7 +597,7 @@ const translations: Record<Locale, TranslationKeys> = {
   zh: {
     // Sidebar
     'nav.home': '首页',
-    'nav.privacyTooltip': '您的数据永不离开浏览器，100% 私密安全。',
+    'nav.privacyTooltip': '您的数据已加密同步，安全私密。',
     'nav.signOut': '退出登录',
     'nav.dashboard': '仪表盘',
     'nav.invoices': '发票',
@@ -888,7 +888,7 @@ const translations: Record<Locale, TranslationKeys> = {
   ja: {
     // Sidebar
     'nav.home': 'ホーム',
-    'nav.privacyTooltip': 'データはブラウザから外に出ません。100%プライベート。',
+    'nav.privacyTooltip': '暗号化済み・100%プライベート。',
     'nav.signOut': 'ログアウト',
     'nav.dashboard': 'ダッシュボード',
     'nav.invoices': '請求書',
@@ -1178,7 +1178,7 @@ const translations: Record<Locale, TranslationKeys> = {
 
   ko: {
     'nav.home': '홈',
-    'nav.privacyTooltip': '데이터가 브라우저를 떠나지 않습니다. 100% 비공개.',
+    'nav.privacyTooltip': '암호화됨 & 100% 비공개.',
     'nav.signOut': '로그아웃',
     'nav.dashboard': '대시보드',
     'nav.invoices': '송장',
@@ -1448,7 +1448,7 @@ const translations: Record<Locale, TranslationKeys> = {
 
   de: {
     'nav.home': 'Startseite',
-    'nav.privacyTooltip': 'Ihre Daten verlassen nie Ihren Browser. 100% privat.',
+    'nav.privacyTooltip': 'Verschlüsselt & 100% privat.',
     'nav.signOut': 'Abmelden',
     'nav.dashboard': 'Dashboard',
     'nav.invoices': 'Rechnungen',
@@ -1718,7 +1718,7 @@ const translations: Record<Locale, TranslationKeys> = {
 
   fr: {
     'nav.home': 'Accueil',
-    'nav.privacyTooltip': 'Vos données ne quittent jamais votre navigateur. 100% privé.',
+    'nav.privacyTooltip': 'Chiffré & 100% privé.',
     'nav.signOut': 'Déconnexion',
     'nav.dashboard': 'Tableau de bord',
     'nav.invoices': 'Factures',
@@ -1988,7 +1988,7 @@ const translations: Record<Locale, TranslationKeys> = {
 
   es: {
     'nav.home': 'Inicio',
-    'nav.privacyTooltip': 'Sus datos nunca salen de su navegador. 100% privado.',
+    'nav.privacyTooltip': 'Cifrado & 100% privado.',
     'nav.signOut': 'Cerrar sesión',
     'nav.dashboard': 'Panel',
     'nav.invoices': 'Facturas',
@@ -2258,7 +2258,7 @@ const translations: Record<Locale, TranslationKeys> = {
 
   pt: {
     'nav.home': 'Início',
-    'nav.privacyTooltip': 'Seus dados nunca saem do navegador. 100% privado.',
+    'nav.privacyTooltip': 'Criptografado & 100% privado.',
     'nav.signOut': 'Sair',
     'nav.dashboard': 'Painel',
     'nav.invoices': 'Faturas',

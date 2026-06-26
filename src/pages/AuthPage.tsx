@@ -41,7 +41,7 @@ export function AuthPage({ onAuth }: AuthPageProps) {
           <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4">
             <Globe size={24} className="text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-900">CrossBorder</h1>
+          <h1 className="text-2xl font-bold text-slate-900">TaxFlow</h1>
           <p className="text-slate-500 mt-1">{t('landing.footerDesc')}</p>
         </div>
 

@@ -58,7 +58,7 @@ export function Sidebar({ onSignOut }: SidebarProps) {
         style={{ backgroundColor: 'var(--sidebar-bg)', color: 'var(--sidebar-text)' }}
       >
         <div className="p-6">
-          <h1 className="text-xl font-bold">CrossBorder</h1>
+          <h1 className="text-xl font-bold">TaxFlow</h1>
           <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>Invoice & Tax Helper</p>
         </div>
 
@@ -145,7 +145,7 @@ export function Sidebar({ onSignOut }: SidebarProps) {
             {t('nav.signOut')}
           </button>
           <p className="text-xs text-center flex items-center justify-center gap-1 group relative" style={{ color: 'var(--text-muted)' }}>
-            v0.1.0 • Local-First 🛡️
+            v0.1.0 • Secure Sync 🔒
             <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-slate-800 text-white text-xs rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
               {t('nav.privacyTooltip')}
             </span>

@@ -58,7 +58,7 @@ export function LandingPage({ onEnterApp }: LandingPageProps) {
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
               <Globe size={18} className="text-white" />
             </div>
-            <span className="font-bold text-xl text-slate-900">CrossBorder</span>
+            <span className="font-bold text-xl text-slate-900">TaxFlow</span>
           </div>
           <div className="flex items-center gap-4">
             {/* Language Switcher */}
@@ -244,7 +244,7 @@ export function LandingPage({ onEnterApp }: LandingPageProps) {
                 <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                   <Globe size={18} className="text-white" />
                 </div>
-                <span className="font-bold text-white">CrossBorder</span>
+                <span className="font-bold text-white">TaxFlow</span>
               </div>
               <p className="text-sm">
                 {t('landing.footerDesc')}
@@ -310,7 +310,7 @@ export function LandingPage({ onEnterApp }: LandingPageProps) {
           </div>
 
           <div className="border-t border-slate-800 pt-8 text-center text-sm">
-            <p>&copy; {new Date().getFullYear()} CrossBorder. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} TaxFlow. All rights reserved.</p>
           </div>
         </div>
       </footer>
