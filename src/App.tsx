@@ -84,6 +84,7 @@ function App() {
       <LandingPage
         onEnterApp={handleEnterApp}
         onBuyNow={handleBuyNow}
+        onMemberLogin={() => setShowLanding(false)}
       />
     )
   }

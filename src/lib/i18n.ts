@@ -257,6 +257,8 @@ type TranslationKeys = {
   'landing.startFree': string
   'landing.freeTrial': string
   'landing.seePricing': string
+  'landing.memberLogin': string
+  'landing.alreadyMember': string
   'landing.featuresTitle': string
   'landing.feature1Title': string
   'landing.feature1Desc': string
@@ -556,6 +558,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.startFree': 'Start Free',
     'landing.freeTrial': 'Free Trial',
     'landing.seePricing': 'See Pricing',
+    'landing.memberLogin': 'Member Login',
+    'landing.alreadyMember': 'Already a member?',
     'landing.featuresTitle': 'Everything You Need',
     'landing.feature1Title': 'Smart Invoice Generator',
     'landing.feature1Desc': 'Create professional invoices with multi-country templates (US, EU, UK). Auto-calculate VAT/GST with reverse charge support.',
@@ -854,6 +858,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.startFree': '免费开始',
     'landing.freeTrial': '免费试用',
     'landing.seePricing': '查看价格',
+    'landing.memberLogin': '会员登录',
+    'landing.alreadyMember': '已有账号？',
     'landing.featuresTitle': '您需要的一切',
     'landing.feature1Title': '智能发票生成器',
     'landing.feature1Desc': '使用多国模板（美国、欧盟、英国）创建专业发票。自动计算增值税/消费税，支持反向征收。',
@@ -1152,6 +1158,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.startFree': '無料で始める',
     'landing.freeTrial': '無料 trial',
     'landing.seePricing': '料金を見る',
+    'landing.memberLogin': 'メンバーログイン',
+    'landing.alreadyMember': 'すでに会員ですか？',
     'landing.featuresTitle': '必要なすべて',
     'landing.feature1Title': 'スマート請求書生成',
     'landing.feature1Desc': '多国テンプレート（米国・EU・英国）でプロの請求書を作成。VAT/GSTを自動計算、リバースチャージ対応。',
@@ -1430,6 +1438,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.startFree': '무료로 시작',
     'landing.freeTrial': '무료 체험',
     'landing.seePricing': '가격 보기',
+    'landing.memberLogin': '회원 로그인',
+    'landing.alreadyMember': '이미 회원이신가요?',
     'landing.featuresTitle': '필요한 모든 것',
     'landing.feature1Title': '스마트 송장 생성기',
     'landing.feature1Desc': '다국 템플릿(미국, EU, 영국)으로 전문 송장을 만듭니다. VAT/GST를 자동 계산하고 역대금을 지원합니다.',
@@ -1708,6 +1718,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.startFree': 'Kostenlos starten',
     'landing.freeTrial': 'Kostenlos testen',
     'landing.seePricing': 'Preise ansehen',
+    'landing.memberLogin': 'Mitglieder-Login',
+    'landing.alreadyMember': 'Bereits Mitglied?',
     'landing.featuresTitle': 'Alles was Sie brauchen',
     'landing.feature1Title': 'Intelligenter Rechnungsgenerator',
     'landing.feature1Desc': 'Erstellen Sie professionelle Rechnungen mit mehr Länder-Vorlagen (US, EU, UK). MwSt./GST automatisch berechnen.',
@@ -1986,6 +1998,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.startFree': 'Commencer gratuitement',
     'landing.freeTrial': 'Essai gratuit',
     'landing.seePricing': 'Voir les prix',
+    'landing.memberLogin': 'Connexion membre',
+    'landing.alreadyMember': 'Déjà membre ?',
     'landing.featuresTitle': 'Tout ce dont vous avez besoin',
     'landing.feature1Title': 'Générateur de factures intelligent',
     'landing.feature1Desc': 'Créez des factures professionnelles avec des modèles multi-pays (US, EU, UK). Calcul automatique de la TVA.',
@@ -2264,6 +2278,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.startFree': 'Empezar gratis',
     'landing.freeTrial': 'Prueba gratis',
     'landing.seePricing': 'Ver precios',
+    'landing.memberLogin': 'Inicio de sesión',
+    'landing.alreadyMember': '¿Ya es miembro?',
     'landing.featuresTitle': 'Todo lo que necesita',
     'landing.feature1Title': 'Generador de facturas inteligente',
     'landing.feature1Desc': 'Cree facturas profesionales con plantillas multipaís (US, EU, UK). Cálculo automático de IVA.',
@@ -2542,6 +2558,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.startFree': 'Começar grátis',
     'landing.freeTrial': 'Teste grátis',
     'landing.seePricing': 'Ver preços',
+    'landing.memberLogin': 'Login de membro',
+    'landing.alreadyMember': 'Já é membro?',
     'landing.featuresTitle': 'Tudo que você precisa',
     'landing.feature1Title': 'Gerador de faturas inteligente',
     'landing.feature1Desc': 'Crie faturas profissionais com modelos multi-país (US, EU, UK). Cálculo automático de IVA.',

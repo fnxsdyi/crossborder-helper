@@ -17,9 +17,10 @@ import type { Locale } from '@/lib/i18n'
 interface LandingPageProps {
   onEnterApp: () => void
   onBuyNow?: () => void
+  onMemberLogin?: () => void
 }
 
-export function LandingPage({ onEnterApp, onBuyNow }: LandingPageProps) {
+export function LandingPage({ onEnterApp, onBuyNow, onMemberLogin }: LandingPageProps) {
   const { t, locale, changeLocale, locales } = useI18n()
   const [showPrivacy, setShowPrivacy] = useState(false)
   const [showTerms, setShowTerms] = useState(false)
@@ -91,6 +92,12 @@ export function LandingPage({ onEnterApp, onBuyNow }: LandingPageProps) {
               )}
             </div>
             <button
+              onClick={onMemberLogin}
+              className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors text-sm font-medium"
+            >
+              {t('landing.memberLogin')}
+            </button>
+            <button
               onClick={onEnterApp}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
             >
@@ -126,6 +133,15 @@ export function LandingPage({ onEnterApp, onBuyNow }: LandingPageProps) {
               {t('landing.seePricing')}
             </a>
           </div>
+          <p className="mt-4 text-sm text-slate-500">
+            {t('landing.alreadyMember')}{' '}
+            <button
+              onClick={onMemberLogin}
+              className="text-blue-600 hover:text-blue-700 font-medium"
+            >
+              {t('landing.memberLogin')}
+            </button>
+          </p>
         </div>
       </section>
 
