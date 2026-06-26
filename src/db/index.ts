@@ -81,7 +81,7 @@ export interface Settings {
   licenseKey?: string
 }
 
-const db = new Dexie('CrossBorderHelper') as Dexie & {
+const db = new Dexie('TaxFlowHelper') as Dexie & {
   clients: EntityTable<Client, 'id'>
   invoices: EntityTable<Invoice, 'id'>
   taxProfiles: EntityTable<TaxProfile, 'id'>
