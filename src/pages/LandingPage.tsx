@@ -285,11 +285,11 @@ export function LandingPage({ onEnterApp }: LandingPageProps) {
               <div>
                 <h4 className="font-semibold text-white mb-3">{t('landing.contactUs')}</h4>
                 <a
-                  href="mailto:support@crossborder-helper.com"
+                  href="mailto:fnxsdyi@qq.com"
                   className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
                 >
                   <Mail size={16} />
-                  support@crossborder-helper.com
+                  fnxsdyi@qq.com
                 </a>
               </div>
               <div>
