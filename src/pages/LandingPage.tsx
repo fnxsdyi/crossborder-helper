@@ -309,17 +309,26 @@ export function LandingPage({ onEnterApp, onBuyNow, onMemberLogin }: LandingPage
               </div>
               <div>
                 <h4 className="font-semibold text-white mb-3">{t('landing.ourProjects')}</h4>
-                <div className="flex flex-wrap gap-3">
-                  <a href="https://kaki.llc" target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors text-sm">
-                    🔗 kaki.llc
-                  </a>
-                  <a href="https://hooki.io" target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors text-sm">
-                    🔗 hooki.io
-                  </a>
-                  <a href="https://flowingpulse.com" target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors text-sm">
-                    🔗 flowingpulse.com
-                  </a>
-                </div>
+                <ul className="space-y-2 text-sm">
+                  <li>
+                    <a href="https://kaki.llc" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors">
+                      KAKI — AI Tool Suite
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://hooki.io" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors">
+                      Hooki — Webhook Debug Console
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://flowingpulse.com" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors">
+                      FlowingPulse — Financial Runway Tracker
+                    </a>
+                  </li>
+                  <li>
+                    <span className="text-slate-400">TaxFlow — Invoice & Tax Helper</span>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
