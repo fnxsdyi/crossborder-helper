@@ -5,9 +5,10 @@ import { Mail, Lock, UserPlus, LogIn, Globe } from 'lucide-react'
 
 interface AuthPageProps {
   onAuth: () => void
+  showWelcome?: boolean
 }
 
-export function AuthPage({ onAuth }: AuthPageProps) {
+export function AuthPage({ onAuth, showWelcome }: AuthPageProps) {
   const { t } = useI18n()
   const [isLogin, setIsLogin] = useState(true)
   const [email, setEmail] = useState('')
@@ -37,6 +38,13 @@ export function AuthPage({ onAuth }: AuthPageProps) {
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
+        {showWelcome && (
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl text-center">
+            <p className="text-green-800 font-medium">🎉 {t('auth.paymentSuccess')}</p>
+            <p className="text-green-600 text-sm mt-1">{t('auth.createAccount')}</p>
+          </div>
+        )}
+
         <div className="text-center mb-8">
           <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4">
             <Globe size={24} className="text-white" />

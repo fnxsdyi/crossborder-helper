@@ -7,15 +7,23 @@ import { useAuthStore } from './stores/authStore'
 function App() {
   const [showLanding, setShowLanding] = useState(true)
   const [isGuest, setIsGuest] = useState(false)
+  const [showRegister, setShowRegister] = useState(false)
   const { user, loading, initialize } = useAuthStore()
 
   useEffect(() => {
     initialize()
-    const entered = localStorage.getItem('app_entered')
-    const guest = localStorage.getItem('is_guest')
-    if (entered === 'true') {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('register') === 'true') {
       setShowLanding(false)
-      setIsGuest(guest === 'true')
+      setShowRegister(true)
+      window.history.replaceState({}, '', window.location.pathname)
+    } else {
+      const entered = localStorage.getItem('app_entered')
+      const guest = localStorage.getItem('is_guest')
+      if (entered === 'true') {
+        setShowLanding(false)
+        setIsGuest(guest === 'true')
+      }
     }
   }, [])
 
@@ -27,13 +35,15 @@ function App() {
   }
 
   function handleBuyNow() {
-    window.open('https://www.paypal.com/ncp/payment/7CFGKT9FM3ER2', '_blank')
+    const returnUrl = encodeURIComponent(window.location.origin + '/?register=true')
+    window.location.href = `https://www.paypal.com/ncp/payment/7CFGKT9FM3ER2?return=${returnUrl}`
   }
 
   function handleAuth() {
     localStorage.setItem('app_entered', 'true')
     localStorage.removeItem('is_guest')
     setIsGuest(false)
+    setShowRegister(false)
     setShowLanding(false)
   }
 
@@ -61,8 +71,8 @@ function App() {
     )
   }
 
-  if (!user && !isGuest) {
-    return <AuthPage onAuth={handleAuth} />
+  if (showRegister || (!user && !isGuest)) {
+    return <AuthPage onAuth={handleAuth} showWelcome={showRegister} />
   }
 
   return (

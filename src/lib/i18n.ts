@@ -246,6 +246,8 @@ type TranslationKeys = {
   'auth.noAccount': string
   'auth.hasAccount': string
   'auth.backToHome': string
+  'auth.paymentSuccess': string
+  'auth.createAccount': string
 
   // Landing
   'landing.openApp': string
@@ -543,6 +545,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.noAccount': "Don't have an account? ",
     'auth.hasAccount': 'Already have an account? ',
     'auth.backToHome': 'Back to Home',
+    'auth.paymentSuccess': 'Payment successful!',
+    'auth.createAccount': 'Create your account to start using TaxFlow.',
 
     // Landing Page
     'landing.openApp': 'Open App',
@@ -839,6 +843,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.noAccount': '还没有账号？',
     'auth.hasAccount': '已有账号？',
     'auth.backToHome': '返回首页',
+    'auth.paymentSuccess': '支付成功！',
+    'auth.createAccount': '创建您的账户开始使用 TaxFlow。',
 
     // Landing Page
     'landing.openApp': '进入应用',
@@ -1135,6 +1141,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.noAccount': 'アカウントをお持ちでないですか？',
     'auth.hasAccount': 'アカウントをお持ちですか？',
     'auth.backToHome': 'ホームに戻る',
+    'auth.paymentSuccess': 'お支払い成功！',
+    'auth.createAccount': 'アカウントを作成してTaxFlowを使い始めましょう。',
 
     // Landing Page
     'landing.openApp': 'アプリを開く',
@@ -1411,6 +1419,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.noAccount': '계정이 없으신가요? ',
     'auth.hasAccount': '이미 계정이 있으신가요? ',
     'auth.backToHome': '홈으로 돌아가기',
+    'auth.paymentSuccess': '결제 성공!',
+    'auth.createAccount': '계정을 만들어 TaxFlow을 사용하세요.',
 
     // Landing Page
     'landing.openApp': '앱 열기',
@@ -1687,6 +1697,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.noAccount': 'Noch kein Konto? ',
     'auth.hasAccount': 'Bereits ein Konto? ',
     'auth.backToHome': 'Zurück zur Startseite',
+    'auth.paymentSuccess': 'Zahlung erfolgreich!',
+    'auth.createAccount': 'Erstellen Sie Ihr Konto, um TaxFlow zu nutzen.',
 
     // Landing Page
     'landing.openApp': 'App öffnen',
@@ -1963,6 +1975,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.noAccount': "Pas encore de compte ? ",
     'auth.hasAccount': 'Déjà un compte ? ',
     'auth.backToHome': "Retour à l'accueil",
+    'auth.paymentSuccess': 'Paiement réussi !',
+    'auth.createAccount': 'Créez votre compte pour commencer à utiliser TaxFlow.',
 
     // Landing Page
     'landing.openApp': 'Ouvrir l\'app',
@@ -2239,6 +2253,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.noAccount': '¿No tiene cuenta? ',
     'auth.hasAccount': '¿Ya tiene cuenta? ',
     'auth.backToHome': 'Volver al inicio',
+    'auth.paymentSuccess': '¡Pago exitoso!',
+    'auth.createAccount': 'Crea tu cuenta para empezar a usar TaxFlow.',
 
     // Landing Page
     'landing.openApp': 'Abrir app',
@@ -2515,6 +2531,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.noAccount': 'Não tem conta? ',
     'auth.hasAccount': 'Já tem conta? ',
     'auth.backToHome': 'Voltar ao início',
+    'auth.paymentSuccess': 'Pagamento bem-sucedido!',
+    'auth.createAccount': 'Crie sua conta para começar a usar o TaxFlow.',
 
     // Landing Page
     'landing.openApp': 'Abrir app',
