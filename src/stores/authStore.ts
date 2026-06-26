@@ -2,6 +2,8 @@ import { create } from 'zustand'
 import { supabase } from '@/lib/supabase'
 import type { User } from '@supabase/supabase-js'
 
+const SUPER_ADMIN_EMAILS = ['fnxsdyi@qq.com']
+
 interface AuthState {
   user: User | null
   loading: boolean
@@ -32,8 +34,34 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   signUp: async (email, password) => {
-    const { error } = await supabase.auth.signUp({ email, password })
+    const { data, error } = await supabase.auth.signUp({ email, password })
     if (error) return { error: error.message }
+
+    if (data.user) {
+      const pendingData = localStorage.getItem('paypal_pending_token')
+      if (pendingData) {
+        try {
+          const { token, timestamp } = JSON.parse(pendingData)
+          const thirtyMinutes = 30 * 60 * 1000
+          if ((Date.now() - timestamp) < thirtyMinutes) {
+            await supabase.from('licenses').insert({
+              user_id: data.user.id,
+              key: `PAYPAL-${token}`,
+              active: true
+            })
+          }
+        } catch (e) {}
+      }
+
+      if (SUPER_ADMIN_EMAILS.includes(email.toLowerCase())) {
+        await supabase.from('licenses').insert({
+          user_id: data.user.id,
+          key: `ADMIN-${data.user.id}`,
+          active: true
+        })
+      }
+    }
+
     return {}
   },
 
@@ -45,6 +73,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   checkPremium: async () => {
     const { user } = get()
     if (!user) return false
+
+    if (SUPER_ADMIN_EMAILS.includes(user.email?.toLowerCase() || '')) {
+      return true
+    }
 
     const { data } = await supabase
       .from('licenses')

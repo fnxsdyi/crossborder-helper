@@ -23,9 +23,16 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
     }
   }, [user])
 
+  const SUPER_ADMIN_EMAILS = ['fnxsdyi@qq.com']
+
   async function checkPremiumStatus() {
     if (!user) {
       setIsPremium(false)
+      return
+    }
+
+    if (SUPER_ADMIN_EMAILS.includes(user.email?.toLowerCase() || '')) {
+      setIsPremium(true)
       return
     }
 
@@ -133,6 +140,8 @@ export function usePremium() {
   const { user } = useAuthStore()
   const [isPremium, setIsPremium] = useState(false)
 
+  const SUPER_ADMIN_EMAILS = ['fnxsdyi@qq.com']
+
   useEffect(() => {
     if (user) {
       checkPremium()
@@ -142,6 +151,11 @@ export function usePremium() {
   async function checkPremium() {
     if (!user) {
       setIsPremium(false)
+      return
+    }
+
+    if (SUPER_ADMIN_EMAILS.includes(user.email?.toLowerCase() || '')) {
+      setIsPremium(true)
       return
     }
 
