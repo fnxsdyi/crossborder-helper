@@ -14,14 +14,20 @@ function App() {
     initialize()
     const params = new URLSearchParams(window.location.search)
     const registerToken = params.get('token')
-    const pendingToken = localStorage.getItem('paypal_pending_token')
+    const pendingData = localStorage.getItem('paypal_pending_token')
 
-    if (registerToken && pendingToken && registerToken === pendingToken) {
-      localStorage.removeItem('paypal_pending_token')
-      setShowLanding(false)
-      setShowRegister(true)
-      window.history.replaceState({}, '', window.location.pathname)
-    } else if (registerToken) {
+    if (registerToken && pendingData) {
+      try {
+        const { token, timestamp } = JSON.parse(pendingData)
+        const thirtyMinutes = 30 * 60 * 1000
+        const isValid = token === registerToken && (Date.now() - timestamp) < thirtyMinutes
+
+        if (isValid) {
+          localStorage.removeItem('paypal_pending_token')
+          setShowLanding(false)
+          setShowRegister(true)
+        }
+      } catch (e) {}
       window.history.replaceState({}, '', window.location.pathname)
     } else {
       const entered = localStorage.getItem('app_entered')
@@ -42,7 +48,10 @@ function App() {
 
   function handleBuyNow() {
     const token = Date.now().toString(36) + Math.random().toString(36).slice(2)
-    localStorage.setItem('paypal_pending_token', token)
+    localStorage.setItem('paypal_pending_token', JSON.stringify({
+      token,
+      timestamp: Date.now()
+    }))
     const returnUrl = encodeURIComponent(window.location.origin + `/?token=${token}`)
     window.location.href = `https://www.paypal.com/ncp/payment/7CFGKT9FM3ER2?return=${returnUrl}`
   }

@@ -104,7 +104,10 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
                 <button
                   onClick={() => {
                     const token = Date.now().toString(36) + Math.random().toString(36).slice(2)
-                    localStorage.setItem('paypal_pending_token', token)
+                    localStorage.setItem('paypal_pending_token', JSON.stringify({
+                      token,
+                      timestamp: Date.now()
+                    }))
                     window.location.href = `https://www.paypal.com/ncp/payment/7CFGKT9FM3ER2?return=${encodeURIComponent(window.location.origin + `/?token=${token}`)}`
                   }}
                   className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
