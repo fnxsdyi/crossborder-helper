@@ -101,16 +101,18 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
               </div>
 
               <div className="space-y-4">
-                <a
-                  href={`https://www.paypal.com/ncp/payment/7CFGKT9FM3ER2?return=${encodeURIComponent(window.location.origin + '/?register=true')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  onClick={() => {
+                    const token = Date.now().toString(36) + Math.random().toString(36).slice(2)
+                    localStorage.setItem('paypal_pending_token', token)
+                    window.location.href = `https://www.paypal.com/ncp/payment/7CFGKT9FM3ER2?return=${encodeURIComponent(window.location.origin + `/?token=${token}`)}`
+                  }}
                   className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
                 >
                   <CreditCard size={18} />
                   {t('premium.payPal')}
                   <ExternalLink size={14} />
-                </a>
+                </button>
               </div>
 
               <p className="mt-4 text-xs text-slate-400 text-center">

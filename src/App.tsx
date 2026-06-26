@@ -13,9 +13,15 @@ function App() {
   useEffect(() => {
     initialize()
     const params = new URLSearchParams(window.location.search)
-    if (params.get('register') === 'true') {
+    const registerToken = params.get('token')
+    const pendingToken = localStorage.getItem('paypal_pending_token')
+
+    if (registerToken && pendingToken && registerToken === pendingToken) {
+      localStorage.removeItem('paypal_pending_token')
       setShowLanding(false)
       setShowRegister(true)
+      window.history.replaceState({}, '', window.location.pathname)
+    } else if (registerToken) {
       window.history.replaceState({}, '', window.location.pathname)
     } else {
       const entered = localStorage.getItem('app_entered')
@@ -35,7 +41,9 @@ function App() {
   }
 
   function handleBuyNow() {
-    const returnUrl = encodeURIComponent(window.location.origin + '/?register=true')
+    const token = Date.now().toString(36) + Math.random().toString(36).slice(2)
+    localStorage.setItem('paypal_pending_token', token)
+    const returnUrl = encodeURIComponent(window.location.origin + `/?token=${token}`)
     window.location.href = `https://www.paypal.com/ncp/payment/7CFGKT9FM3ER2?return=${returnUrl}`
   }
 
