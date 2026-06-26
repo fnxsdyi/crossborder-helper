@@ -21,9 +21,10 @@ import type { Locale } from '@/lib/i18n'
 
 interface SidebarProps {
   onSignOut?: () => void
+  isGuest?: boolean
 }
 
-export function Sidebar({ onSignOut }: SidebarProps) {
+export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
   const { currentView, setCurrentView, sidebarOpen, toggleSidebar } = useAppStore()
   const { t, locale, changeLocale, locales } = useI18n()
   const { signOut } = useAuthStore()
@@ -133,17 +134,32 @@ export function Sidebar({ onSignOut }: SidebarProps) {
             <Home size={16} />
             {t('nav.home')}
           </button>
-          <button
-            onClick={() => {
-              signOut()
-              onSignOut?.()
-            }}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-slate-800 transition-colors mb-2"
-            style={{ color: 'var(--text-muted)' }}
-          >
-            <LogOut size={16} />
-            {t('nav.signOut')}
-          </button>
+          {isGuest ? (
+            <button
+              onClick={() => {
+                localStorage.removeItem('app_entered')
+                localStorage.removeItem('is_guest')
+                window.location.reload()
+              }}
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-slate-800 transition-colors mb-2"
+              style={{ color: 'var(--text-muted)' }}
+            >
+              <LogOut size={16} />
+              {t('nav.signIn')}
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                signOut()
+                onSignOut?.()
+              }}
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-slate-800 transition-colors mb-2"
+              style={{ color: 'var(--text-muted)' }}
+            >
+              <LogOut size={16} />
+              {t('nav.signOut')}
+            </button>
+          )}
           <p className="text-xs text-center flex items-center justify-center gap-1 group relative" style={{ color: 'var(--text-muted)' }}>
             v0.1.0 • Secure Sync 🔒
             <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-slate-800 text-white text-xs rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">

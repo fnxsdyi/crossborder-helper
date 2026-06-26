@@ -16,9 +16,10 @@ import type { Locale } from '@/lib/i18n'
 
 interface LandingPageProps {
   onEnterApp: () => void
+  onBuyNow?: () => void
 }
 
-export function LandingPage({ onEnterApp }: LandingPageProps) {
+export function LandingPage({ onEnterApp, onBuyNow }: LandingPageProps) {
   const { t, locale, changeLocale, locales } = useI18n()
   const [showPrivacy, setShowPrivacy] = useState(false)
   const [showTerms, setShowTerms] = useState(false)
@@ -114,9 +115,9 @@ export function LandingPage({ onEnterApp }: LandingPageProps) {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={onEnterApp}
-              className="px-8 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+              className="px-8 py-3 bg-slate-900 text-white rounded-xl font-medium hover:bg-slate-800 transition-colors flex items-center justify-center gap-2"
             >
-              {t('landing.startFree')} <ArrowRight size={18} />
+              {t('landing.freeTrial')} <ArrowRight size={18} />
             </button>
             <a
               href="#pricing"
@@ -186,7 +187,7 @@ export function LandingPage({ onEnterApp }: LandingPageProps) {
                 onClick={onEnterApp}
                 className="w-full py-3 border border-slate-300 text-slate-700 rounded-xl font-medium hover:bg-slate-50 transition-colors"
               >
-                {t('landing.getStarted')}
+                {t('landing.freeTrial')}
               </button>
             </div>
 
@@ -218,15 +219,13 @@ export function LandingPage({ onEnterApp }: LandingPageProps) {
                   {t('landing.premiumFeature5')}
                 </li>
               </ul>
-              <a
-                href="https://www.paypal.com/ncp/payment/7CFGKT9FM3ER2"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                onClick={onBuyNow}
                 className="w-full py-3 bg-white text-blue-600 rounded-xl font-medium hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"
               >
                 <CreditCard size={18} />
                 {t('landing.buyNow')}
-              </a>
+              </button>
               <p className="text-xs text-blue-200 text-center mt-3">
                 {t('landing.orUseKey')}
               </p>
@@ -285,11 +284,11 @@ export function LandingPage({ onEnterApp }: LandingPageProps) {
               <div>
                 <h4 className="font-semibold text-white mb-3">{t('landing.contactUs')}</h4>
                 <a
-                  href="mailto:support@taxflow.com"
+                  href="mailto:support@tax.flowingpulse.com"
                   className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
                 >
                   <Mail size={16} />
-                  support@taxflow.com
+                  support@tax.flowingpulse.com
                 </a>
               </div>
               <div>

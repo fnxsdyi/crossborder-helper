@@ -5,7 +5,11 @@ import { useI18n } from '@/hooks/useI18n'
 import { useAuthStore } from '@/stores/authStore'
 import { usePremium } from '@/components/PremiumGate'
 
-export function SettingsPage() {
+interface SettingsPageProps {
+  onUpgrade?: () => void
+}
+
+export function SettingsPage({ onUpgrade }: SettingsPageProps) {
   const { t } = useI18n()
   const { user, signOut } = useAuthStore()
   const isPremium = usePremium()
@@ -20,7 +24,6 @@ export function SettingsPage() {
   const [defaultTemplate, setDefaultTemplate] = useState<'us' | 'eu' | 'uk'>('us')
   const [taxRate, setTaxRate] = useState(0)
   const [invoicePrefix, setInvoicePrefix] = useState('INV')
-  const [licenseKey, setLicenseKey] = useState('')
 
   useEffect(() => {
     loadSettings()
@@ -65,24 +68,6 @@ export function SettingsPage() {
       await db.settings.add(settingsData as SettingsType)
     }
     loadSettings()
-  }
-
-  async function handleActivateLicense() {
-    if (!licenseKey.trim()) return
-    if (licenseKey.startsWith('CB-')) {
-      if (settings?.id) {
-        await db.settings.update(settings.id, { isPremium: true, licenseKey })
-      } else {
-        await db.settings.add({
-          ...settings,
-          isPremium: true,
-          licenseKey,
-        } as SettingsType)
-      }
-      loadSettings()
-    } else {
-      alert(t('common.error'))
-    }
   }
 
   return (
@@ -136,20 +121,13 @@ export function SettingsPage() {
             </p>
           </div>
         </div>
-        {!settings?.isPremium && (
-          <div className="mt-3 flex gap-2">
-            <input
-              type="text"
-              value={licenseKey}
-              onChange={(e) => setLicenseKey(e.target.value)}
-              placeholder={t('settings.licensePlaceholder')}
-              className="flex-1 px-3 py-2 border border-amber-200 rounded-lg text-sm"
-            />
+        {!isPremium && (
+          <div className="mt-3">
             <button
-              onClick={handleActivateLicense}
-              className="px-4 py-2 bg-amber-600 text-white rounded-lg text-sm hover:bg-amber-700"
+              onClick={onUpgrade}
+              className="w-full px-4 py-2 bg-amber-600 text-white rounded-lg text-sm hover:bg-amber-700"
             >
-              {t('settings.activate')}
+              {t('settings.upgradeToPremium')}
             </button>
           </div>
         )}

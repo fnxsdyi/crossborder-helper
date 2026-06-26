@@ -14,9 +14,6 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
   const { user } = useAuthStore()
   const [isPremium, setIsPremium] = useState<boolean | null>(null)
   const [showUpgrade, setShowUpgrade] = useState(false)
-  const [licenseKey, setLicenseKey] = useState('')
-  const [activating, setActivating] = useState(false)
-  const [activatingError, setActivatingError] = useState('')
 
   useEffect(() => {
     if (user) {
@@ -40,39 +37,6 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
       .single()
 
     setIsPremium(!!data)
-  }
-
-  async function handleActivate() {
-    if (!licenseKey.trim() || !user) return
-    setActivating(true)
-    setActivatingError('')
-
-    const { data, error } = await supabase
-      .from('licenses')
-      .select('id')
-      .eq('key', licenseKey.trim())
-      .eq('active', true)
-      .single()
-
-    if (error || !data) {
-      setActivatingError(t('common.error'))
-      setActivating(false)
-      return
-    }
-
-    const { error: updateError } = await supabase
-      .from('licenses')
-      .update({ user_id: user.id })
-      .eq('id', data.id)
-      .is('user_id', null)
-
-    if (updateError) {
-      setActivatingError('License key already used')
-    } else {
-      setIsPremium(true)
-      setShowUpgrade(false)
-    }
-    setActivating(false)
   }
 
   if (isPremium === null) {
@@ -147,36 +111,6 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
                   {t('premium.payPal')}
                   <ExternalLink size={14} />
                 </a>
-
-                <div className="relative my-4">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-slate-200" />
-                  </div>
-                  <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-white text-slate-500">{t('premium.orEnterKey')}</span>
-                  </div>
-                </div>
-
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={licenseKey}
-                    onChange={(e) => setLicenseKey(e.target.value)}
-                    placeholder="CB-XXXX-XXXX"
-                    className="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm"
-                  />
-                  <button
-                    onClick={handleActivate}
-                    disabled={activating || !licenseKey.trim()}
-                    className="px-4 py-2 bg-slate-900 text-white rounded-lg text-sm hover:bg-slate-800 disabled:opacity-50"
-                  >
-                    {activating ? t('premium.activating') : t('settings.activate')}
-                  </button>
-                </div>
-
-                {activatingError && (
-                  <p className="text-sm text-red-600">{activatingError}</p>
-                )}
               </div>
 
               <p className="mt-4 text-xs text-slate-400 text-center">

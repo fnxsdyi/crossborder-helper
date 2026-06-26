@@ -16,12 +16,18 @@ type TranslationKeys = {
   'nav.home': string
   'nav.privacyTooltip': string
   'nav.signOut': string
+  'nav.signIn': string
   'nav.dashboard': string
   'nav.invoices': string
   'nav.clients': string
   'nav.currency': string
   'nav.tax': string
   'nav.settings': string
+
+  // Guest
+  'guest.bannerTitle': string
+  'guest.bannerDesc': string
+  'guest.upgradeNow': string
 
   // Dashboard
   'dashboard.title': string
@@ -184,8 +190,7 @@ type TranslationKeys = {
   'settings.freePlan': string
   'settings.premiumDesc': string
   'settings.freeDesc': string
-  'settings.activate': string
-  'settings.licensePlaceholder': string
+  'settings.upgradeToPremium': string
   'settings.businessInfo': string
   'settings.businessName': string
   'settings.email': string
@@ -231,8 +236,6 @@ type TranslationKeys = {
   'premium.lifetimeAccess': string
   'premium.payPal': string
   'premium.lemonSqueezy': string
-  'premium.orEnterKey': string
-  'premium.activating': string
   'premium.oneTime': string
 
   // Auth
@@ -242,6 +245,7 @@ type TranslationKeys = {
   'auth.password': string
   'auth.noAccount': string
   'auth.hasAccount': string
+  'auth.backToHome': string
 
   // Landing
   'landing.openApp': string
@@ -249,6 +253,7 @@ type TranslationKeys = {
   'landing.heroTitle': string
   'landing.heroDesc': string
   'landing.startFree': string
+  'landing.freeTrial': string
   'landing.seePricing': string
   'landing.featuresTitle': string
   'landing.feature1Title': string
@@ -308,12 +313,18 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.home': 'Home',
     'nav.privacyTooltip': 'Encrypted & 100% Private.',
     'nav.signOut': 'Sign Out',
+    'nav.signIn': 'Sign In',
     'nav.dashboard': 'Dashboard',
     'nav.invoices': 'Invoices',
     'nav.clients': 'Clients',
     'nav.currency': 'Currency Dashboard',
     'nav.tax': 'W-8BEN Wizard',
     'nav.settings': 'Settings',
+
+    // Guest
+    'guest.bannerTitle': 'You\'re in Guest Mode',
+    'guest.bannerDesc': 'Upgrade to unlock all features and save your data to the cloud.',
+    'guest.upgradeNow': 'Upgrade Now',
 
     // Dashboard
     'dashboard.title': 'Dashboard',
@@ -476,8 +487,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'settings.freePlan': 'Free Plan',
     'settings.premiumDesc': 'You have access to all features including PDF export',
     'settings.freeDesc': 'Upgrade to premium for watermark-free PDF export',
-    'settings.activate': 'Activate',
-    'settings.licensePlaceholder': 'Enter license key (CB-XXXX)',
+    'settings.upgradeToPremium': 'Upgrade to Premium',
     'settings.businessInfo': 'Business Information',
     'settings.businessName': 'Business Name',
     'settings.email': 'Email',
@@ -523,9 +533,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'premium.lifetimeAccess': 'Lifetime access & updates',
     'premium.payPal': 'Pay $19 with PayPal',
     'premium.lemonSqueezy': 'Pay $19 with Lemon Squeezy',
-    'premium.orEnterKey': 'or enter license key',
-    'premium.activating': 'Activating...',
-    'premium.oneTime': 'One-time payment. No subscriptions. No data leaves your browser.',
+    'premium.oneTime': 'One-time payment. No subscriptions. Your data is secure in the cloud.',
 
     // Auth
     'auth.signIn': 'Sign In',
@@ -534,6 +542,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.password': 'Password',
     'auth.noAccount': "Don't have an account? ",
     'auth.hasAccount': 'Already have an account? ',
+    'auth.backToHome': 'Back to Home',
 
     // Landing Page
     'landing.openApp': 'Open App',
@@ -541,6 +550,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.heroTitle': 'Invoice & Tax Made Simple for Global Workers',
     'landing.heroDesc': 'Create professional invoices, handle W-8BEN tax forms, and track multi-currency payments. Secure cloud sync keeps your data encrypted and accessible anywhere.',
     'landing.startFree': 'Start Free',
+    'landing.freeTrial': 'Free Trial',
     'landing.seePricing': 'See Pricing',
     'landing.featuresTitle': 'Everything You Need',
     'landing.feature1Title': 'Smart Invoice Generator',
@@ -599,12 +609,18 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.home': '首页',
     'nav.privacyTooltip': '您的数据已加密同步，安全私密。',
     'nav.signOut': '退出登录',
+    'nav.signIn': '登录',
     'nav.dashboard': '仪表盘',
     'nav.invoices': '发票',
     'nav.clients': '客户',
     'nav.currency': '多币种看板',
     'nav.tax': 'W-8BEN 税表向导',
     'nav.settings': '设置',
+
+    // Guest
+    'guest.bannerTitle': '您正在使用游客模式',
+    'guest.bannerDesc': '升级以解锁所有功能并将数据同步到云端。',
+    'guest.upgradeNow': '立即升级',
 
     // Dashboard
     'dashboard.title': '仪表盘',
@@ -767,8 +783,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'settings.freePlan': '免费版',
     'settings.premiumDesc': '您可以使用所有功能，包括 PDF 导出',
     'settings.freeDesc': '升级到高级版获取无水印 PDF 导出',
-    'settings.activate': '激活',
-    'settings.licensePlaceholder': '输入许可证密钥 (CB-XXXX)',
+    'settings.upgradeToPremium': '升级到高级版',
     'settings.businessInfo': '业务信息',
     'settings.businessName': '公司名称',
     'settings.email': '邮箱',
@@ -814,9 +829,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'premium.lifetimeAccess': '终身访问和更新',
     'premium.payPal': '用 PayPal 支付 $19',
     'premium.lemonSqueezy': '用 Lemon Squeezy 支付 $19',
-    'premium.orEnterKey': '或输入许可证密钥',
-    'premium.activating': '激活中...',
-    'premium.oneTime': '一次性付款。无订阅。数据不会离开您的浏览器。',
+    'premium.oneTime': '一次性付款。无订阅。您的数据安全存储在云端。',
 
     // Auth
     'auth.signIn': '登录',
@@ -825,6 +838,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.password': '密码',
     'auth.noAccount': '还没有账号？',
     'auth.hasAccount': '已有账号？',
+    'auth.backToHome': '返回首页',
 
     // Landing Page
     'landing.openApp': '进入应用',
@@ -832,6 +846,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.heroTitle': '为全球工作者简化发票与税务',
     'landing.heroDesc': '创建专业发票、处理 W-8BEN 税表、追踪多币种付款。安全云同步，数据加密存储，随时随地访问。',
     'landing.startFree': '免费开始',
+    'landing.freeTrial': '免费试用',
     'landing.seePricing': '查看价格',
     'landing.featuresTitle': '您需要的一切',
     'landing.feature1Title': '智能发票生成器',
@@ -890,12 +905,18 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.home': 'ホーム',
     'nav.privacyTooltip': '暗号化済み・100%プライベート。',
     'nav.signOut': 'ログアウト',
+    'nav.signIn': 'ログイン',
     'nav.dashboard': 'ダッシュボード',
     'nav.invoices': '請求書',
     'nav.clients': 'クライアント',
     'nav.currency': '通貨ダッシュボード',
     'nav.tax': 'W-8BEN 税務ウィザード',
     'nav.settings': '設定',
+
+    // Guest
+    'guest.bannerTitle': 'ゲストモードです',
+    'guest.bannerDesc': 'アップグレードして全機能を解除し、クラウドにデータを保存しましょう。',
+    'guest.upgradeNow': '今すぐアップグレード',
 
     // Dashboard
     'dashboard.title': 'ダッシュボード',
@@ -1058,8 +1079,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'settings.freePlan': '無料プラン',
     'settings.premiumDesc': 'PDF エクスポートを含むすべての機能にアクセスできます',
     'settings.freeDesc': 'ウォーターマークなし PDF エクスポートにアップグレード',
-    'settings.activate': '有効化',
-    'settings.licensePlaceholder': 'ライセンスキーを入力 (CB-XXXX)',
+    'settings.upgradeToPremium': 'プレミアムにアップグレード',
     'settings.businessInfo': 'ビジネス情報',
     'settings.businessName': '会社名',
     'settings.email': 'メール',
@@ -1105,9 +1125,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'premium.lifetimeAccess': '终身アクセスと更新',
     'premium.payPal': 'PayPal で $19 支払い',
     'premium.lemonSqueezy': 'Lemon Squeezy で $19 支払い',
-    'premium.orEnterKey': 'またはライセンスキーを入力',
-    'premium.activating': '有効化中...',
-    'premium.oneTime': '一回の支払い。サブスクリプションなし。データはブラウザから外に出ません。',
+    'premium.oneTime': '一回の支払い。サブスクリプションなし。データはクラウドに安全に保存されます。',
 
     // Auth
     'auth.signIn': 'ログイン',
@@ -1116,6 +1134,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.password': 'パスワード',
     'auth.noAccount': 'アカウントをお持ちでないですか？',
     'auth.hasAccount': 'アカウントをお持ちですか？',
+    'auth.backToHome': 'ホームに戻る',
 
     // Landing Page
     'landing.openApp': 'アプリを開く',
@@ -1123,6 +1142,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.heroTitle': 'グロールルワーカーのための請求書と税務をシンプルに',
     'landing.heroDesc': 'プロフェッショナルな請求書を作成、W-8BEN税務書類を処理、多通貨支払いを追跡。安全なクラウド同期でデータを暗号化し、どこからでもアクセス。',
     'landing.startFree': '無料で始める',
+    'landing.freeTrial': '無料 trial',
     'landing.seePricing': '料金を見る',
     'landing.featuresTitle': '必要なすべて',
     'landing.feature1Title': 'スマート請求書生成',
@@ -1180,12 +1200,19 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.home': '홈',
     'nav.privacyTooltip': '암호화됨 & 100% 비공개.',
     'nav.signOut': '로그아웃',
+    'nav.signIn': '로그인',
     'nav.dashboard': '대시보드',
     'nav.invoices': '송장',
     'nav.clients': '고객',
     'nav.currency': '통화 대시보드',
     'nav.tax': 'W-8BEN 세금 마법사',
     'nav.settings': '설정',
+
+    // Guest
+    'guest.bannerTitle': '게스트 모드입니다',
+    'guest.bannerDesc': '업그레이드하여 모든 기능을 사용하고 클라우드에 데이터를 저장하세요.',
+    'guest.upgradeNow': '지금 업그레이드',
+
     'dashboard.title': '대시보드',
     'dashboard.subtitle': '돌아오셨군요. 재무 개요입니다.',
     'dashboard.totalInvoices': '총 송장',
@@ -1334,8 +1361,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'settings.freePlan': '무료 플랜',
     'settings.premiumDesc': 'PDF 내보내기를 포함한 모든 기능에 액세스할 수 있습니다',
     'settings.freeDesc': '워터마크 없는 PDF 내보내기를 위해 프리미엄으로 업그레이드',
-    'settings.activate': '활성화',
-    'settings.licensePlaceholder': '라이선스 키 입력 (CB-XXXX)',
+    'settings.upgradeToPremium': '프리미엄으로 업그레이드',
     'settings.businessInfo': '비즈니스 정보',
     'settings.businessName': '회사 이름',
     'settings.email': '이메일',
@@ -1375,9 +1401,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'premium.lifetimeAccess': '평생 액세스 및 업데이트',
     'premium.payPal': 'PayPal로 $19 결제',
     'premium.lemonSqueezy': 'Lemon Squeezy로 $19 결제',
-    'premium.orEnterKey': '또는 라이선스 키 입력',
-    'premium.activating': '활성화 중...',
-    'premium.oneTime': '일회성 결제. 구독 없음. 데이터가 브라우저를 떠나지 않습니다.',
+    'premium.oneTime': '일회성 결제. 구독 없음. 데이터가 클라우드에 안전하게 저장됩니다.',
 
     // Auth
     'auth.signIn': '로그인',
@@ -1386,6 +1410,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.password': '비밀번호',
     'auth.noAccount': '계정이 없으신가요? ',
     'auth.hasAccount': '이미 계정이 있으신가요? ',
+    'auth.backToHome': '홈으로 돌아가기',
 
     // Landing Page
     'landing.openApp': '앱 열기',
@@ -1393,6 +1418,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.heroTitle': '글로벌 워커를 위한 송장 및 세금을 간소화',
     'landing.heroDesc': '전문 송장을 만들고, W-8BEN 세금 서류를 처리하고, 다중 통화 지불을 추적합니다. 안전한 클라우드 동기화로 데이터를 암호화하고 어디서든 접근하세요.',
     'landing.startFree': '무료로 시작',
+    'landing.freeTrial': '무료 체험',
     'landing.seePricing': '가격 보기',
     'landing.featuresTitle': '필요한 모든 것',
     'landing.feature1Title': '스마트 송장 생성기',
@@ -1450,12 +1476,19 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.home': 'Startseite',
     'nav.privacyTooltip': 'Verschlüsselt & 100% privat.',
     'nav.signOut': 'Abmelden',
+    'nav.signIn': 'Anmelden',
     'nav.dashboard': 'Dashboard',
     'nav.invoices': 'Rechnungen',
     'nav.clients': 'Kunden',
     'nav.currency': 'Währungs-Dashboard',
     'nav.tax': 'W-8BEN Steuer-Assistent',
     'nav.settings': 'Einstellungen',
+
+    // Guest
+    'guest.bannerTitle': 'Sie sind im Gastmodus',
+    'guest.bannerDesc': 'Upgraden Sie, um alle Funktionen freizuschalten und Ihre Daten in der Cloud zu speichern.',
+    'guest.upgradeNow': 'Jetzt upgraden',
+
     'dashboard.title': 'Dashboard',
     'dashboard.subtitle': 'Willkommen zurück. Hier ist Ihre Finanzübersicht.',
     'dashboard.totalInvoices': 'Rechnungen gesamt',
@@ -1604,8 +1637,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'settings.freePlan': 'Kostenloser Plan',
     'settings.premiumDesc': 'Sie haben Zugriff auf alle Funktionen inkl. PDF-Export',
     'settings.freeDesc': 'Upgrade auf Premium für Wasserzeichen-freien PDF-Export',
-    'settings.activate': 'Aktivieren',
-    'settings.licensePlaceholder': 'Lizenzschlüssel eingeben (CB-XXXX)',
+    'settings.upgradeToPremium': 'Auf Premium upgraden',
     'settings.businessInfo': 'Geschäftsinformationen',
     'settings.businessName': 'Firmenname',
     'settings.email': 'E-Mail',
@@ -1645,9 +1677,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'premium.lifetimeAccess': 'Lebenslanger Zugang & Updates',
     'premium.payPal': 'Mit PayPal $19 bezahlen',
     'premium.lemonSqueezy': 'Mit Lemon Squeezy $19 bezahlen',
-    'premium.orEnterKey': 'oder Lizenzschlüssel eingeben',
-    'premium.activating': 'Aktivierung...',
-    'premium.oneTime': 'Einmalige Zahlung. Keine Abonnements. Daten verlassen Ihren Browser nicht.',
+    'premium.oneTime': 'Einmalige Zahlung. Keine Abonnements. Ihre Daten sind sicher in der Cloud.',
 
     // Auth
     'auth.signIn': 'Anmelden',
@@ -1656,6 +1686,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.password': 'Passwort',
     'auth.noAccount': 'Noch kein Konto? ',
     'auth.hasAccount': 'Bereits ein Konto? ',
+    'auth.backToHome': 'Zurück zur Startseite',
 
     // Landing Page
     'landing.openApp': 'App öffnen',
@@ -1663,6 +1694,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.heroTitle': 'Rechnungen & Steuern einfach gemacht für globale Arbeiter',
     'landing.heroDesc': 'Erstellen Sie professionelle Rechnungen, bearbeiten Sie W-8BEN-Steuerformulare und verfolgen Sie mehrwährungszahlungen. Sichere Cloud-Synchronisation mit verschlüsseltem Zugriff überall.',
     'landing.startFree': 'Kostenlos starten',
+    'landing.freeTrial': 'Kostenlos testen',
     'landing.seePricing': 'Preise ansehen',
     'landing.featuresTitle': 'Alles was Sie brauchen',
     'landing.feature1Title': 'Intelligenter Rechnungsgenerator',
@@ -1720,12 +1752,19 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.home': 'Accueil',
     'nav.privacyTooltip': 'Chiffré & 100% privé.',
     'nav.signOut': 'Déconnexion',
+    'nav.signIn': 'Se connecter',
     'nav.dashboard': 'Tableau de bord',
     'nav.invoices': 'Factures',
     'nav.clients': 'Clients',
     'nav.currency': 'Tableau de bord devises',
     'nav.tax': 'Assistant fiscal W-8BEN',
     'nav.settings': 'Paramètres',
+
+    // Guest
+    'guest.bannerTitle': 'Vous êtes en mode invité',
+    'guest.bannerDesc': 'Passez au premium pour débloquer toutes les fonctionnalités et sauvegarder vos données dans le cloud.',
+    'guest.upgradeNow': 'Passer au premium',
+
     'dashboard.title': 'Tableau de bord',
     'dashboard.subtitle': 'Bienvenue. Voici votre aperçu financier.',
     'dashboard.totalInvoices': 'Total factures',
@@ -1874,8 +1913,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'settings.freePlan': 'Plan gratuit',
     'settings.premiumDesc': "Vous avez accès à toutes les fonctionnalités y compris l'export PDF",
     'settings.freeDesc': "Passez au premium pour l'export PDF sans filigrane",
-    'settings.activate': 'Activer',
-    'settings.licensePlaceholder': 'Entrez la clé de licence (CB-XXXX)',
+    'settings.upgradeToPremium': 'Passer au Premium',
     'settings.businessInfo': 'Informations professionnelles',
     'settings.businessName': "Nom de l'entreprise",
     'settings.email': 'E-mail',
@@ -1915,9 +1953,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'premium.lifetimeAccess': 'Accès à vie et mises à jour',
     'premium.payPal': 'Payer 19$ avec PayPal',
     'premium.lemonSqueezy': 'Payer 19$ avec Lemon Squeezy',
-    'premium.orEnterKey': 'ou entrer la clé de licence',
-    'premium.activating': 'Activation...',
-    'premium.oneTime': 'Paiement unique. Pas d abonnement. Les données ne quittent pas votre navigateur.',
+    'premium.oneTime': 'Paiement unique. Pas d\'abonnement. Vos données sont sécurisées dans le cloud.',
 
     // Auth
     'auth.signIn': 'Se connecter',
@@ -1926,6 +1962,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.password': 'Mot de passe',
     'auth.noAccount': "Pas encore de compte ? ",
     'auth.hasAccount': 'Déjà un compte ? ',
+    'auth.backToHome': "Retour à l'accueil",
 
     // Landing Page
     'landing.openApp': 'Ouvrir l\'app',
@@ -1933,6 +1970,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.heroTitle': 'Facturation et fiscalité simplifiées pour les travailleurs mondiaux',
     'landing.heroDesc': 'Créez des factures professionnelles, gérez les formulaires fiscaux W-8BEN et suivez les paiements multi-devises. Synchronisation cloud sécurisée avec données chiffrées et accessibles partout.',
     'landing.startFree': 'Commencer gratuitement',
+    'landing.freeTrial': 'Essai gratuit',
     'landing.seePricing': 'Voir les prix',
     'landing.featuresTitle': 'Tout ce dont vous avez besoin',
     'landing.feature1Title': 'Générateur de factures intelligent',
@@ -1990,12 +2028,19 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.home': 'Inicio',
     'nav.privacyTooltip': 'Cifrado & 100% privado.',
     'nav.signOut': 'Cerrar sesión',
+    'nav.signIn': 'Iniciar sesión',
     'nav.dashboard': 'Panel',
     'nav.invoices': 'Facturas',
     'nav.clients': 'Clientes',
     'nav.currency': 'Panel de divisas',
     'nav.tax': 'Asistente fiscal W-8BEN',
     'nav.settings': 'Configuración',
+
+    // Guest
+    'guest.bannerTitle': 'Estás en modo invitado',
+    'guest.bannerDesc': 'Actualiza para desbloquear todas las funciones y guardar tus datos en la nube.',
+    'guest.upgradeNow': 'Actualizar ahora',
+
     'dashboard.title': 'Panel',
     'dashboard.subtitle': 'Bienvenido. Aquí está su resumen financiero.',
     'dashboard.totalInvoices': 'Total facturas',
@@ -2144,8 +2189,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'settings.freePlan': 'Plan gratuito',
     'settings.premiumDesc': 'Tiene acceso a todas las funciones incluyendo exportación PDF',
     'settings.freeDesc': 'Actualice a premium para exportación PDF sin marca de agua',
-    'settings.activate': 'Activar',
-    'settings.licensePlaceholder': 'Ingrese clave de licencia (CB-XXXX)',
+    'settings.upgradeToPremium': 'Actualizar a Premium',
     'settings.businessInfo': 'Información del negocio',
     'settings.businessName': 'Nombre del negocio',
     'settings.email': 'Correo',
@@ -2185,9 +2229,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'premium.lifetimeAccess': 'Acceso de por vida y actualizaciones',
     'premium.payPal': 'Pagar $19 con PayPal',
     'premium.lemonSqueezy': 'Pagar $19 con Lemon Squeezy',
-    'premium.orEnterKey': 'o ingrese clave de licencia',
-    'premium.activating': 'Activando...',
-    'premium.oneTime': 'Pago único. Sin suscripciones. Los datos no salen de su navegador.',
+    'premium.oneTime': 'Pago único. Sin suscripciones. Tus datos están seguros en la nube.',
 
     // Auth
     'auth.signIn': 'Iniciar sesión',
@@ -2196,6 +2238,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.password': 'Contraseña',
     'auth.noAccount': '¿No tiene cuenta? ',
     'auth.hasAccount': '¿Ya tiene cuenta? ',
+    'auth.backToHome': 'Volver al inicio',
 
     // Landing Page
     'landing.openApp': 'Abrir app',
@@ -2203,6 +2246,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.heroTitle': 'Facturación e impuestos simplificados para trabajadores globales',
     'landing.heroDesc': 'Cree facturas profesionales, maneje formularios fiscales W-8BEN y rastree pagos multidivisa. Sincronización segura en la nube con datos cifrados y accesibles desde cualquier lugar.',
     'landing.startFree': 'Empezar gratis',
+    'landing.freeTrial': 'Prueba gratis',
     'landing.seePricing': 'Ver precios',
     'landing.featuresTitle': 'Todo lo que necesita',
     'landing.feature1Title': 'Generador de facturas inteligente',
@@ -2260,12 +2304,19 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.home': 'Início',
     'nav.privacyTooltip': 'Criptografado & 100% privado.',
     'nav.signOut': 'Sair',
+    'nav.signIn': 'Entrar',
     'nav.dashboard': 'Painel',
     'nav.invoices': 'Faturas',
     'nav.clients': 'Clientes',
     'nav.currency': 'Painel de moedas',
     'nav.tax': 'Assistente fiscal W-8BEN',
     'nav.settings': 'Configurações',
+
+    // Guest
+    'guest.bannerTitle': 'Você está no modo convidado',
+    'guest.bannerDesc': 'Atualize para desbloquear todas as funcionalidades e salvar seus dados na nuvem.',
+    'guest.upgradeNow': 'Atualizar agora',
+
     'dashboard.title': 'Painel',
     'dashboard.subtitle': 'Bem-vindo. Aqui está seu resumo financeiro.',
     'dashboard.totalInvoices': 'Total faturas',
@@ -2414,8 +2465,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'settings.freePlan': 'Plano gratuito',
     'settings.premiumDesc': 'Você tem acesso a todas as funções incluindo exportação PDF',
     'settings.freeDesc': 'Atualize para premium para exportação PDF sem marca d\'água',
-    'settings.activate': 'Ativar',
-    'settings.licensePlaceholder': 'Digite a chave de licença (CB-XXXX)',
+    'settings.upgradeToPremium': 'Atualizar para Premium',
     'settings.businessInfo': 'Informações do negócio',
     'settings.businessName': 'Nome do negócio',
     'settings.email': 'E-mail',
@@ -2455,9 +2505,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'premium.lifetimeAccess': 'Acesso vitalício e atualizações',
     'premium.payPal': 'Pagar $19 com PayPal',
     'premium.lemonSqueezy': 'Pagar $19 com Lemon Squeezy',
-    'premium.orEnterKey': 'ou insira chave de licença',
-    'premium.activating': 'Ativando...',
-    'premium.oneTime': 'Pagamento único. Sem assinaturas. Os dados não saem do seu navegador.',
+    'premium.oneTime': 'Pagamento único. Sem assinaturas. Seus dados estão seguros na nuvem.',
 
     // Auth
     'auth.signIn': 'Entrar',
@@ -2466,6 +2514,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.password': 'Senha',
     'auth.noAccount': 'Não tem conta? ',
     'auth.hasAccount': 'Já tem conta? ',
+    'auth.backToHome': 'Voltar ao início',
 
     // Landing Page
     'landing.openApp': 'Abrir app',
@@ -2473,6 +2522,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.heroTitle': 'Faturação e impostos simplificados para trabalhadores globais',
     'landing.heroDesc': 'Crie faturas profissionais, gerencie formulários fiscais W-8BEN e rastrece pagamentos multidivisa. Sincronização segura na nuvem com dados criptografados e acessíveis de qualquer lugar.',
     'landing.startFree': 'Começar grátis',
+    'landing.freeTrial': 'Teste grátis',
     'landing.seePricing': 'Ver preços',
     'landing.featuresTitle': 'Tudo que você precisa',
     'landing.feature1Title': 'Gerador de faturas inteligente',

@@ -123,6 +123,18 @@ export function AuthPage({ onAuth }: AuthPageProps) {
               {isLogin ? t('auth.signUp') : t('auth.signIn')}
             </button>
           </div>
+
+          <div className="mt-4 text-center">
+            <button
+              onClick={() => {
+                localStorage.removeItem('app_entered')
+                window.location.reload()
+              }}
+              className="text-sm text-slate-400 hover:text-slate-600"
+            >
+              ← {t('auth.backToHome')}
+            </button>
+          </div>
         </div>
       </div>
     </div>
