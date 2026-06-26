@@ -248,6 +248,7 @@ type TranslationKeys = {
   'auth.backToHome': string
   'auth.paymentSuccess': string
   'auth.createAccount': string
+  'auth.becomeMember': string
 
   // Landing
   'landing.openApp': string
@@ -549,6 +550,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.backToHome': 'Back to Home',
     'auth.paymentSuccess': 'Payment successful!',
     'auth.createAccount': 'Create your account to start using TaxFlow.',
+    'auth.becomeMember': 'Become a Member — $19',
 
     // Landing Page
     'landing.openApp': 'Open App',
@@ -849,6 +851,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.backToHome': '返回首页',
     'auth.paymentSuccess': '支付成功！',
     'auth.createAccount': '创建您的账户开始使用 TaxFlow。',
+    'auth.becomeMember': '成为会员 — $19',
 
     // Landing Page
     'landing.openApp': '进入应用',
@@ -1149,6 +1152,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.backToHome': 'ホームに戻る',
     'auth.paymentSuccess': 'お支払い成功！',
     'auth.createAccount': 'アカウントを作成してTaxFlowを使い始めましょう。',
+    'auth.becomeMember': '会員になる — $19',
 
     // Landing Page
     'landing.openApp': 'アプリを開く',
@@ -1429,6 +1433,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.backToHome': '홈으로 돌아가기',
     'auth.paymentSuccess': '결제 성공!',
     'auth.createAccount': '계정을 만들어 TaxFlow을 사용하세요.',
+    'auth.becomeMember': '회원 되기 — $19',
 
     // Landing Page
     'landing.openApp': '앱 열기',
@@ -1709,6 +1714,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.backToHome': 'Zurück zur Startseite',
     'auth.paymentSuccess': 'Zahlung erfolgreich!',
     'auth.createAccount': 'Erstellen Sie Ihr Konto, um TaxFlow zu nutzen.',
+    'auth.becomeMember': 'Mitglied werden — $19',
 
     // Landing Page
     'landing.openApp': 'App öffnen',
@@ -1989,6 +1995,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.backToHome': "Retour à l'accueil",
     'auth.paymentSuccess': 'Paiement réussi !',
     'auth.createAccount': 'Créez votre compte pour commencer à utiliser TaxFlow.',
+    'auth.becomeMember': 'Devenir membre — 19$',
 
     // Landing Page
     'landing.openApp': 'Ouvrir l\'app',
@@ -2269,6 +2276,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.backToHome': 'Volver al inicio',
     'auth.paymentSuccess': '¡Pago exitoso!',
     'auth.createAccount': 'Crea tu cuenta para empezar a usar TaxFlow.',
+    'auth.becomeMember': 'Hazte miembro — $19',
 
     // Landing Page
     'landing.openApp': 'Abrir app',
@@ -2549,6 +2557,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.backToHome': 'Voltar ao início',
     'auth.paymentSuccess': 'Pagamento bem-sucedido!',
     'auth.createAccount': 'Crie sua conta para começar a usar o TaxFlow.',
+    'auth.becomeMember': 'Tornar-se membro — $19',
 
     // Landing Page
     'landing.openApp': 'Abrir app',

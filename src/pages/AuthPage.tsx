@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { useI18n } from '@/hooks/useI18n'
-import { Mail, Lock, UserPlus, LogIn, Globe } from 'lucide-react'
+import { Mail, Lock, LogIn, Globe, CreditCard, UserPlus } from 'lucide-react'
 
 interface AuthPageProps {
   onAuth: () => void
@@ -10,21 +10,18 @@ interface AuthPageProps {
 
 export function AuthPage({ onAuth, showWelcome }: AuthPageProps) {
   const { t } = useI18n()
-  const [isLogin, setIsLogin] = useState(true)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const { signIn, signUp } = useAuthStore()
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
     setError('')
     setLoading(true)
 
-    const result = isLogin
-      ? await signIn(email, password)
-      : await signUp(email, password)
+    const result = await signIn(email, password)
 
     setLoading(false)
 
@@ -33,6 +30,32 @@ export function AuthPage({ onAuth, showWelcome }: AuthPageProps) {
     } else {
       onAuth()
     }
+  }
+
+  async function handleRegister(e: React.FormEvent) {
+    e.preventDefault()
+    setError('')
+    setLoading(true)
+
+    const result = await signUp(email, password)
+
+    setLoading(false)
+
+    if (result.error) {
+      setError(result.error)
+    } else {
+      onAuth()
+    }
+  }
+
+  function handleBecomeMember() {
+    const token = Date.now().toString(36) + Math.random().toString(36).slice(2)
+    localStorage.setItem('paypal_pending_token', JSON.stringify({
+      token,
+      timestamp: Date.now()
+    }))
+    const returnUrl = encodeURIComponent(window.location.origin + `/?token=${token}`)
+    window.location.href = `https://www.paypal.com/ncp/payment/7CFGKT9FM3ER2?return=${returnUrl}`
   }
 
   return (
@@ -55,10 +78,10 @@ export function AuthPage({ onAuth, showWelcome }: AuthPageProps) {
 
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
           <h2 className="text-xl font-semibold text-center mb-6">
-            {isLogin ? t('auth.signIn') : t('auth.signUp')}
+            {showWelcome ? t('auth.createAccount') : t('auth.signIn')}
           </h2>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={showWelcome ? handleRegister : handleLogin} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">{t('auth.email')}</label>
               <div className="relative">
@@ -103,34 +126,31 @@ export function AuthPage({ onAuth, showWelcome }: AuthPageProps) {
             >
               {loading ? (
                 <span className="animate-spin">⏳</span>
-              ) : isLogin ? (
-                <>
-                  <LogIn size={18} />
-                  {t('auth.signIn')}
-                </>
-              ) : (
+              ) : showWelcome ? (
                 <>
                   <UserPlus size={18} />
                   {t('auth.signUp')}
+                </>
+              ) : (
+                <>
+                  <LogIn size={18} />
+                  {t('auth.signIn')}
                 </>
               )}
             </button>
           </form>
 
-          <div className="mt-6 text-center text-sm">
-            <span className="text-slate-500">
-              {isLogin ? t('auth.noAccount') : t('auth.hasAccount')}
-            </span>
-            <button
-              onClick={() => {
-                setIsLogin(!isLogin)
-                setError('')
-              }}
-              className="text-blue-600 hover:text-blue-700 font-medium"
-            >
-              {isLogin ? t('auth.signUp') : t('auth.signIn')}
-            </button>
-          </div>
+          {!showWelcome && (
+            <div className="mt-6 text-center">
+              <button
+                onClick={handleBecomeMember}
+                className="w-full flex items-center justify-center gap-2 py-2.5 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors"
+              >
+                <CreditCard size={18} />
+                {t('auth.becomeMember')}
+              </button>
+            </div>
+          )}
 
           <div className="mt-4 text-center">
             <button
