@@ -60,9 +60,15 @@ function App() {
   }, [])
 
   function handleEnterApp() {
+    const currentUser = useAuthStore.getState().user
     localStorage.setItem('app_entered', 'true')
-    localStorage.setItem('is_guest', 'true')
-    setIsGuest(true)
+    if (currentUser) {
+      localStorage.removeItem('is_guest')
+      setIsGuest(false)
+    } else {
+      localStorage.setItem('is_guest', 'true')
+      setIsGuest(true)
+    }
     setShowLanding(false)
   }
 
@@ -105,7 +111,14 @@ function App() {
         <LandingPage
           onEnterApp={handleEnterApp}
           onBuyNow={handleBuyNow}
-          onMemberLogin={() => setShowLanding(false)}
+          onMemberLogin={() => {
+            if (user) {
+              localStorage.setItem('app_entered', 'true')
+              localStorage.removeItem('is_guest')
+              setIsGuest(false)
+            }
+            setShowLanding(false)
+          }}
         />
       </Suspense>
     )
