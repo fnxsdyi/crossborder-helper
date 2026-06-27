@@ -20,32 +20,43 @@ function App() {
   const { user, loading, initialize } = useAuthStore()
 
   useEffect(() => {
-    initialize()
-    const params = new URLSearchParams(window.location.search)
-    const registerToken = params.get('token')
-    const pendingData = localStorage.getItem('paypal_pending_token')
+    async function init() {
+      await initialize()
 
-    if (registerToken && pendingData) {
-      try {
-        const { token, timestamp } = JSON.parse(pendingData)
-        const thirtyMinutes = 30 * 60 * 1000
-        const isValid = token === registerToken && (Date.now() - timestamp) < thirtyMinutes
+      const params = new URLSearchParams(window.location.search)
+      const registerToken = params.get('token')
+      const pendingData = localStorage.getItem('paypal_pending_token')
 
-        if (isValid) {
-          localStorage.removeItem('paypal_pending_token')
+      if (registerToken && pendingData) {
+        try {
+          const { token, timestamp } = JSON.parse(pendingData)
+          const thirtyMinutes = 30 * 60 * 1000
+          const isValid = token === registerToken && (Date.now() - timestamp) < thirtyMinutes
+
+          if (isValid) {
+            localStorage.removeItem('paypal_pending_token')
+            setShowLanding(false)
+            setShowRegister(true)
+          }
+        } catch (e) {}
+        window.history.replaceState({}, '', window.location.pathname)
+      } else {
+        const entered = localStorage.getItem('app_entered')
+        const guest = localStorage.getItem('is_guest')
+
+        const currentUser = useAuthStore.getState().user
+
+        if (currentUser && guest === 'true') {
+          localStorage.removeItem('is_guest')
+          setIsGuest(false)
           setShowLanding(false)
-          setShowRegister(true)
+        } else if (entered === 'true') {
+          setShowLanding(false)
+          setIsGuest(guest === 'true')
         }
-      } catch (e) {}
-      window.history.replaceState({}, '', window.location.pathname)
-    } else {
-      const entered = localStorage.getItem('app_entered')
-      const guest = localStorage.getItem('is_guest')
-      if (entered === 'true') {
-        setShowLanding(false)
-        setIsGuest(guest === 'true')
       }
     }
+    init()
   }, [])
 
   function handleEnterApp() {
