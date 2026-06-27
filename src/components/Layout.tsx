@@ -1,13 +1,23 @@
+import { Suspense, lazy } from 'react'
 import { Sidebar } from './Sidebar'
 import { Disclaimer } from './Disclaimer'
 import { GuestBanner } from './GuestBanner'
 import { useAppStore } from '@/stores/appStore'
-import { Dashboard } from '@/pages/Dashboard'
-import { Invoices } from '@/pages/Invoices'
-import { Clients } from '@/pages/Clients'
-import { TaxWizard } from '@/pages/TaxWizard'
-import { CurrencyDashboard } from '@/pages/CurrencyDashboard'
-import { SettingsPage } from '@/pages/Settings'
+
+const Dashboard = lazy(() => import('@/pages/Dashboard').then(m => ({ default: m.Dashboard })))
+const Invoices = lazy(() => import('@/pages/Invoices').then(m => ({ default: m.Invoices })))
+const Clients = lazy(() => import('@/pages/Clients').then(m => ({ default: m.Clients })))
+const TaxWizard = lazy(() => import('@/pages/TaxWizard').then(m => ({ default: m.TaxWizard })))
+const CurrencyDashboard = lazy(() => import('@/pages/CurrencyDashboard').then(m => ({ default: m.CurrencyDashboard })))
+const SettingsPage = lazy(() => import('@/pages/Settings').then(m => ({ default: m.SettingsPage })))
+
+function PageLoader() {
+  return (
+    <div className="flex items-center justify-center py-20">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+    </div>
+  )
+}
 
 interface LayoutProps {
   onSignOut?: () => void
@@ -43,7 +53,9 @@ export function Layout({ onSignOut, isGuest, onUpgrade }: LayoutProps) {
       <main className="lg:ml-64">
         <div className="p-6 lg:p-8">
           {isGuest && <GuestBanner onUpgrade={onUpgrade} />}
-          {renderPage()}
+          <Suspense fallback={<PageLoader />}>
+            {renderPage()}
+          </Suspense>
           <Disclaimer />
         </div>
       </main>

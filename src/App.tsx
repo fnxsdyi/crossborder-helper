@@ -1,8 +1,17 @@
-import { useState, useEffect } from 'react'
-import { Layout } from './components/Layout'
-import { LandingPage } from './pages/LandingPage'
-import { AuthPage } from './pages/AuthPage'
+import { useState, useEffect, Suspense, lazy } from 'react'
 import { useAuthStore } from './stores/authStore'
+
+const Layout = lazy(() => import('./components/Layout').then(m => ({ default: m.Layout })))
+const LandingPage = lazy(() => import('./pages/LandingPage').then(m => ({ default: m.LandingPage })))
+const AuthPage = lazy(() => import('./pages/AuthPage').then(m => ({ default: m.AuthPage })))
+
+function Loading() {
+  return (
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+    </div>
+  )
+}
 
 function App() {
   const [showLanding, setShowLanding] = useState(true)
@@ -81,24 +90,32 @@ function App() {
 
   if (showLanding) {
     return (
-      <LandingPage
-        onEnterApp={handleEnterApp}
-        onBuyNow={handleBuyNow}
-        onMemberLogin={() => setShowLanding(false)}
-      />
+      <Suspense fallback={<Loading />}>
+        <LandingPage
+          onEnterApp={handleEnterApp}
+          onBuyNow={handleBuyNow}
+          onMemberLogin={() => setShowLanding(false)}
+        />
+      </Suspense>
     )
   }
 
   if (showRegister || (!user && !isGuest)) {
-    return <AuthPage onAuth={handleAuth} showWelcome={showRegister} />
+    return (
+      <Suspense fallback={<Loading />}>
+        <AuthPage onAuth={handleAuth} showWelcome={showRegister} />
+      </Suspense>
+    )
   }
 
   return (
-    <Layout
-      onSignOut={handleSignOut}
-      isGuest={isGuest}
-      onUpgrade={() => handleBuyNow()}
-    />
+    <Suspense fallback={<Loading />}>
+      <Layout
+        onSignOut={handleSignOut}
+        isGuest={isGuest}
+        onUpgrade={() => handleBuyNow()}
+      />
+    </Suspense>
   )
 }
 
