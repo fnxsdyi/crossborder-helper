@@ -22,6 +22,7 @@ type TranslationKeys = {
   'nav.clients': string
   'nav.currency': string
   'nav.tax': string
+  'nav.contractScanner': string
   'nav.settings': string
 
   // Guest
@@ -324,6 +325,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.clients': 'Clients',
     'nav.currency': 'Currency Dashboard',
     'nav.tax': 'W-8BEN Wizard',
+    'nav.contractScanner': 'Contract Scanner',
     'nav.settings': 'Settings',
 
     // Guest
@@ -625,6 +627,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.clients': '客户',
     'nav.currency': '多币种看板',
     'nav.tax': 'W-8BEN 税表向导',
+    'nav.contractScanner': '合同审计',
     'nav.settings': '设置',
 
     // Guest
@@ -926,6 +929,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.clients': 'クライアント',
     'nav.currency': '通貨ダッシュボード',
     'nav.tax': 'W-8BEN 税務ウィザード',
+    'nav.contractScanner': '契約スキャナー',
     'nav.settings': '設定',
 
     // Guest
@@ -1226,6 +1230,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.clients': '고객',
     'nav.currency': '통화 대시보드',
     'nav.tax': 'W-8BEN 세금 마법사',
+    'nav.contractScanner': '계약 스캐너',
     'nav.settings': '설정',
 
     // Guest
@@ -1507,6 +1512,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.clients': 'Kunden',
     'nav.currency': 'Währungs-Dashboard',
     'nav.tax': 'W-8BEN Steuer-Assistent',
+    'nav.contractScanner': 'Vertragsprüfung',
     'nav.settings': 'Einstellungen',
 
     // Guest
@@ -1788,6 +1794,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.clients': 'Clients',
     'nav.currency': 'Tableau de bord devises',
     'nav.tax': 'Assistant fiscal W-8BEN',
+    'nav.contractScanner': 'Analyse de contrat',
     'nav.settings': 'Paramètres',
 
     // Guest
@@ -2069,6 +2076,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.clients': 'Clientes',
     'nav.currency': 'Panel de divisas',
     'nav.tax': 'Asistente fiscal W-8BEN',
+    'nav.contractScanner': 'Escáner de contratos',
     'nav.settings': 'Configuración',
 
     // Guest
@@ -2350,6 +2358,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.clients': 'Clientes',
     'nav.currency': 'Painel de moedas',
     'nav.tax': 'Assistente fiscal W-8BEN',
+    'nav.contractScanner': 'Scanner de contrato',
     'nav.settings': 'Configurações',
 
     // Guest

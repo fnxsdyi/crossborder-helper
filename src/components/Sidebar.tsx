@@ -11,6 +11,7 @@ import {
   Globe,
   Home,
   LogOut,
+  ShieldCheck,
 } from 'lucide-react'
 import { useAppStore } from '@/stores/appStore'
 import { ThemeToggle } from './ThemeToggle'
@@ -36,6 +37,7 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
     { id: 'clients' as const, labelKey: 'nav.clients' as const, icon: Users },
     { id: 'currency' as const, labelKey: 'nav.currency' as const, icon: ArrowRightLeft },
     { id: 'tax' as const, labelKey: 'nav.tax' as const, icon: Calculator },
+    { id: 'contract' as const, labelKey: 'nav.contractScanner' as const, icon: ShieldCheck, external: true, href: 'https://shield.kaki.llc' },
     { id: 'settings' as const, labelKey: 'nav.settings' as const, icon: Settings },
   ]
 
@@ -64,25 +66,48 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
         </div>
 
         <nav className="px-4 space-y-1">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => {
-                setCurrentView(item.id)
-                if (window.innerWidth < 1024) toggleSidebar()
-              }}
-              className={cn(
-                'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-                currentView === item.id
-                  ? 'bg-primary text-white'
-                  : 'hover:bg-slate-800'
-              )}
-              style={currentView !== item.id ? { color: 'var(--sidebar-text)' } : undefined}
-            >
-              <item.icon size={18} />
-              {t(item.labelKey)}
-            </button>
-          ))}
+          {navItems.map((item) => {
+            const isActive = currentView === item.id && !('external' in item && item.external)
+
+            if ('external' in item && item.external) {
+              return (
+                <a
+                  key={item.id}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => {
+                    if (window.innerWidth < 1024) toggleSidebar()
+                  }}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-slate-800"
+                  style={{ color: 'var(--sidebar-text)' }}
+                >
+                  <item.icon size={18} />
+                  {t(item.labelKey)}
+                </a>
+              )
+            }
+
+            return (
+              <button
+                key={item.id}
+                onClick={() => {
+                  setCurrentView(item.id)
+                  if (window.innerWidth < 1024) toggleSidebar()
+                }}
+                className={cn(
+                  'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                  isActive
+                    ? 'bg-primary text-white'
+                    : 'hover:bg-slate-800'
+                )}
+                style={isActive ? undefined : { color: 'var(--sidebar-text)' }}
+              >
+                <item.icon size={18} />
+                {t(item.labelKey)}
+              </button>
+            )
+          })}
         </nav>
 
         <div className="absolute bottom-0 left-0 right-0 p-4" style={{ borderTop: '1px solid var(--border-color)' }}>
