@@ -23,6 +23,7 @@ type TranslationKeys = {
   'nav.currency': string
   'nav.tax': string
   'nav.contractScanner': string
+  'nav.externalTool': string
   'nav.settings': string
 
   // Guest
@@ -326,6 +327,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.currency': 'Currency Dashboard',
     'nav.tax': 'W-8BEN Wizard',
     'nav.contractScanner': 'Contract Scanner',
+    'nav.externalTool': 'External Tool →',
     'nav.settings': 'Settings',
 
     // Guest
@@ -628,6 +630,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.currency': '多币种看板',
     'nav.tax': 'W-8BEN 税表向导',
     'nav.contractScanner': '合同审计',
+    'nav.externalTool': '外部工具 →',
     'nav.settings': '设置',
 
     // Guest
@@ -930,6 +933,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.currency': '通貨ダッシュボード',
     'nav.tax': 'W-8BEN 税務ウィザード',
     'nav.contractScanner': '契約スキャナー',
+    'nav.externalTool': '外部ツール →',
     'nav.settings': '設定',
 
     // Guest
@@ -1231,6 +1235,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.currency': '통화 대시보드',
     'nav.tax': 'W-8BEN 세금 마법사',
     'nav.contractScanner': '계약 스캐너',
+    'nav.externalTool': '외부 도구 →',
     'nav.settings': '설정',
 
     // Guest
@@ -1513,6 +1518,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.currency': 'Währungs-Dashboard',
     'nav.tax': 'W-8BEN Steuer-Assistent',
     'nav.contractScanner': 'Vertragsprüfung',
+    'nav.externalTool': 'Externes Tool →',
     'nav.settings': 'Einstellungen',
 
     // Guest
@@ -1795,6 +1801,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.currency': 'Tableau de bord devises',
     'nav.tax': 'Assistant fiscal W-8BEN',
     'nav.contractScanner': 'Analyse de contrat',
+    'nav.externalTool': 'Outil externe →',
     'nav.settings': 'Paramètres',
 
     // Guest
@@ -2077,6 +2084,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.currency': 'Panel de divisas',
     'nav.tax': 'Asistente fiscal W-8BEN',
     'nav.contractScanner': 'Escáner de contratos',
+    'nav.externalTool': 'Herramienta externa →',
     'nav.settings': 'Configuración',
 
     // Guest
@@ -2359,6 +2367,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.currency': 'Painel de moedas',
     'nav.tax': 'Assistente fiscal W-8BEN',
     'nav.contractScanner': 'Scanner de contrato',
+    'nav.externalTool': 'Ferramenta externa →',
     'nav.settings': 'Configurações',
 
     // Guest

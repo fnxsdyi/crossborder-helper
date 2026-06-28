@@ -83,7 +83,12 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
                   style={{ color: 'var(--sidebar-text)' }}
                 >
                   <item.icon size={18} />
-                  {t(item.labelKey)}
+                  <div className="flex flex-col">
+                    {t(item.labelKey)}
+                    <span className="text-[10px] text-zinc-500 dark:text-zinc-500">
+                      {t('nav.externalTool')}
+                    </span>
+                  </div>
                 </a>
               )
             }
