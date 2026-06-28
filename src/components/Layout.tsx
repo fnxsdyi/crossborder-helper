@@ -42,6 +42,10 @@ export function Layout({ onSignOut, isGuest, onUpgrade }: LayoutProps) {
         return <TaxWizard />
       case 'settings':
         return <SettingsPage onUpgrade={onUpgrade} isGuest={isGuest} />
+      case 'contract':
+        window.open('https://shield.kaki.llc', '_blank', 'noopener,noreferrer')
+        setTimeout(() => useAppStore.setState({ currentView: 'dashboard' }), 0)
+        return <Dashboard />
       default:
         return <Dashboard />
     }
