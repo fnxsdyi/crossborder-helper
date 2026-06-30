@@ -350,7 +350,7 @@ export function LandingPage({ onEnterApp, onBuyNow, onMemberLogin }: LandingPage
               </button>
             </div>
             <div className="px-6 py-4 text-sm text-slate-600 space-y-4">
-              <p><strong>{t('landing.lastUpdated')}</strong> {new Date().toLocaleDateString()}</p>
+              <p><strong>{t('landing.lastUpdated')}</strong> June 30, 2026</p>
 
               <h3 className="font-semibold text-slate-900">{t('landing.privacySection1Title')}</h3>
               <p>{t('landing.privacySection1')}</p>
@@ -363,6 +363,30 @@ export function LandingPage({ onEnterApp, onBuyNow, onMemberLogin }: LandingPage
 
               <h3 className="font-semibold text-slate-900">{t('landing.privacySection4Title')}</h3>
               <p>{t('landing.privacySection4')}</p>
+
+              <h3 className="font-semibold text-slate-900">{t('landing.privacySection5Title')}</h3>
+              <p>{t('landing.privacySection5')}</p>
+
+              <h3 className="font-semibold text-slate-900">{t('landing.privacySection6Title')}</h3>
+              <p>{t('landing.privacySection6')}</p>
+
+              <h3 className="font-semibold text-slate-900">{t('landing.privacySection7Title')}</h3>
+              <p>{t('landing.privacySection7')}</p>
+
+              <h3 className="font-semibold text-slate-900">{t('landing.privacySection8Title')}</h3>
+              <p>{t('landing.privacySection8')}</p>
+
+              <h3 className="font-semibold text-slate-900">{t('landing.privacySection9Title')}</h3>
+              <p>{t('landing.privacySection9')}</p>
+
+              <h3 className="font-semibold text-slate-900">{t('landing.privacySection10Title')}</h3>
+              <p>{t('landing.privacySection10')}</p>
+
+              <h3 className="font-semibold text-slate-900">{t('landing.privacySection11Title')}</h3>
+              <p>{t('landing.privacySection11')}</p>
+
+              <h3 className="font-semibold text-slate-900">{t('landing.privacySection12Title')}</h3>
+              <p>{t('landing.privacySection12')}</p>
             </div>
           </div>
         </div>
@@ -379,7 +403,7 @@ export function LandingPage({ onEnterApp, onBuyNow, onMemberLogin }: LandingPage
               </button>
             </div>
             <div className="px-6 py-4 text-sm text-slate-600 space-y-4">
-              <p><strong>{t('landing.lastUpdated')}</strong> {new Date().toLocaleDateString()}</p>
+              <p><strong>{t('landing.lastUpdated')}</strong> June 30, 2026</p>
 
               <h3 className="font-semibold text-slate-900">{t('landing.termsSection1Title')}</h3>
               <p>{t('landing.termsSection1')}</p>
@@ -392,6 +416,33 @@ export function LandingPage({ onEnterApp, onBuyNow, onMemberLogin }: LandingPage
 
               <h3 className="font-semibold text-slate-900">{t('landing.termsSection4Title')}</h3>
               <p>{t('landing.termsSection4')}</p>
+
+              <h3 className="font-semibold text-slate-900">{t('landing.termsSection5Title')}</h3>
+              <p>{t('landing.termsSection5')}</p>
+
+              <h3 className="font-semibold text-slate-900">{t('landing.termsSection6Title')}</h3>
+              <p>{t('landing.termsSection6')}</p>
+
+              <h3 className="font-semibold text-slate-900">{t('landing.termsSection7Title')}</h3>
+              <p>{t('landing.termsSection7')}</p>
+
+              <h3 className="font-semibold text-slate-900">{t('landing.termsSection8Title')}</h3>
+              <p>{t('landing.termsSection8')}</p>
+
+              <h3 className="font-semibold text-slate-900">{t('landing.termsSection9Title')}</h3>
+              <p>{t('landing.termsSection9')}</p>
+
+              <h3 className="font-semibold text-slate-900">{t('landing.termsSection10Title')}</h3>
+              <p>{t('landing.termsSection10')}</p>
+
+              <h3 className="font-semibold text-slate-900">{t('landing.termsSection11Title')}</h3>
+              <p>{t('landing.termsSection11')}</p>
+
+              <h3 className="font-semibold text-slate-900">{t('landing.termsSection12Title')}</h3>
+              <p>{t('landing.termsSection12')}</p>
+
+              <h3 className="font-semibold text-slate-900">{t('landing.termsSection13Title')}</h3>
+              <p>{t('landing.termsSection13')}</p>
             </div>
           </div>
         </div>
