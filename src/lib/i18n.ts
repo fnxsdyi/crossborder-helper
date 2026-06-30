@@ -312,6 +312,12 @@ type TranslationKeys = {
   'landing.termsSection4': string
   'landing.ourProjects': string
   'landing.contactUs': string
+
+  // Cookie
+  'cookie.message': string
+  'cookie.accept': string
+  'cookie.dismiss': string
+  'cookie.privacyLink': string
 }
 
 const translations: Record<Locale, TranslationKeys> = {
@@ -616,6 +622,10 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection4': 'TaxFlow is provided "as is" without warranties. We shall not be liable for any damages arising from the use of this application.',
     'landing.ourProjects': 'Our Projects',
     'landing.contactUs': 'Contact Us',
+    'cookie.message': 'We use essential cookies to keep things running smoothly.',
+    'cookie.accept': 'Accept',
+    'cookie.dismiss': 'Dismiss',
+    'cookie.privacyLink': 'Privacy Policy',
   },
 
   zh: {
@@ -919,6 +929,10 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection4': 'TaxFlow 按"原样"提供，不作任何保证。我们不对因使用此应用而产生的任何损害承担责任。',
     'landing.ourProjects': '我们的项目',
     'landing.contactUs': '联系我们',
+    'cookie.message': '我们使用必要的 Cookie 来确保服务正常运行。',
+    'cookie.accept': '接受',
+    'cookie.dismiss': '关闭',
+    'cookie.privacyLink': '隐私政策',
   },
 
   ja: {
@@ -1222,6 +1236,10 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection4': 'TaxFlowは「現状のまま」保証なしで提供されます。アプリの使用により生じる損害について責任を負いません。',
     'landing.ourProjects': '私たちのプロジェクト',
     'landing.contactUs': 'お問い合わせ',
+    'cookie.message': 'サービスの正常な運営のために必要なCookieを使用しています。',
+    'cookie.accept': '同意する',
+    'cookie.dismiss': '閉じる',
+    'cookie.privacyLink': 'プライバシーポリシー',
   },
 
   ko: {
@@ -1505,6 +1523,10 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection4': 'TaxFlow는 "있는 그대로" 보증 없이 제공됩니다.',
     'landing.ourProjects': '우리의 프로젝트',
     'landing.contactUs': '문의하기',
+    'cookie.message': '원활한 서비스 이용을 위해 필수 쿠키를 사용합니다.',
+    'cookie.accept': '동의',
+    'cookie.dismiss': '닫기',
+    'cookie.privacyLink': '개인정보처리방침',
   },
 
   de: {
@@ -1788,6 +1810,10 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection4': 'TaxFlow wird "wie besehen" ohne Gewährleistungen bereitgestellt.',
     'landing.ourProjects': 'Unsere Projekte',
     'landing.contactUs': 'Kontakt',
+    'cookie.message': 'Wir verwenden essenzielle Cookies für den reibungslosen Betrieb.',
+    'cookie.accept': 'Akzeptieren',
+    'cookie.dismiss': 'Schließen',
+    'cookie.privacyLink': 'Datenschutzrichtlinie',
   },
 
   fr: {
@@ -2071,6 +2097,10 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection4': 'TaxFlow est fourni "en l\'état" sans garantie.',
     'landing.ourProjects': 'Nos projets',
     'landing.contactUs': 'Contactez-nous',
+    'cookie.message': 'Nous utilisons des cookies essentiels pour assurer le bon fonctionnement.',
+    'cookie.accept': 'Accepter',
+    'cookie.dismiss': 'Fermer',
+    'cookie.privacyLink': 'Politique de confidentialité',
   },
 
   es: {
@@ -2354,6 +2384,10 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection4': 'TaxFlow se proporciona "tal cual" sin garantías.',
     'landing.ourProjects': 'Nuestros proyectos',
     'landing.contactUs': 'Contáctenos',
+    'cookie.message': 'Utilizamos cookies esenciales para garantizar el correcto funcionamiento.',
+    'cookie.accept': 'Aceptar',
+    'cookie.dismiss': 'Cerrar',
+    'cookie.privacyLink': 'Política de privacidad',
   },
 
   pt: {
@@ -2637,6 +2671,10 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.termsSection4': 'TaxFlow é fornecido "como está" sem garantias.',
     'landing.ourProjects': 'Nossos projetos',
     'landing.contactUs': 'Contate-nos',
+    'cookie.message': 'Utilizamos cookies essenciais para garantir o funcionamento correto.',
+    'cookie.accept': 'Aceitar',
+    'cookie.dismiss': 'Fechar',
+    'cookie.privacyLink': 'Política de Privacidade',
   },
 }
 

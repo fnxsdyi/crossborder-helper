@@ -1,5 +1,6 @@
 import { useState, useEffect, Suspense, lazy } from 'react'
 import { useAuthStore } from './stores/authStore'
+import { CookieConsent } from './components/CookieConsent'
 
 const Layout = lazy(() => import('./components/Layout').then(m => ({ default: m.Layout })))
 const LandingPage = lazy(() => import('./pages/LandingPage').then(m => ({ default: m.LandingPage })))
@@ -132,15 +133,16 @@ function App() {
     )
   }
 
-  return (
-    <Suspense fallback={<Loading />}>
-      <Layout
-        onSignOut={handleSignOut}
-        isGuest={isGuest}
-        onUpgrade={() => handleBuyNow()}
-      />
-    </Suspense>
-  )
+    return (
+      <Suspense fallback={<Loading />}>
+        <Layout
+          onSignOut={handleSignOut}
+          isGuest={isGuest}
+          onUpgrade={() => handleBuyNow()}
+        />
+        <CookieConsent />
+      </Suspense>
+    )
 }
 
 export default App
