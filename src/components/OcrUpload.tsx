@@ -20,12 +20,21 @@ export function OcrUpload({ onResult }: OcrUploadProps) {
   const [checkedUsage, setCheckedUsage] = useState(false)
 
   async function checkUsage() {
-    if (!user?.id) return
-    const usage = await checkOcrUsage(user.id)
-    setUsageCount(usage.used)
-    setHasSubscription(usage.hasSubscription)
-    setCheckedUsage(true)
-    return usage
+    if (!user?.id) {
+      console.warn('OCR: No user ID, skipping usage check')
+      return { allowed: true, used: 0, limit: 3, hasSubscription: false }
+    }
+    try {
+      const usage = await checkOcrUsage(user.id)
+      setUsageCount(usage.used)
+      setHasSubscription(usage.hasSubscription)
+      setCheckedUsage(true)
+      return usage
+    } catch (err) {
+      console.error('Failed to check OCR usage:', err)
+      // Allow usage if check fails (graceful degradation)
+      return { allowed: true, used: 0, limit: 3, hasSubscription: false }
+    }
   }
 
   async function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
@@ -75,6 +84,7 @@ export function OcrUpload({ onResult }: OcrUploadProps) {
 
           onResult()
         } catch (err) {
+          console.error('OCR recognition error:', err)
           const msg = err instanceof Error ? err.message : 'UNKNOWN'
           switch (msg) {
             case 'IMAGE_TOO_LARGE':
@@ -85,6 +95,12 @@ export function OcrUpload({ onResult }: OcrUploadProps) {
               break
             case 'API_KEY_MISSING':
               setError('API key not configured')
+              break
+            case 'API_ERROR':
+              setError('API request failed. Please try again.')
+              break
+            case 'Failed to load image':
+              setError('Failed to load image. Please try another file.')
               break
             default:
               setError(t('ocr.errorTimeout'))
