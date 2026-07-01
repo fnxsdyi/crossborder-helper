@@ -18,6 +18,7 @@ function App() {
   const [showLanding, setShowLanding] = useState(true)
   const [isGuest, setIsGuest] = useState(false)
   const [showRegister, setShowRegister] = useState(false)
+  const [hasEntered, setHasEntered] = useState(false)
   const { user, loading, initialize } = useAuthStore()
 
   useEffect(() => {
@@ -50,8 +51,10 @@ function App() {
         if (currentUser && guest === 'true') {
           localStorage.removeItem('is_guest')
           setIsGuest(false)
+          setHasEntered(true)
           setShowLanding(false)
         } else if (entered === 'true') {
+          setHasEntered(true)
           setShowLanding(false)
           setIsGuest(guest === 'true')
         }
@@ -63,6 +66,7 @@ function App() {
   function handleEnterApp() {
     const currentUser = useAuthStore.getState().user
     localStorage.setItem('app_entered', 'true')
+    setHasEntered(true)
     if (currentUser) {
       localStorage.removeItem('is_guest')
       setIsGuest(false)
@@ -113,6 +117,7 @@ function App() {
           onEnterApp={handleEnterApp}
           onBuyNow={handleBuyNow}
           onMemberLogin={() => {
+            setHasEntered(true)
             if (user) {
               localStorage.setItem('app_entered', 'true')
               localStorage.removeItem('is_guest')
@@ -125,7 +130,7 @@ function App() {
     )
   }
 
-  if (showRegister || (!user && !isGuest)) {
+  if (showRegister || (!user && !isGuest && !hasEntered)) {
     return (
       <Suspense fallback={<Loading />}>
         <AuthPage onAuth={handleAuth} showWelcome={showRegister} />

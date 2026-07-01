@@ -8,44 +8,61 @@ export async function checkOcrUsage(userId: string): Promise<{
   limit: number
   hasSubscription: boolean
 }> {
-  // Check subscription
-  const hasSubscription = await hasOcrSubscription(userId)
-  if (hasSubscription) {
-    return { allowed: true, used: 0, limit: Infinity, hasSubscription: true }
-  }
+  try {
+    // Check subscription
+    const hasSubscription = await hasOcrSubscription(userId)
+    if (hasSubscription) {
+      return { allowed: true, used: 0, limit: Infinity, hasSubscription: true }
+    }
 
-  // Check free usage
-  const { count } = await supabase
-    .from('ocr_usage')
-    .select('*', { count: 'exact', head: true })
-    .eq('user_id', userId)
+    // Check free usage
+    const { count, error } = await supabase
+      .from('ocr_usage')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId)
 
-  const used = count || 0
-  return {
-    allowed: used < OCR_FREE_LIMIT,
-    used,
-    limit: OCR_FREE_LIMIT,
-    hasSubscription: false,
+    if (error) {
+      console.warn('[TaxFlow] ocr_usage query failed:', error.message)
+    }
+
+    const used = count || 0
+    return {
+      allowed: used < OCR_FREE_LIMIT,
+      used,
+      limit: OCR_FREE_LIMIT,
+      hasSubscription: false,
+    }
+  } catch (err) {
+    console.error('[TaxFlow] checkOcrUsage failed:', err)
+    return { allowed: true, used: 0, limit: OCR_FREE_LIMIT, hasSubscription: false }
   }
 }
 
 export async function recordOcrUsage(userId: string, imageHash: string): Promise<void> {
-  await supabase.from('ocr_usage').insert({
-    user_id: userId,
-    image_hash: imageHash,
-  })
+  try {
+    await supabase.from('ocr_usage').insert({
+      user_id: userId,
+      image_hash: imageHash,
+    })
+  } catch (err) {
+    console.warn('[TaxFlow] Failed to record OCR usage:', err)
+  }
 }
 
 export async function hasOcrSubscription(userId: string): Promise<boolean> {
-  const { data } = await supabase
-    .from('licenses')
-    .select('id')
-    .eq('user_id', userId)
-    .eq('key', 'OCR_ADDON')
-    .eq('active', true)
-    .single()
+  try {
+    const { data } = await supabase
+      .from('licenses')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('key', 'OCR_ADDON')
+      .eq('active', true)
+      .maybeSingle()
 
-  return !!data
+    return !!data
+  } catch {
+    return false
+  }
 }
 
 export async function simpleHash(str: string): Promise<string> {
