@@ -18,8 +18,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   loading: true,
 
   initialize: async () => {
-    const { data: { session } } = await supabase.auth.getSession()
-    set({ user: session?.user || null, loading: false })
+    try {
+      const { data: { session }, error } = await supabase.auth.getSession()
+      if (error) {
+        console.error('[TaxFlow] Supabase session error:', error.message)
+      }
+      set({ user: session?.user || null, loading: false })
+    } catch (err) {
+      console.error('[TaxFlow] Failed to initialize auth:', err)
+      set({ user: null, loading: false })
+    }
 
     supabase.auth.onAuthStateChange((_event, session) => {
       set({ user: session?.user || null })
@@ -27,41 +35,51 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   signIn: async (email, password) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) return { error: error.message }
-    return {}
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) return { error: error.message }
+      return {}
+    } catch (err) {
+      console.error('[TaxFlow] Sign in failed:', err)
+      return { error: 'Connection failed. Please check your network.' }
+    }
   },
 
   signUp: async (email, password) => {
-    const { data, error } = await supabase.auth.signUp({ email, password })
-    if (error) return { error: error.message }
+    try {
+      const { data, error } = await supabase.auth.signUp({ email, password })
+      if (error) return { error: error.message }
 
-    if (data.user) {
-      const pendingData = localStorage.getItem('paypal_pending_token')
-      if (pendingData) {
-        try {
-          const { token, timestamp } = JSON.parse(pendingData)
-          const thirtyMinutes = 30 * 60 * 1000
-          if ((Date.now() - timestamp) < thirtyMinutes) {
-            await supabase.from('licenses').insert({
-              user_id: data.user.id,
-              key: `PAYPAL-${token}`,
-              active: true
-            })
-          }
-        } catch (e) {}
+      if (data.user) {
+        const pendingData = localStorage.getItem('paypal_pending_token')
+        if (pendingData) {
+          try {
+            const { token, timestamp } = JSON.parse(pendingData)
+            const thirtyMinutes = 30 * 60 * 1000
+            if ((Date.now() - timestamp) < thirtyMinutes) {
+              await supabase.from('licenses').insert({
+                user_id: data.user.id,
+                key: `PAYPAL-${token}`,
+                active: true
+              })
+            }
+          } catch (e) {}
+        }
+
+        if (isAdmin(email)) {
+          await supabase.from('licenses').insert({
+            user_id: data.user.id,
+            key: `ADMIN-${data.user.id}`,
+            active: true
+          })
+        }
       }
 
-      if (isAdmin(email)) {
-        await supabase.from('licenses').insert({
-          user_id: data.user.id,
-          key: `ADMIN-${data.user.id}`,
-          active: true
-        })
-      }
+      return {}
+    } catch (err) {
+      console.error('[TaxFlow] Sign up failed:', err)
+      return { error: 'Connection failed. Please check your network.' }
     }
-
-    return {}
   },
 
   signOut: async () => {
