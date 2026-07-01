@@ -33,6 +33,8 @@ export interface Invoice {
   total: number
   notes?: string
   items: InvoiceItem[]
+  ocrProcessed?: boolean
+  ocrConfidence?: number
   createdAt: Date
   updatedAt: Date
 }
@@ -93,6 +95,16 @@ db.version(1).stores({
   invoices: '++id, invoiceNumber, clientId, status, currency, issueDate, createdAt',
   taxProfiles: '++id, country, createdAt',
   settings: '++id',
+})
+
+db.version(2).stores({
+  clients: '++id, name, email, country, createdAt',
+  invoices: '++id, invoiceNumber, clientId, status, currency, issueDate, createdAt',
+  taxProfiles: '++id, country, createdAt',
+  settings: '++id',
+}).upgrade(_tx => {
+  // OCR fields are optional, no migration needed
+  return Promise.resolve()
 })
 
 export default db

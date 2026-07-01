@@ -352,6 +352,28 @@ type TranslationKeys = {
   'cookie.accept': string
   'cookie.dismiss': string
   'cookie.privacyLink': string
+
+  // OCR
+  'nav.ocr': string
+  'ocr.title': string
+  'ocr.description': string
+  'ocr.takePhoto': string
+  'ocr.chooseGallery': string
+  'ocr.recognizing': string
+  'ocr.resultTitle': string
+  'ocr.confidence': string
+  'ocr.saveInvoice': string
+  'ocr.rescan': string
+  'ocr.freeUsed': string
+  'ocr.upgrade': string
+  'ocr.limitReached': string
+  'ocr.backManual': string
+  'ocr.verifyManually': string
+  'ocr.errorTimeout': string
+  'ocr.errorSize': string
+  'ocr.originalImage': string
+  'editor.vendorName': string
+  'editor.taxId': string
 }
 
 const translations: Record<Locale, TranslationKeys> = {
@@ -694,6 +716,28 @@ const translations: Record<Locale, TranslationKeys> = {
     'cookie.accept': 'Accept',
     'cookie.dismiss': 'Dismiss',
     'cookie.privacyLink': 'Privacy Policy',
+
+    // OCR
+    'nav.ocr': 'Invoice Scanner',
+    'ocr.title': 'Invoice Scanner',
+    'ocr.description': 'Snap a photo of your invoice and we\'ll extract the details automatically.',
+    'ocr.takePhoto': 'Take Photo',
+    'ocr.chooseGallery': 'Choose from Gallery',
+    'ocr.recognizing': 'Recognizing...',
+    'ocr.resultTitle': 'Recognition Complete',
+    'ocr.confidence': 'Confidence',
+    'ocr.saveInvoice': 'Save Invoice',
+    'ocr.rescan': 'Re-scan',
+    'ocr.freeUsed': 'Free scans: {used}/{limit} used',
+    'ocr.upgrade': 'Upgrade OCR — $9/month',
+    'ocr.limitReached': 'Free Limit Reached',
+    'ocr.backManual': 'Back to Manual Entry',
+    'ocr.verifyManually': 'Low confidence. Please verify manually.',
+    'ocr.errorTimeout': 'Recognition timed out. Try again.',
+    'ocr.errorSize': 'Image too large. Max 10MB.',
+    'ocr.originalImage': 'Original Image',
+    'editor.vendorName': 'Vendor Name',
+    'editor.taxId': 'Tax ID',
   },
 
   zh: {
@@ -1035,6 +1079,28 @@ const translations: Record<Locale, TranslationKeys> = {
     'cookie.accept': '接受',
     'cookie.dismiss': '关闭',
     'cookie.privacyLink': '隐私政策',
+
+    // OCR
+    'nav.ocr': '发票扫描',
+    'ocr.title': '发票扫描',
+    'ocr.description': '拍摄发票照片，自动提取发票信息。',
+    'ocr.takePhoto': '拍照',
+    'ocr.chooseGallery': '从相册选择',
+    'ocr.recognizing': '识别中...',
+    'ocr.resultTitle': '识别完成',
+    'ocr.confidence': '置信度',
+    'ocr.saveInvoice': '保存发票',
+    'ocr.rescan': '重新扫描',
+    'ocr.freeUsed': '免费次数：已用 {used}/{limit}',
+    'ocr.upgrade': '升级 OCR — $9/月',
+    'ocr.limitReached': '免费次数已用完',
+    'ocr.backManual': '返回手动录入',
+    'ocr.verifyManually': '置信度低，请人工核对。',
+    'ocr.errorTimeout': '识别超时，请重试。',
+    'ocr.errorSize': '图片过大，最大 10MB。',
+    'ocr.originalImage': '原始图片',
+    'editor.vendorName': '供应商名称',
+    'editor.taxId': '税号',
   },
 
   ja: {
@@ -1376,6 +1442,28 @@ const translations: Record<Locale, TranslationKeys> = {
     'cookie.accept': '同意する',
     'cookie.dismiss': '閉じる',
     'cookie.privacyLink': 'プライバシーポリシー',
+
+    // OCR
+    'nav.ocr': '請求書スキャナー',
+    'ocr.title': '請求書スキャナー',
+    'ocr.description': '請求書の写真を撮ると、詳細を自動で抽出します。',
+    'ocr.takePhoto': '写真を撮る',
+    'ocr.chooseGallery': 'ギャラリーから選択',
+    'ocr.recognizing': '認識中...',
+    'ocr.resultTitle': '認識完了',
+    'ocr.confidence': '信頼度',
+    'ocr.saveInvoice': '請求書を保存',
+    'ocr.rescan': '再スキャン',
+    'ocr.freeUsed': '無料スキャン: {used}/{limit} 使用済み',
+    'ocr.upgrade': 'OCR をアップグレード — $9/月',
+    'ocr.limitReached': '無料制限に達しました',
+    'ocr.backManual': '手動入力に戻る',
+    'ocr.verifyManually': '信頼度が低います。手動で確認してください。',
+    'ocr.errorTimeout': '認識がタイムアウトしました。再試行してください。',
+    'ocr.errorSize': '画像が大きすぎます。最大 10MB。',
+    'ocr.originalImage': '元の画像',
+    'editor.vendorName': '供应商名',
+    'editor.taxId': '税番号',
   },
 
   ko: {
@@ -1697,6 +1785,28 @@ const translations: Record<Locale, TranslationKeys> = {
     'cookie.accept': '동의',
     'cookie.dismiss': '닫기',
     'cookie.privacyLink': '개인정보처리방침',
+
+    // OCR
+    'nav.ocr': '송장 스캐너',
+    'ocr.title': '송장 스캐너',
+    'ocr.description': '송장 사진을 찍으면 세부 정보를 자동으로 추출합니다.',
+    'ocr.takePhoto': '사진 촬영',
+    'ocr.chooseGallery': '갤러리에서 선택',
+    'ocr.recognizing': '인식 중...',
+    'ocr.resultTitle': '인식 완료',
+    'ocr.confidence': '신뢰도',
+    'ocr.saveInvoice': '송장 저장',
+    'ocr.rescan': '다시 스캔',
+    'ocr.freeUsed': '무료 스캔: {used}/{limit} 사용',
+    'ocr.upgrade': 'OCR 업그레이드 — $9/월',
+    'ocr.limitReached': '무료 제한 도달',
+    'ocr.backManual': '수동 입력으로 돌아가기',
+    'ocr.verifyManually': '신뢰도가 낮습니다. 수동으로 확인하세요.',
+    'ocr.errorTimeout': '인식 시간 초과. 다시 시도하세요.',
+    'ocr.errorSize': '이미지가 너무 큽니다. 최대 10MB.',
+    'ocr.originalImage': '원본 이미지',
+    'editor.vendorName': '공급업체명',
+    'editor.taxId': '세금번호',
   },
 
   de: {
@@ -2018,6 +2128,28 @@ const translations: Record<Locale, TranslationKeys> = {
     'cookie.accept': 'Akzeptieren',
     'cookie.dismiss': 'Schließen',
     'cookie.privacyLink': 'Datenschutzrichtlinie',
+
+    // OCR
+    'nav.ocr': 'Rechnungsscanner',
+    'ocr.title': 'Rechnungsscanner',
+    'ocr.description': 'Fotografiere deine Rechnung und wir extrahieren die Details automatisch.',
+    'ocr.takePhoto': 'Foto aufnehmen',
+    'ocr.chooseGallery': 'Aus Galerie wählen',
+    'ocr.recognizing': 'Erkennung...',
+    'ocr.resultTitle': 'Erkennung abgeschlossen',
+    'ocr.confidence': 'Vertrauen',
+    'ocr.saveInvoice': 'Rechnung speichern',
+    'ocr.rescan': 'Erneut scannen',
+    'ocr.freeUsed': 'Kostenlose Scans: {used}/{limit} verwendet',
+    'ocr.upgrade': 'OCR upgraden — $9/Monat',
+    'ocr.limitReached': 'Kostenloses Limit erreicht',
+    'ocr.backManual': 'Zur manuellen Eingabe',
+    'ocr.verifyManually': 'Niedriges Vertrauen. Bitte manuell prüfen.',
+    'ocr.errorTimeout': 'Erkennung abgelaufen. Erneut versuchen.',
+    'ocr.errorSize': 'Bild zu groß. Max. 10MB.',
+    'ocr.originalImage': 'Originalbild',
+    'editor.vendorName': 'Lieferant',
+    'editor.taxId': 'Steuer-ID',
   },
 
   fr: {
@@ -2339,6 +2471,28 @@ const translations: Record<Locale, TranslationKeys> = {
     'cookie.accept': 'Accepter',
     'cookie.dismiss': 'Fermer',
     'cookie.privacyLink': 'Politique de confidentialité',
+
+    // OCR
+    'nav.ocr': 'Scanner de factures',
+    'ocr.title': 'Scanner de factures',
+    'ocr.description': 'Prenez une photo de votre facture et nous extrairons les détails automatiquement.',
+    'ocr.takePhoto': 'Prendre une photo',
+    'ocr.chooseGallery': 'Choisir dans la galerie',
+    'ocr.recognizing': 'Reconnaissance...',
+    'ocr.resultTitle': 'Reconnaissance terminée',
+    'ocr.confidence': 'Confiance',
+    'ocr.saveInvoice': 'Enregistrer la facture',
+    'ocr.rescan': 'Scanner à nouveau',
+    'ocr.freeUsed': 'Scans gratuits : {used}/{limit} utilisés',
+    'ocr.upgrade': 'Upgrade OCR — $9/mois',
+    'ocr.limitReached': 'Limite gratuite atteinte',
+    'ocr.backManual': 'Retour à la saisie manuelle',
+    'ocr.verifyManually': 'Faible confiance. Veuillez vérifier manuellement.',
+    'ocr.errorTimeout': 'Reconnaissance expirée. Réessayez.',
+    'ocr.errorSize': 'Image trop volumineuse. Max 10 Mo.',
+    'ocr.originalImage': 'Image originale',
+    'editor.vendorName': 'Fournisseur',
+    'editor.taxId': 'Numéro fiscal',
   },
 
   es: {
@@ -2660,6 +2814,28 @@ const translations: Record<Locale, TranslationKeys> = {
     'cookie.accept': 'Aceptar',
     'cookie.dismiss': 'Cerrar',
     'cookie.privacyLink': 'Política de privacidad',
+
+    // OCR
+    'nav.ocr': 'Escáner de facturas',
+    'ocr.title': 'Escáner de facturas',
+    'ocr.description': 'Tome una foto de su factura y extraeremos los detalles automáticamente.',
+    'ocr.takePhoto': 'Tomar foto',
+    'ocr.chooseGallery': 'Elegir de galería',
+    'ocr.recognizing': 'Reconociendo...',
+    'ocr.resultTitle': 'Reconocimiento completado',
+    'ocr.confidence': 'Confianza',
+    'ocr.saveInvoice': 'Guardar factura',
+    'ocr.rescan': 'Escanear de nuevo',
+    'ocr.freeUsed': 'Escaneos gratuitos: {used}/{limit} usados',
+    'ocr.upgrade': 'Mejorar OCR — $9/mes',
+    'ocr.limitReached': 'Límite gratuito alcanzado',
+    'ocr.backManual': 'Volver a entrada manual',
+    'ocr.verifyManually': 'Baja confianza. Verifique manualmente.',
+    'ocr.errorTimeout': 'Reconocimiento agotado. Intente de nuevo.',
+    'ocr.errorSize': 'Imagen demasiado grande. Máx 10MB.',
+    'ocr.originalImage': 'Imagen original',
+    'editor.vendorName': 'Proveedor',
+    'editor.taxId': 'NIF/CIF',
   },
 
   pt: {
@@ -2981,6 +3157,28 @@ const translations: Record<Locale, TranslationKeys> = {
     'cookie.accept': 'Aceitar',
     'cookie.dismiss': 'Fechar',
     'cookie.privacyLink': 'Política de Privacidade',
+
+    // OCR
+    'nav.ocr': 'Scanner de faturas',
+    'ocr.title': 'Scanner de faturas',
+    'ocr.description': 'Tire uma foto da sua fatura e extrairmos os detalhes automaticamente.',
+    'ocr.takePhoto': 'Tirar foto',
+    'ocr.chooseGallery': 'Escolher da galeria',
+    'ocr.recognizing': 'Reconhecendo...',
+    'ocr.resultTitle': 'Reconhecimento concluído',
+    'ocr.confidence': 'Confiança',
+    'ocr.saveInvoice': 'Salvar fatura',
+    'ocr.rescan': 'Escanear novamente',
+    'ocr.freeUsed': 'Escaneamentos gratuitos: {used}/{limit} usados',
+    'ocr.upgrade': 'Upgrade OCR — $9/mês',
+    'ocr.limitReached': 'Limite gratuito atingido',
+    'ocr.backManual': 'Voltar à entrada manual',
+    'ocr.verifyManually': 'Baixa confiança. Verifique manualmente.',
+    'ocr.errorTimeout': 'Reconhecimento expirado. Tente novamente.',
+    'ocr.errorSize': 'Imagem muito grande. Máx 10MB.',
+    'ocr.originalImage': 'Imagem original',
+    'editor.vendorName': 'Fornecedor',
+    'editor.taxId': 'NIF',
   },
 }
 
@@ -3011,6 +3209,12 @@ export function getLocale(): Locale {
   return currentLocale
 }
 
-export function t(key: keyof TranslationKeys): string {
-  return translations[currentLocale]?.[key] || translations.en[key] || key
+export function t(key: keyof TranslationKeys, vars?: Record<string, string>): string {
+  let str = translations[currentLocale]?.[key] || translations.en[key] || key
+  if (vars) {
+    for (const [k, v] of Object.entries(vars)) {
+      str = str.replace(`{${k}}`, v)
+    }
+  }
+  return str
 }

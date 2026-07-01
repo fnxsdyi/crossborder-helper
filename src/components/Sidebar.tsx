@@ -12,6 +12,7 @@ import {
   Home,
   LogOut,
   ShieldCheck,
+  Camera,
 } from 'lucide-react'
 import { useAppStore } from '@/stores/appStore'
 import { ThemeToggle } from './ThemeToggle'
@@ -34,6 +35,7 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
   const navItems = [
     { id: 'dashboard' as const, labelKey: 'nav.dashboard' as const, icon: LayoutDashboard },
     { id: 'invoices' as const, labelKey: 'nav.invoices' as const, icon: FileText },
+    { id: 'ocr' as const, labelKey: 'nav.ocr' as const, icon: Camera },
     { id: 'clients' as const, labelKey: 'nav.clients' as const, icon: Users },
     { id: 'currency' as const, labelKey: 'nav.currency' as const, icon: ArrowRightLeft },
     { id: 'tax' as const, labelKey: 'nav.tax' as const, icon: Calculator },

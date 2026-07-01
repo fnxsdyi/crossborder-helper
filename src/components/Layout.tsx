@@ -10,6 +10,7 @@ const Clients = lazy(() => import('@/pages/Clients').then(m => ({ default: m.Cli
 const TaxWizard = lazy(() => import('@/pages/TaxWizard').then(m => ({ default: m.TaxWizard })))
 const CurrencyDashboard = lazy(() => import('@/pages/CurrencyDashboard').then(m => ({ default: m.CurrencyDashboard })))
 const SettingsPage = lazy(() => import('@/pages/Settings').then(m => ({ default: m.SettingsPage })))
+const OcrPage = lazy(() => import('@/pages/OcrPage').then(m => ({ default: m.OcrPage })))
 
 function PageLoader() {
   return (
@@ -34,6 +35,8 @@ export function Layout({ onSignOut, isGuest, onUpgrade }: LayoutProps) {
         return <Dashboard />
       case 'invoices':
         return <Invoices />
+      case 'ocr':
+        return <OcrPage />
       case 'clients':
         return <Clients />
       case 'currency':
