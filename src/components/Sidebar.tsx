@@ -57,7 +57,7 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
 
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-40 w-64 transform transition-transform duration-200 lg:translate-x-0',
+          'fixed inset-y-0 left-0 z-40 w-64 transform transition-transform duration-200 lg:translate-x-0 flex flex-col overflow-hidden',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         )}
         style={{ backgroundColor: 'var(--sidebar-bg)', color: 'var(--sidebar-text)' }}
@@ -67,7 +67,7 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
           <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>Invoice & Tax Helper</p>
         </div>
 
-        <nav className="px-4 space-y-1">
+        <nav className="px-4 space-y-1 flex-1 overflow-y-auto">
           {navItems.map((item) => {
             const isActive = currentView === item.id && !('external' in item && item.external)
 
