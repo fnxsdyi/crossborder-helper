@@ -66,11 +66,13 @@ export async function recognizeInvoice(
 
   const apiKey = import.meta.env.VITE_API2D_KEY
   if (!apiKey) {
+    console.error('[TaxFlow] VITE_API2D_KEY is not set')
     throw new Error('API_KEY_MISSING')
   }
+  console.log('[TaxFlow] OCR request starting, image size:', Math.round(imageBase64.length / 1024), 'KB')
 
   const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 30000)
+  const timeoutId = setTimeout(() => controller.abort(), 60000)
 
   try {
     const response = await fetch(API2D_URL, {
@@ -99,6 +101,8 @@ export async function recognizeInvoice(
     clearTimeout(timeoutId)
 
     if (!response.ok) {
+      const errText = await response.text().catch(() => 'unknown')
+      console.error(`[TaxFlow] API2D error ${response.status}:`, errText)
       throw new Error('API_ERROR')
     }
 
@@ -106,6 +110,7 @@ export async function recognizeInvoice(
     const content = data.choices?.[0]?.message?.content
 
     if (!content) {
+      console.error('[TaxFlow] API2D empty response:', JSON.stringify(data).slice(0, 500))
       throw new Error('EMPTY_RESPONSE')
     }
 
