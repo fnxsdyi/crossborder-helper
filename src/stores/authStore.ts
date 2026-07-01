@@ -1,8 +1,7 @@
 import { create } from 'zustand'
 import { supabase } from '@/lib/supabase'
+import { isAdmin } from '@/lib/config'
 import type { User } from '@supabase/supabase-js'
-
-const SUPER_ADMIN_EMAILS = ['fnxsdyi@qq.com']
 
 interface AuthState {
   user: User | null
@@ -53,7 +52,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         } catch (e) {}
       }
 
-      if (SUPER_ADMIN_EMAILS.includes(email.toLowerCase())) {
+      if (isAdmin(email)) {
         await supabase.from('licenses').insert({
           user_id: data.user.id,
           key: `ADMIN-${data.user.id}`,
@@ -74,7 +73,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     const { user } = get()
     if (!user) return false
 
-    if (SUPER_ADMIN_EMAILS.includes(user.email?.toLowerCase() || '')) {
+    if (isAdmin(user.email)) {
       return true
     }
 

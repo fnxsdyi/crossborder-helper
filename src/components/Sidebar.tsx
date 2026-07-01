@@ -190,6 +190,26 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
               {t('nav.signOut')}
             </button>
           )}
+          {/* Our Projects */}
+          <div className="mb-3 pt-3" style={{ borderTop: '1px solid var(--border-color)' }}>
+            <p className="text-[10px] font-semibold uppercase tracking-wider mb-2 px-3" style={{ color: 'var(--text-muted)' }}>
+              Our Projects
+            </p>
+            <div className="space-y-1 px-3">
+              <a href="https://hooki.io" target="_blank" rel="noopener noreferrer" className="block text-[11px] hover:opacity-80 transition-opacity" style={{ color: 'var(--text-muted)' }}>
+                Hooki — Webhook Console
+              </a>
+              <a href="https://chart.flowingpulse.com" target="_blank" rel="noopener noreferrer" className="block text-[11px] hover:opacity-80 transition-opacity" style={{ color: 'var(--text-muted)' }}>
+                ChartFlow — Notion Charts
+              </a>
+              <a href="https://kaki.llc" target="_blank" rel="noopener noreferrer" className="block text-[11px] hover:opacity-80 transition-opacity" style={{ color: 'var(--text-muted)' }}>
+                Kaki — SaaS Platform
+              </a>
+              <a href="https://flowingpulse.com" target="_blank" rel="noopener noreferrer" className="block text-[11px] hover:opacity-80 transition-opacity" style={{ color: 'var(--text-muted)' }}>
+                FlowingPulse — Studio
+              </a>
+            </div>
+          </div>
           <p className="text-xs text-center flex items-center justify-center gap-1 group relative" style={{ color: 'var(--text-muted)' }}>
             v0.1.0 • Secure Sync 🔒
             <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-slate-800 text-white text-xs rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">

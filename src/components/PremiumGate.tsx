@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/authStore'
+import { isAdmin } from '@/lib/config'
 import { Lock, X, CreditCard, ExternalLink } from 'lucide-react'
 import { useI18n } from '@/hooks/useI18n'
 
@@ -23,15 +24,13 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
     }
   }, [user])
 
-  const SUPER_ADMIN_EMAILS = ['fnxsdyi@qq.com']
-
   async function checkPremiumStatus() {
     if (!user) {
       setIsPremium(false)
       return
     }
 
-    if (SUPER_ADMIN_EMAILS.includes(user.email?.toLowerCase() || '')) {
+    if (isAdmin(user.email)) {
       setIsPremium(true)
       return
     }
@@ -73,7 +72,7 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
 
       {showUpgrade && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
+          <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
             <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-6 text-white">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold">{t('premium.title')}</h2>
@@ -86,8 +85,8 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
 
             <div className="p-6">
               <div className="mb-6">
-                <h3 className="font-semibold mb-3">{t('premium.features')}</h3>
-                <ul className="space-y-2 text-sm text-slate-600">
+                <h3 className="font-semibold mb-3 dark:text-white">{t('premium.features')}</h3>
+                <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
                   <li className="flex items-center gap-2">
                     <span className="text-green-500">✓</span>
                     {t('premium.unlimitedPdf')}
@@ -140,8 +139,6 @@ export function usePremium() {
   const { user } = useAuthStore()
   const [isPremium, setIsPremium] = useState(false)
 
-  const SUPER_ADMIN_EMAILS = ['fnxsdyi@qq.com']
-
   useEffect(() => {
     if (user) {
       checkPremium()
@@ -154,7 +151,7 @@ export function usePremium() {
       return
     }
 
-    if (SUPER_ADMIN_EMAILS.includes(user.email?.toLowerCase() || '')) {
+    if (isAdmin(user.email)) {
       setIsPremium(true)
       return
     }
