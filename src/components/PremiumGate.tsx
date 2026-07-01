@@ -35,14 +35,19 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
       return
     }
 
-    const { data } = await supabase
-      .from('licenses')
-      .select('id')
-      .eq('user_id', user.id)
-      .eq('active', true)
-      .single()
+    try {
+      const { data } = await supabase
+        .from('licenses')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('active', true)
+        .single()
 
-    setIsPremium(!!data)
+      setIsPremium(!!data)
+    } catch (err) {
+      console.error('Failed to check premium status:', err)
+      setIsPremium(false)
+    }
   }
 
   if (isPremium === null) {

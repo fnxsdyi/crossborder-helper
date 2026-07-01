@@ -77,13 +77,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       return true
     }
 
-    const { data } = await supabase
-      .from('licenses')
-      .select('id')
-      .eq('user_id', user.id)
-      .eq('active', true)
-      .single()
+    try {
+      const { data } = await supabase
+        .from('licenses')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('active', true)
+        .single()
 
-    return !!data
+      return !!data
+    } catch (err) {
+      console.error('Failed to check premium status:', err)
+      return false
+    }
   },
 }))
