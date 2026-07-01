@@ -2,6 +2,8 @@ import { Lock, CreditCard, ArrowLeft } from 'lucide-react'
 import { useI18n } from '@/hooks/useI18n'
 import { useAppStore } from '@/stores/appStore'
 
+const PAYPAL_OCR_PLAN_ID = 'P-29E1204392902382CNJCROFI'
+
 interface OcrUsageLimitProps {
   used: number
   limit: number
@@ -18,8 +20,7 @@ export function OcrUsageLimit({ used, limit }: OcrUsageLimitProps) {
       timestamp: Date.now(),
     }))
     const returnUrl = encodeURIComponent(window.location.origin + `/ocr?token=${token}`)
-    // TODO: Replace with actual OCR add-on PayPal plan link
-    window.location.href = `https://www.paypal.com/ncp/payment/OCR_PLAN_ID?return=${returnUrl}`
+    window.location.href = `https://www.paypal.com/subscriptions?plan_id=${PAYPAL_OCR_PLAN_ID}&return=${returnUrl}`
   }
 
   return (
