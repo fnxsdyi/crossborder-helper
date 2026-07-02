@@ -75,13 +75,18 @@ export interface SyncSettings {
 // ==========================================
 
 export async function getClients(userId: string): Promise<SyncClient[]> {
+  console.log('[Sync] getClients called for user:', userId)
   const { data, error } = await supabase
     .from('sf_clients')
     .select('*')
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
 
-  if (error) throw error
+  if (error) {
+    console.error('[Sync] getClients error:', error)
+    throw error
+  }
+  console.log('[Sync] getClients result:', data?.length, 'rows')
   return (data || []).map(mapClient)
 }
 
@@ -145,13 +150,18 @@ function mapClient(row: Record<string, unknown>): SyncClient {
 // ==========================================
 
 export async function getInvoices(userId: string): Promise<SyncInvoice[]> {
+  console.log('[Sync] getInvoices called for user:', userId)
   const { data, error } = await supabase
     .from('sf_invoices')
     .select('*')
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
 
-  if (error) throw error
+  if (error) {
+    console.error('[Sync] getInvoices error:', error)
+    throw error
+  }
+  console.log('[Sync] getInvoices result:', data?.length, 'rows')
   return (data || []).map(mapInvoice)
 }
 
@@ -260,11 +270,16 @@ function mapInvoice(row: Record<string, unknown>): SyncInvoice {
 // ==========================================
 
 export async function getSettings(userId: string): Promise<SyncSettings> {
+  console.log('[Sync] getSettings called for user:', userId)
   const { data, error } = await supabase
     .from('sf_settings')
     .select('*')
     .eq('user_id', userId)
     .single()
+
+  if (error) {
+    console.error('[Sync] getSettings query error:', error)
+  }
 
   if (error || !data) {
     // Create default settings

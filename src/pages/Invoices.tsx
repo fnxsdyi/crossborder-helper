@@ -22,13 +22,20 @@ export function Invoices() {
   }, [user])
 
   async function loadInvoices() {
-    if (!user) return
+    console.log('[Invoices] loadInvoices called, user:', user?.id)
+    if (!user) {
+      console.log('[Invoices] No user, skipping')
+      setLoading(false)
+      return
+    }
     try {
       setLoading(true)
+      console.log('[Invoices] Fetching invoices for user:', user.id)
       const data = await getInvoices(user.id)
+      console.log('[Invoices] Got invoices:', data.length)
       setInvoices(data)
     } catch (err) {
-      console.error('Failed to load invoices:', err)
+      console.error('[Invoices] Failed to load invoices:', err)
     } finally {
       setLoading(false)
     }
