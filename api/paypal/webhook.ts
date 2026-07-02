@@ -1,5 +1,12 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { createClient } from '@supabase/supabase-js'
+import type { IncomingMessage, ServerResponse } from 'http'
+
+interface VercelRequest extends IncomingMessage {
+  body: any
+  query: Record<string, string>
+}
+
+type VercelResponse = ServerResponse
 
 const supabaseUrl = process.env.SUPABASE_URL!
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
