@@ -62,9 +62,61 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
         )}
         style={{ backgroundColor: 'var(--sidebar-bg)', color: 'var(--sidebar-text)' }}
       >
-        <div className="p-6">
-          <h1 className="text-xl font-bold">TaxFlow</h1>
-          <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>Invoice & Tax Helper</p>
+        {/* Header with controls */}
+        <div className="px-4 pt-4 pb-3 shrink-0">
+          <div className="flex items-center justify-between mb-2">
+            <div>
+              <h1 className="text-lg font-bold">TaxFlow</h1>
+              <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Invoice & Tax Helper</p>
+            </div>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => {
+                  localStorage.removeItem('app_entered')
+                  window.location.reload()
+                }}
+                className="p-1.5 rounded-md hover:bg-slate-800 transition-colors"
+                style={{ color: 'var(--text-muted)' }}
+                title={t('nav.home')}
+              >
+                <Home size={15} />
+              </button>
+              <ThemeToggle />
+            </div>
+          </div>
+          {/* Language Switcher */}
+          <div className="relative">
+            <button
+              onClick={() => setShowLangMenu(!showLangMenu)}
+              className="flex items-center gap-1.5 px-2 py-1 rounded-md text-xs w-full hover:bg-slate-800 transition-colors"
+              style={{ color: 'var(--text-muted)' }}
+            >
+              <Globe size={13} />
+              <span>{currentLang?.nativeName || 'English'}</span>
+            </button>
+            {showLangMenu && (
+              <div
+                className="absolute top-full left-0 right-0 mt-1 py-1 rounded-lg shadow-lg max-h-48 overflow-y-auto z-50"
+                style={{ backgroundColor: 'var(--sidebar-bg)', border: '1px solid var(--border-color)' }}
+              >
+                {locales.map((lang) => (
+                  <button
+                    key={lang.code}
+                    onClick={() => {
+                      changeLocale(lang.code as Locale)
+                      setShowLangMenu(false)
+                    }}
+                    className={cn(
+                      'w-full px-3 py-1.5 text-left text-sm hover:bg-slate-800 transition-colors',
+                      locale === lang.code && 'bg-primary text-white'
+                    )}
+                  >
+                    {lang.nativeName}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         <nav className="px-4 space-y-1 flex-1 overflow-y-auto">
@@ -117,55 +169,8 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
           })}
         </nav>
 
-        <div className="shrink-0 p-3 space-y-1" style={{ borderTop: '1px solid var(--border-color)' }}>
-          {/* Language Switcher */}
-          <div className="relative">
-            <button
-              onClick={() => setShowLangMenu(!showLangMenu)}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm w-full hover:bg-slate-800 transition-colors"
-              style={{ color: 'var(--sidebar-text)' }}
-            >
-              <Globe size={16} />
-              <span>{currentLang?.nativeName || 'English'}</span>
-            </button>
-            {showLangMenu && (
-              <div
-                className="absolute bottom-full left-0 right-0 mb-1 py-1 rounded-lg shadow-lg max-h-48 overflow-y-auto"
-                style={{ backgroundColor: 'var(--sidebar-bg)', border: '1px solid var(--border-color)' }}
-              >
-                {locales.map((lang) => (
-                  <button
-                    key={lang.code}
-                    onClick={() => {
-                      changeLocale(lang.code as Locale)
-                      setShowLangMenu(false)
-                    }}
-                    className={cn(
-                      'w-full px-3 py-1.5 text-left text-sm hover:bg-slate-800 transition-colors',
-                      locale === lang.code && 'bg-primary text-white'
-                    )}
-                  >
-                    {lang.nativeName}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="flex justify-center">
-            <ThemeToggle />
-          </div>
-          <button
-            onClick={() => {
-              localStorage.removeItem('app_entered')
-              window.location.reload()
-            }}
-            className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm hover:bg-slate-800 transition-colors"
-            style={{ color: 'var(--text-muted)' }}
-          >
-            <Home size={16} />
-            {t('nav.home')}
-          </button>
+        {/* Bottom section */}
+        <div className="shrink-0 px-4 py-3 space-y-1" style={{ borderTop: '1px solid var(--border-color)' }}>
           {isGuest ? (
             <button
               onClick={() => {
@@ -212,11 +217,8 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
               </a>
             </div>
           </div>
-          <p className="text-xs text-center flex items-center justify-center gap-1 group relative pt-1" style={{ color: 'var(--text-muted)' }}>
-            v0.1.0 • Secure Sync 🔒
-            <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-slate-800 text-white text-xs rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-              {t('nav.privacyTooltip')}
-            </span>
+          <p className="text-[10px] text-center pt-1" style={{ color: 'var(--text-muted)' }}>
+            v0.1.0 • Secure Sync
           </p>
         </div>
       </aside>

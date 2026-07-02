@@ -11,6 +11,7 @@ import {
   ArrowRight,
   X,
   Mail,
+  Camera,
 } from 'lucide-react'
 import type { Locale } from '@/lib/i18n'
 
@@ -29,6 +30,12 @@ export function LandingPage({ onEnterApp, onBuyNow, onMemberLogin }: LandingPage
   const currentLang = locales.find(l => l.code === locale)
 
   const features = [
+    {
+      icon: Camera,
+      titleKey: 'landing.feature5Title' as const,
+      descKey: 'landing.feature5Desc' as const,
+      highlight: true,
+    },
     {
       icon: FileText,
       titleKey: 'landing.feature1Title' as const,
@@ -153,12 +160,23 @@ export function LandingPage({ onEnterApp, onBuyNow, onMemberLogin }: LandingPage
           </h2>
           <div className="grid md:grid-cols-2 gap-8">
             {features.map((f, i) => (
-              <div key={i} className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
-                  <f.icon size={24} className="text-blue-600" />
+              <div
+                key={i}
+                className={`rounded-2xl p-6 shadow-sm border ${
+                  (f as { highlight?: boolean }).highlight
+                    ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white border-blue-500 md:col-span-2'
+                    : 'bg-white border-slate-200'
+                }`}
+              >
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${
+                  (f as { highlight?: boolean }).highlight ? 'bg-white/20' : 'bg-blue-100'
+                }`}>
+                  <f.icon size={24} className={(f as { highlight?: boolean }).highlight ? 'text-white' : 'text-blue-600'} />
                 </div>
-                <h3 className="text-xl font-semibold text-slate-900 mb-2">{t(f.titleKey)}</h3>
-                <p className="text-slate-600">{t(f.descKey)}</p>
+                <h3 className={`text-xl font-semibold mb-2 ${
+                  (f as { highlight?: boolean }).highlight ? 'text-white' : 'text-slate-900'
+                }`}>{t(f.titleKey)}</h3>
+                <p className={(f as { highlight?: boolean }).highlight ? 'text-blue-100' : 'text-slate-600'}>{t(f.descKey)}</p>
               </div>
             ))}
           </div>

@@ -271,6 +271,8 @@ type TranslationKeys = {
   'landing.feature3Desc': string
   'landing.feature4Title': string
   'landing.feature4Desc': string
+  'landing.feature5Title': string
+  'landing.feature5Desc': string
   'landing.pricingTitle': string
   'landing.pricingDesc': string
   'landing.freePlan': string
@@ -645,6 +647,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.feature3Desc': 'Track revenue across currencies. Real-time FX rates, gain/loss analysis, and payment tracking.',
     'landing.feature4Title': '100% Secure',
     'landing.feature4Desc': 'Your data is encrypted and securely synced to the cloud. Access from anywhere, anytime.',
+    'landing.feature5Title': 'AI Invoice Scanner',
+    'landing.feature5Desc': 'Snap a photo of any invoice and our AI extracts all details instantly — vendor, amount, tax ID, date. Save time on manual data entry.',
     'landing.pricingTitle': 'Simple, One-Time Pricing',
     'landing.pricingDesc': 'No subscriptions. No hidden fees. Pay once, use forever.',
     'landing.freePlan': 'Free',
@@ -1016,6 +1020,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.feature3Desc': '追踪跨币种收入。实时汇率、损益分析和付款追踪。',
     'landing.feature4Title': '100% 安全',
     'landing.feature4Desc': '您的数据加密并安全同步到云端，随时随地访问。',
+    'landing.feature5Title': 'AI 发票扫描',
+    'landing.feature5Desc': '拍摄发票照片，AI 自动提取供应商、金额、税号、日期等所有信息，告别手动录入。',
     'landing.pricingTitle': '简单的一次性定价',
     'landing.pricingDesc': '无订阅。无隐藏费用。一次付费，永久使用。',
     'landing.freePlan': '免费版',
@@ -1387,6 +1393,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.feature3Desc': '通貨別収益を追跡。リアルタイム為替レート、損益分析、支払い追跡。',
     'landing.feature4Title': '100%セキュア',
     'landing.feature4Desc': 'データは暗号化されクラウドに安全に同期。どこからでもアクセス可能。',
+    'landing.feature5Title': 'AI請求書スキャナー',
+    'landing.feature5Desc': '請求書の写真を撮るだけで、AIが vendor・金額・税番号・日付を自動抽出。手動入力の手間を削減。',
     'landing.pricingTitle': 'シンプルな一回払い',
     'landing.pricingDesc': 'サブスクリプションなし、隠れた費用なし。一度払えば永続使用。',
     'landing.freePlan': '無料プラン',
@@ -1738,6 +1746,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.feature3Desc': '통화별 수익을 추적합니다. 실시간 환율, 손익 분석 및 지불 추적.',
     'landing.feature4Title': '100% 안전',
     'landing.feature4Desc': '데이터가 암호화되어 클라우드에 안전하게 동기화됩니다. 어디서든 접근 가능.',
+    'landing.feature5Title': 'AI 송장 스캐너',
+    'landing.feature5Desc': '송장 사진을 찍으면 AI가 공급자, 금액, 세금 번호, 날짜를 자동 추출합니다. 수동 입력 시간을 절약하세요.',
     'landing.pricingTitle': '간단한 일회성 가격',
     'landing.pricingDesc': '구독 없음, 숨겨진 비용 없음. 한번 지불하면 영구 사용.',
     'landing.freePlan': '무료 플랜',
@@ -2089,6 +2099,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.feature3Desc': 'Verfolgen Sie Umsätze über Währungen. Echtzeit-Wechselkurse, Gewinn/Verlust-Analyse.',
     'landing.feature4Title': '100% Sicher',
     'landing.feature4Desc': 'Ihre Daten werden verschlüsselt und sicher in der Cloud synchronisiert. Überall zugänglich.',
+    'landing.feature5Title': 'KI-Rechnungsscanner',
+    'landing.feature5Desc': 'Fotografieren Sie eine Rechnung und unser KI extrahiert alle Details automatisch — Lieferant, Betrag, Steuer-ID, Datum.',
     'landing.pricingTitle': 'Einfache Einmalzahlung',
     'landing.pricingDesc': 'Keine Abonnements. Keine versteckten Gebühren. Einmal zahlen, ewig nutzen.',
     'landing.freePlan': 'Kostenloser Plan',
@@ -2440,6 +2452,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.feature3Desc': 'Suivez les revenus par devise. Taux de change en temps réel, analyse des gains/pertes.',
     'landing.feature4Title': '100% Sécurisé',
     'landing.feature4Desc': 'Vos données sont chiffrées et synchronisées en toute sécurité dans le cloud. Accessibles partout.',
+    'landing.feature5Title': 'Scanner de factures IA',
+    'landing.feature5Desc': 'Prenez une photo de facture et notre IA extrait tous les détails automatiquement — fournisseur, montant, numéro fiscal, date.',
     'landing.pricingTitle': 'Prix unique simple',
     'landing.pricingDesc': 'Pas d\'abonnement. Pas de frais cachés. Payez une fois, utilisez pour toujours.',
     'landing.freePlan': 'Plan gratuit',
@@ -2791,6 +2805,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.feature3Desc': 'Rastree ingresos por divisa. Tipos de cambio en tiempo real, análisis de ganancias/pérdidas.',
     'landing.feature4Title': '100% Seguro',
     'landing.feature4Desc': 'Sus datos están cifrados y sincronizados de forma segura en la nube. Accesible desde cualquier lugar.',
+    'landing.feature5Title': 'Escáner de facturas con IA',
+    'landing.feature5Desc': 'Tome una foto de cualquier factura y nuestra IA extrae todos los detalles al instante — proveedor, monto, ID fiscal, fecha.',
     'landing.pricingTitle': 'Precio único simple',
     'landing.pricingDesc': 'Sin suscripciones. Sin costos ocultos. Pague una vez, use para siempre.',
     'landing.freePlan': 'Plan gratuito',
@@ -3142,6 +3158,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.feature3Desc': 'Rastreie receitas por moeda. Taxas de câmbio em tempo real, análise de ganhos/perdas.',
     'landing.feature4Title': '100% Seguro',
     'landing.feature4Desc': 'Seus dados são criptografados e sincronizados com segurança na nuvem. Acessível de qualquer lugar.',
+    'landing.feature5Title': 'Scanner de faturas com IA',
+    'landing.feature5Desc': 'Tire uma foto de qualquer fatura e nossa IA extrai todos os detalhes automaticamente — fornecedor, valor, ID fiscal, data.',
     'landing.pricingTitle': 'Preço único simples',
     'landing.pricingDesc': 'Sem assinaturas. Sem taxas ocultas. Pague uma vez, use para sempre.',
     'landing.freePlan': 'Plano gratuito',
