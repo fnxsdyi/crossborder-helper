@@ -48,7 +48,7 @@ interface OldClient {
 }
 
 export function MigrateData() {
-  const { user } = useAuthStore()
+  const { user, loading } = useAuthStore()
   const [logs, setLogs] = useState<LogEntry[]>([])
   const [migrating, setMigrating] = useState(false)
   const [done, setDone] = useState(false)
@@ -58,6 +58,10 @@ export function MigrateData() {
   }
 
   async function startMigration() {
+    if (loading) {
+      log('正在加载认证信息，请稍候...', 'info')
+      return
+    }
     if (!user) {
       log('请先登录', 'error')
       return
@@ -172,10 +176,15 @@ export function MigrateData() {
 
       <button
         onClick={startMigration}
-        disabled={migrating || done}
+        disabled={migrating || done || loading}
         className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors"
       >
-        {migrating ? (
+        {loading ? (
+          <>
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
+            加载中...
+          </>
+        ) : migrating ? (
           <>
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
             迁移中...

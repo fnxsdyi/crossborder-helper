@@ -3,10 +3,13 @@
 import { useEffect, useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { getSettings, upsertSettings, type SyncSettings } from '@/lib/sync'
-import { Settings as SettingsIcon, LogOut, User, Database } from 'lucide-react'
+import { Settings as SettingsIcon, LogOut, User, Database, X } from 'lucide-react'
 import { useI18n } from '@/hooks/useI18n'
 import { usePremium } from '@/components/PremiumGate'
 import { useAppStore } from '@/stores/appStore'
+import { PayPalSubscriptionButton } from '@/components/PayPalSubscriptionButton'
+import { PRO_MONTHLY_PLAN_ID, PRO_ANNUAL_PLAN_ID } from '@/lib/config'
+import { supabase } from '@/lib/supabase'
 
 interface SettingsPageProps {
   onUpgrade?: () => void
@@ -18,6 +21,7 @@ export function SettingsPage({ onUpgrade, isGuest }: SettingsPageProps) {
   const { user, signOut } = useAuthStore()
   const { setCurrentView } = useAppStore()
   const isPremium = usePremium()
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   const [settings, setSettings] = useState<SyncSettings | null>(null)
   const [businessName, setBusinessName] = useState('')
   const [businessAddress, setBusinessAddress] = useState('')
@@ -128,7 +132,7 @@ export function SettingsPage({ onUpgrade, isGuest }: SettingsPageProps) {
         {!isPremium && (
           <div className="mt-3">
             <button
-              onClick={() => onUpgrade?.()}
+              onClick={() => setShowUpgradeModal(true)}
               className="w-full px-4 py-2 bg-amber-600 text-white rounded-lg text-sm hover:bg-amber-700"
             >
               {t('settings.upgradeToPremium')}
@@ -265,6 +269,67 @@ export function SettingsPage({ onUpgrade, isGuest }: SettingsPageProps) {
           打开迁移工具
         </button>
       </div>
+
+      {/* Upgrade Modal */}
+      {showUpgradeModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h3 className="text-lg font-semibold">{t('settings.upgradeToPremium')}</h3>
+              <button onClick={() => setShowUpgradeModal(false)} className="p-1 hover:bg-slate-100 rounded">
+                <X size={20} />
+              </button>
+            </div>
+            <div className="p-6">
+              <p className="text-slate-600 mb-4">选择你的订阅方案：</p>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm font-medium mb-2">Pro 月付 — $9/月</p>
+                  <PayPalSubscriptionButton
+                    planId={PRO_MONTHLY_PLAN_ID}
+                    onSuccess={async (id) => {
+                      if (user) {
+                        await supabase.from('subscriptions').upsert({
+                          user_id: user.id,
+                          paypal_subscription_id: id,
+                          plan_type: 'monthly',
+                          status: 'active',
+                          current_period_start: new Date().toISOString(),
+                          current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+                        }, { onConflict: 'paypal_subscription_id' })
+                      }
+                      setShowUpgradeModal(false)
+                      window.location.reload()
+                    }}
+                    onError={(err) => console.error('Payment error:', err)}
+                  />
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-2">Pro 年付 — $90/年（省 $18）</p>
+                  <PayPalSubscriptionButton
+                    planId={PRO_ANNUAL_PLAN_ID}
+                    onSuccess={async (id) => {
+                      if (user) {
+                        await supabase.from('subscriptions').upsert({
+                          user_id: user.id,
+                          paypal_subscription_id: id,
+                          plan_type: 'annual',
+                          status: 'active',
+                          current_period_start: new Date().toISOString(),
+                          current_period_end: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+                        }, { onConflict: 'paypal_subscription_id' })
+                      }
+                      setShowUpgradeModal(false)
+                      window.location.reload()
+                    }}
+                    onError={(err) => console.error('Payment error:', err)}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
