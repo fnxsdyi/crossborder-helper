@@ -63,7 +63,7 @@ export function Layout({ onSignOut, isGuest, onUpgrade }: LayoutProps) {
       case 'tax':
         return <TaxWizard />
       case 'settings':
-        return <SettingsPage onUpgrade={onUpgrade} isGuest={isGuest} />
+        return <SettingsPage isGuest={isGuest} />
       case 'migrate':
         return <MigrateData />
       case 'contract':

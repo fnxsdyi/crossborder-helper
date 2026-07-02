@@ -12,11 +12,10 @@ import { PRO_MONTHLY_PLAN_ID, PRO_ANNUAL_PLAN_ID } from '@/lib/config'
 import { supabase } from '@/lib/supabase'
 
 interface SettingsPageProps {
-  onUpgrade?: () => void
   isGuest?: boolean
 }
 
-export function SettingsPage({ onUpgrade, isGuest }: SettingsPageProps) {
+export function SettingsPage({ isGuest }: SettingsPageProps) {
   const { t } = useI18n()
   const { user, signOut } = useAuthStore()
   const { setCurrentView } = useAppStore()
