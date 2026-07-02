@@ -28,9 +28,18 @@ export function OcrUpload({ onResult }: OcrUploadProps) {
   }
 
   async function checkUsage() {
+    // Guest: use localStorage to track usage
     if (!user?.id) {
-      console.warn('OCR: No user ID, skipping usage check')
-      return { allowed: true, used: 0, limit: 3, hasSubscription: false }
+      const guestUsed = parseInt(localStorage.getItem('ocr_guest_used') || '0', 10)
+      setUsageCount(guestUsed)
+      setHasSubscription(false)
+      setCheckedUsage(true)
+      return {
+        allowed: guestUsed < 3,
+        used: guestUsed,
+        limit: 3,
+        hasSubscription: false,
+      }
     }
     try {
       const usage = await checkOcrUsage(user.id)
@@ -40,7 +49,6 @@ export function OcrUpload({ onResult }: OcrUploadProps) {
       return usage
     } catch (err) {
       console.error('Failed to check OCR usage:', err)
-      // Allow usage if check fails (graceful degradation)
       return { allowed: true, used: 0, limit: 3, hasSubscription: false }
     }
   }
@@ -88,6 +96,11 @@ export function OcrUpload({ onResult }: OcrUploadProps) {
             const hash = await simpleHash(base64.slice(0, 1000))
             await recordOcrUsage(user.id, hash)
             setUsageCount(usageCount + 1)
+          } else {
+            // Guest: increment localStorage counter
+            const current = parseInt(localStorage.getItem('ocr_guest_used') || '0', 10)
+            localStorage.setItem('ocr_guest_used', String(current + 1))
+            setUsageCount(current + 1)
           }
 
           onResult()
