@@ -13,6 +13,7 @@ import {
   LogOut,
   ShieldCheck,
   Camera,
+  UserPlus,
 } from 'lucide-react'
 import { useAppStore } from '@/stores/appStore'
 import { ThemeToggle } from './ThemeToggle'
@@ -172,18 +173,32 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
         {/* Bottom section */}
         <div className="shrink-0 px-4 py-3 space-y-1" style={{ borderTop: '1px solid var(--border-color)' }}>
           {isGuest ? (
-            <button
-              onClick={() => {
-                localStorage.removeItem('app_entered')
-                localStorage.removeItem('is_guest')
-                window.location.reload()
-              }}
-              className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm hover:bg-slate-800 transition-colors"
-              style={{ color: 'var(--text-muted)' }}
-            >
-              <LogOut size={16} />
-              {t('nav.signIn')}
-            </button>
+            <>
+              <button
+                onClick={() => {
+                  localStorage.removeItem('app_entered')
+                  localStorage.removeItem('is_guest')
+                  window.location.reload()
+                }}
+                className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm hover:bg-slate-800 transition-colors"
+                style={{ color: 'var(--text-muted)' }}
+              >
+                <LogOut size={16} />
+                {t('nav.signIn')}
+              </button>
+              <button
+                onClick={() => {
+                  localStorage.removeItem('app_entered')
+                  localStorage.removeItem('is_guest')
+                  window.location.href = '/register'
+                }}
+                className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm hover:bg-slate-800 transition-colors"
+                style={{ color: 'var(--text-muted)' }}
+              >
+                <UserPlus size={16} />
+                {t('nav.register')}
+              </button>
+            </>
           ) : (
             <button
               onClick={() => {

@@ -34,6 +34,13 @@ export function PayPalSubscriptionButton({
 
     const containerId = `paypal-btn-${uniqueId}`
 
+    // Check if CLIENT_ID is configured
+    if (!CLIENT_ID) {
+      console.error('[PayPal] VITE_PAYPAL_CLIENT_ID not configured')
+      onError?.(new Error('PayPal not configured'))
+      return
+    }
+
     // Check if PayPal SDK is already loaded
     if (window.paypal) {
       renderButton(containerId)

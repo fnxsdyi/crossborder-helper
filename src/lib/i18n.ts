@@ -17,6 +17,7 @@ type TranslationKeys = {
   'nav.privacyTooltip': string
   'nav.signOut': string
   'nav.signIn': string
+  'nav.register': string
   'nav.dashboard': string
   'nav.invoices': string
   'nav.clients': string
@@ -406,6 +407,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.privacyTooltip': 'Encrypted & 100% Private.',
     'nav.signOut': 'Sign Out',
     'nav.signIn': 'Sign In',
+    'nav.register': 'Register',
     'nav.dashboard': 'Dashboard',
     'nav.invoices': 'Invoices',
     'nav.clients': 'Clients',
@@ -792,6 +794,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.privacyTooltip': '您的数据已加密同步，安全私密。',
     'nav.signOut': '退出登录',
     'nav.signIn': '登录',
+    'nav.register': '注册',
     'nav.dashboard': '仪表盘',
     'nav.invoices': '发票',
     'nav.clients': '客户',
@@ -1178,6 +1181,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.privacyTooltip': '暗号化済み・100%プライベート。',
     'nav.signOut': 'ログアウト',
     'nav.signIn': 'ログイン',
+    'nav.register': '登録',
     'nav.dashboard': 'ダッシュボード',
     'nav.invoices': '請求書',
     'nav.clients': 'クライアント',
@@ -1563,6 +1567,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.privacyTooltip': '암호화됨 & 100% 비공개.',
     'nav.signOut': '로그아웃',
     'nav.signIn': '로그인',
+    'nav.register': '회원가입',
     'nav.dashboard': '대시보드',
     'nav.invoices': '송장',
     'nav.clients': '고객',
@@ -1929,6 +1934,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.privacyTooltip': 'Verschlüsselt & 100% privat.',
     'nav.signOut': 'Abmelden',
     'nav.signIn': 'Anmelden',
+    'nav.register': 'Registrieren',
     'nav.dashboard': 'Dashboard',
     'nav.invoices': 'Rechnungen',
     'nav.clients': 'Kunden',
@@ -2295,6 +2301,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.privacyTooltip': 'Chiffré & 100% privé.',
     'nav.signOut': 'Déconnexion',
     'nav.signIn': 'Se connecter',
+    'nav.register': "S'inscrire",
     'nav.dashboard': 'Tableau de bord',
     'nav.invoices': 'Factures',
     'nav.clients': 'Clients',
@@ -2661,6 +2668,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.privacyTooltip': 'Cifrado & 100% privado.',
     'nav.signOut': 'Cerrar sesión',
     'nav.signIn': 'Iniciar sesión',
+    'nav.register': 'Registrarse',
     'nav.dashboard': 'Panel',
     'nav.invoices': 'Facturas',
     'nav.clients': 'Clientes',
@@ -3027,6 +3035,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'nav.privacyTooltip': 'Criptografado & 100% privado.',
     'nav.signOut': 'Sair',
     'nav.signIn': 'Entrar',
+    'nav.register': 'Cadastrar',
     'nav.dashboard': 'Painel',
     'nav.invoices': 'Faturas',
     'nav.clients': 'Clientes',
