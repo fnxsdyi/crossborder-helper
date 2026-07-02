@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/authStore'
 import { isAdmin } from '@/lib/config'
 import { PRO_MONTHLY_PLAN_ID, PRO_ANNUAL_PLAN_ID } from '@/lib/config'
+import { checkSubscriptionWithFallback } from '@/lib/subscription'
 import { Lock, X, CheckCircle } from 'lucide-react'
 import { useI18n } from '@/hooks/useI18n'
 import { PayPalSubscriptionButton } from './PayPalSubscriptionButton'
@@ -38,32 +39,27 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
       return
     }
 
-    try {
-      const { data } = await supabase
-        .from('licenses')
-        .select('id')
-        .eq('user_id', user.id)
-        .eq('active', true)
-        .maybeSingle()
-
-      setIsPremium(!!data)
-    } catch (err) {
-      console.error('Failed to check premium status:', err)
-      setIsPremium(false)
-    }
+    const result = await checkSubscriptionWithFallback(user.id)
+    setIsPremium(result.isPremium)
   }
 
   async function handleSubscriptionSuccess(subscriptionId: string, _planType: string) {
     if (!user) return
+
+    // Create subscription record (webhook will also do this, but we do it here for immediate UX)
     try {
-      await supabase.from('licenses').insert({
+      await supabase.from('subscriptions').upsert({
         user_id: user.id,
-        key: `PAYPAL-SUB-${subscriptionId}`,
-        active: true,
-      })
+        paypal_subscription_id: subscriptionId,
+        plan_type: _planType as 'monthly' | 'annual',
+        status: 'active',
+        current_period_start: new Date().toISOString(),
+        current_period_end: new Date(Date.now() + (_planType === 'annual' ? 365 : 30) * 24 * 60 * 60 * 1000).toISOString(),
+      }, { onConflict: 'paypal_subscription_id' })
     } catch (err) {
       console.error('Failed to record subscription:', err)
     }
+
     setSuccess(true)
     await checkPremiumStatus()
     setTimeout(() => {
@@ -209,14 +205,8 @@ export function usePremium() {
       return
     }
 
-    const { data } = await supabase
-      .from('licenses')
-      .select('id')
-      .eq('user_id', user.id)
-      .eq('active', true)
-      .maybeSingle()
-
-    setIsPremium(!!data)
+    const result = await checkSubscriptionWithFallback(user.id)
+    setIsPremium(result.isPremium)
   }
 
   return isPremium

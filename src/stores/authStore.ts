@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { supabase } from '@/lib/supabase'
 import { isAdmin } from '@/lib/config'
+import { checkSubscriptionWithFallback } from '@/lib/subscription'
 import type { User } from '@supabase/supabase-js'
 
 interface AuthState {
@@ -54,13 +55,17 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         const pendingData = localStorage.getItem('paypal_pending_token')
         if (pendingData) {
           try {
-            const { token, timestamp } = JSON.parse(pendingData)
+            const { token, timestamp, planType } = JSON.parse(pendingData)
             const thirtyMinutes = 30 * 60 * 1000
             if ((Date.now() - timestamp) < thirtyMinutes) {
-              await supabase.from('licenses').insert({
+              // Create subscription record
+              await supabase.from('subscriptions').insert({
                 user_id: data.user.id,
-                key: `PAYPAL-${token}`,
-                active: true
+                paypal_subscription_id: `PENDING-${token}`,
+                plan_type: planType || 'monthly',
+                status: 'active',
+                current_period_start: new Date().toISOString(),
+                current_period_end: new Date(Date.now() + (planType === 'annual' ? 365 : 30) * 24 * 60 * 60 * 1000).toISOString(),
               })
             }
           } catch (e) {}
@@ -95,18 +100,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       return true
     }
 
-    try {
-      const { data } = await supabase
-        .from('licenses')
-        .select('id')
-        .eq('user_id', user.id)
-        .eq('active', true)
-        .single()
-
-      return !!data
-    } catch (err) {
-      console.error('Failed to check premium status:', err)
-      return false
-    }
+    const result = await checkSubscriptionWithFallback(user.id)
+    return result.isPremium
   },
 }))

@@ -1,4 +1,5 @@
 import { supabase } from './supabase'
+import { checkSubscription } from './subscription'
 
 const OCR_FREE_LIMIT = 3
 
@@ -10,8 +11,8 @@ export async function checkOcrUsage(userId: string): Promise<{
 }> {
   try {
     // Check subscription
-    const hasSubscription = await hasOcrSubscription(userId)
-    if (hasSubscription) {
+    const subResult = await checkSubscription(userId)
+    if (subResult.isPremium) {
       return { allowed: true, used: 0, limit: Infinity, hasSubscription: true }
     }
 
@@ -46,21 +47,6 @@ export async function recordOcrUsage(userId: string, imageHash: string): Promise
     })
   } catch (err) {
     console.warn('[TaxFlow] Failed to record OCR usage:', err)
-  }
-}
-
-export async function hasOcrSubscription(userId: string): Promise<boolean> {
-  try {
-    const { data } = await supabase
-      .from('licenses')
-      .select('id')
-      .eq('user_id', userId)
-      .eq('active', true)
-      .maybeSingle()
-
-    return !!data
-  } catch {
-    return false
   }
 }
 

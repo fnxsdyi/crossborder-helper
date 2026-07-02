@@ -18,13 +18,16 @@ export function OcrUsageLimit({ used, limit }: OcrUsageLimitProps) {
   const { user } = useAuthStore()
   const [success, setSuccess] = useState(false)
 
-  async function handleSuccess(subscriptionId: string, _planType: string) {
+  async function handleSuccess(subscriptionId: string, planType: string) {
     if (user) {
       try {
-        await supabase.from('licenses').insert({
+        await supabase.from('subscriptions').insert({
           user_id: user.id,
-          key: `PAYPAL-SUB-${subscriptionId}`,
-          active: true,
+          paypal_subscription_id: subscriptionId,
+          plan_type: planType as 'monthly' | 'annual',
+          status: 'active',
+          current_period_start: new Date().toISOString(),
+          current_period_end: new Date(Date.now() + (planType === 'annual' ? 365 : 30) * 24 * 60 * 60 * 1000).toISOString(),
         })
       } catch (err) {
         console.error('Failed to record subscription:', err)
