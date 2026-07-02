@@ -20,6 +20,7 @@ function App() {
   const [isGuest, setIsGuest] = useState(false)
   const [showRegister, setShowRegister] = useState(false)
   const [hasEntered, setHasEntered] = useState(false)
+  const [isRegister, setIsRegister] = useState(false)
   const { user, loading, initialize } = useAuthStore()
 
   useEffect(() => {
@@ -44,20 +45,28 @@ function App() {
         } catch (e) {}
         window.history.replaceState({}, '', window.location.pathname)
       } else {
-        const entered = localStorage.getItem('app_entered')
-        const guest = localStorage.getItem('is_guest')
-
-        const currentUser = useAuthStore.getState().user
-
-        if (currentUser && guest === 'true') {
-          localStorage.removeItem('is_guest')
-          setIsGuest(false)
-          setHasEntered(true)
+        // Handle URL-based routing for key pages
+        const path = window.location.pathname
+        if (path === '/login' || path === '/register') {
           setShowLanding(false)
-        } else if (entered === 'true') {
-          setHasEntered(true)
+          if (path === '/register') setIsRegister(true)
+        } else if (path === '/pricing') {
           setShowLanding(false)
-          setIsGuest(guest === 'true')
+        } else {
+          const entered = localStorage.getItem('app_entered')
+          const guest = localStorage.getItem('is_guest')
+          const currentUser = useAuthStore.getState().user
+
+          if (currentUser && guest === 'true') {
+            localStorage.removeItem('is_guest')
+            setIsGuest(false)
+            setHasEntered(true)
+            setShowLanding(false)
+          } else if (entered === 'true') {
+            setHasEntered(true)
+            setShowLanding(false)
+            setIsGuest(guest === 'true')
+          }
         }
       }
     }
@@ -137,7 +146,7 @@ function App() {
   if (showRegister || (!user && !isGuest && !hasEntered)) {
     return (
       <Suspense fallback={<Loading />}>
-        <AuthPage onAuth={handleAuth} showWelcome={showRegister} />
+        <AuthPage onAuth={handleAuth} showWelcome={showRegister || isRegister} />
       </Suspense>
     )
   }
