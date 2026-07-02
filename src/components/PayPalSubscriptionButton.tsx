@@ -66,10 +66,10 @@ export function PayPalSubscriptionButton({
       try {
         window.paypal.Buttons({
           style: {
-            shape: 'pill',
-            color: 'silver',
+            shape: 'rect',
+            color: 'gold',
             layout: 'vertical',
-            label: 'paypal',
+            label: 'subscribe',
           },
           createSubscription: (_data: unknown, actions: { subscription: { create: (config: { plan_id: string }) => Promise<string> } }) => {
             return actions.subscription.create({ plan_id: planId })
