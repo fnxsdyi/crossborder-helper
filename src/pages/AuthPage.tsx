@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { useI18n } from '@/hooks/useI18n'
+import { PRO_MONTHLY_PLAN_ID } from '@/lib/config'
 import { Mail, Lock, LogIn, Globe, CreditCard, UserPlus } from 'lucide-react'
 
 interface AuthPageProps {
@@ -52,10 +53,12 @@ export function AuthPage({ onAuth, showWelcome }: AuthPageProps) {
     const token = Date.now().toString(36) + Math.random().toString(36).slice(2)
     localStorage.setItem('paypal_pending_token', JSON.stringify({
       token,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      planType: 'monthly',
+      planId: PRO_MONTHLY_PLAN_ID
     }))
-    const returnUrl = encodeURIComponent(window.location.origin + `/?token=${token}`)
-    window.location.href = `https://www.paypal.com/ncp/payment/7CFGKT9FM3ER2?return=${returnUrl}`
+    const returnUrl = encodeURIComponent(window.location.origin + `/?token=${token}&plan=monthly`)
+    window.location.href = `https://www.paypal.com/ncp/payment/${PRO_MONTHLY_PLAN_ID}?return=${returnUrl}`
   }
 
   return (
