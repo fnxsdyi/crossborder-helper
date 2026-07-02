@@ -1,7 +1,7 @@
 import { useEffect, useRef, useId } from 'react'
 
 const PAYPAL_SDK_URL = 'https://www.paypal.com/sdk/js'
-const CLIENT_ID = 'ATs49ULf5-BT-BzxVRiH_5VPCYZlb_x11S4j1ZHwqGKQMjS8jLEgG3tm-lJ9Ch01s2ePTbs8nkgDN9P2'
+const CLIENT_ID = import.meta.env.VITE_PAYPAL_CLIENT_ID || ''
 
 interface PayPalSubscriptionButtonProps {
   planId: string

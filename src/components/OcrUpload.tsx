@@ -102,10 +102,10 @@ export function OcrUpload({ onResult }: OcrUploadProps) {
               setError(t('ocr.errorTimeout'))
               break
             case 'API_KEY_MISSING':
-              setError('API key not configured')
+              setError(t('ocr.errorApiKey'))
               break
             case 'API_ERROR':
-              setError('API request failed. Please try again.')
+              setError(t('ocr.errorApi'))
               break
             case 'Failed to load image':
               setError('Failed to load image. Please try another file.')

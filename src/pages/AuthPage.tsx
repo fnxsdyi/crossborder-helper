@@ -15,7 +15,7 @@ export function AuthPage({ onAuth, showWelcome: initialShowWelcome }: AuthPagePr
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [showWelcome, setShowWelcome] = useState(initialShowWelcome)
+  const [isRegister, setIsRegister] = useState(initialShowWelcome || false)
   const { signIn, signUp } = useAuthStore()
 
   async function handleLogin(e: React.FormEvent) {
@@ -24,7 +24,6 @@ export function AuthPage({ onAuth, showWelcome: initialShowWelcome }: AuthPagePr
     setLoading(true)
 
     const result = await signIn(email, password)
-
     setLoading(false)
 
     if (result.error) {
@@ -40,7 +39,6 @@ export function AuthPage({ onAuth, showWelcome: initialShowWelcome }: AuthPagePr
     setLoading(true)
 
     const result = await signUp(email, password)
-
     setLoading(false)
 
     if (result.error) {
@@ -65,13 +63,6 @@ export function AuthPage({ onAuth, showWelcome: initialShowWelcome }: AuthPagePr
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        {showWelcome && (
-          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl text-center">
-            <p className="text-green-800 font-medium">🎉 {t('auth.paymentSuccess')}</p>
-            <p className="text-green-600 text-sm mt-1">{t('auth.createAccount')}</p>
-          </div>
-        )}
-
         <div className="text-center mb-8">
           <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4">
             <Globe size={24} className="text-white" />
@@ -81,11 +72,27 @@ export function AuthPage({ onAuth, showWelcome: initialShowWelcome }: AuthPagePr
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-          <h2 className="text-xl font-semibold text-center mb-6">
-            {showWelcome ? t('auth.createAccount') : t('auth.signIn')}
-          </h2>
+          {/* Tab Switcher */}
+          <div className="flex mb-6 bg-slate-100 rounded-lg p-1">
+            <button
+              onClick={() => { setIsRegister(false); setError('') }}
+              className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${
+                !isRegister ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              {t('auth.signIn')}
+            </button>
+            <button
+              onClick={() => { setIsRegister(true); setError('') }}
+              className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${
+                isRegister ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              {t('auth.signUp')}
+            </button>
+          </div>
 
-          <form onSubmit={showWelcome ? handleRegister : handleLogin} className="space-y-4">
+          <form onSubmit={isRegister ? handleRegister : handleLogin} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">{t('auth.email')}</label>
               <div className="relative">
@@ -130,7 +137,7 @@ export function AuthPage({ onAuth, showWelcome: initialShowWelcome }: AuthPagePr
             >
               {loading ? (
                 <span className="animate-spin">⏳</span>
-              ) : showWelcome ? (
+              ) : isRegister ? (
                 <>
                   <UserPlus size={18} />
                   {t('auth.signUp')}
@@ -144,24 +151,13 @@ export function AuthPage({ onAuth, showWelcome: initialShowWelcome }: AuthPagePr
             </button>
           </form>
 
-          {!showWelcome && (
-            <div className="mt-6 text-center">
-              <button
-                onClick={handleBecomeMember}
-                className="w-full flex items-center justify-center gap-2 py-2.5 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors"
-              >
-                <CreditCard size={18} />
-                {t('auth.becomeMember')}
-              </button>
-            </div>
-          )}
-
-          <div className="mt-4 text-center">
+          <div className="mt-6 pt-4 border-t border-slate-200">
             <button
-              onClick={() => setShowWelcome(!showWelcome)}
-              className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+              onClick={handleBecomeMember}
+              className="w-full flex items-center justify-center gap-2 py-2.5 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors"
             >
-              {showWelcome ? t('auth.hasAccount') + t('auth.signIn') : t('auth.noAccount') + t('auth.signUp')}
+              <CreditCard size={18} />
+              {t('auth.becomeMember')}
             </button>
           </div>
 

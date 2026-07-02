@@ -21,14 +21,14 @@ export function OcrUsageLimit({ used, limit }: OcrUsageLimitProps) {
   async function handleSuccess(subscriptionId: string, planType: string) {
     if (user) {
       try {
-        await supabase.from('subscriptions').insert({
+        await supabase.from('subscriptions').upsert({
           user_id: user.id,
           paypal_subscription_id: subscriptionId,
           plan_type: planType as 'monthly' | 'annual',
           status: 'active',
           current_period_start: new Date().toISOString(),
           current_period_end: new Date(Date.now() + (planType === 'annual' ? 365 : 30) * 24 * 60 * 60 * 1000).toISOString(),
-        })
+        }, { onConflict: 'paypal_subscription_id' })
       } catch (err) {
         console.error('Failed to record subscription:', err)
       }
