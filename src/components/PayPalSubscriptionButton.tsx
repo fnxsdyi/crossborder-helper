@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useId } from 'react'
 
 const PAYPAL_SDK_URL = 'https://www.paypal.com/sdk/js'
 const CLIENT_ID = 'ATs49ULf5-BT-BzxVRiH_5VPCYZlb_x11S4j1ZHwqGKQMjS8jLEgG3tm-lJ9Ch01s2ePTbs8nkgDN9P2'
@@ -26,14 +26,17 @@ export function PayPalSubscriptionButton({
 }: PayPalSubscriptionButtonProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const renderedRef = useRef(false)
+  const uniqueId = useId().replace(/:/g, '-')
 
   useEffect(() => {
     if (renderedRef.current) return
     if (!containerRef.current) return
 
+    const containerId = `paypal-btn-${uniqueId}`
+
     // Check if PayPal SDK is already loaded
     if (window.paypal) {
-      renderButton()
+      renderButton(containerId)
       return
     }
 
@@ -42,7 +45,7 @@ export function PayPalSubscriptionButton({
     script.src = `${PAYPAL_SDK_URL}?client-id=${CLIENT_ID}&vault=true&intent=subscription`
     script.async = true
     script.onload = () => {
-      renderButton()
+      renderButton(containerId)
     }
     script.onerror = () => {
       console.error('Failed to load PayPal SDK')
@@ -50,7 +53,7 @@ export function PayPalSubscriptionButton({
     }
     document.body.appendChild(script)
 
-    function renderButton() {
+    function renderButton(containerId: string) {
       if (!containerRef.current || !window.paypal) return
 
       try {
@@ -73,7 +76,7 @@ export function PayPalSubscriptionButton({
             console.error('PayPal error:', err)
             onError?.(err)
           },
-        }).render('#paypal-container')
+        }).render(`#${containerId}`)
         renderedRef.current = true
       } catch (err) {
         console.error('Failed to render PayPal button:', err)
@@ -84,7 +87,7 @@ export function PayPalSubscriptionButton({
     return () => {
       // Cleanup is handled by React unmounting
     }
-  }, [planId, onSuccess, onError])
+  }, [planId, onSuccess, onError, uniqueId])
 
-  return <div id="paypal-container" ref={containerRef} className="paypal-button-container" />
+  return <div id={`paypal-btn-${uniqueId}`} ref={containerRef} className="paypal-button-container" />
 }

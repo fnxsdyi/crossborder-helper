@@ -9,12 +9,13 @@ interface AuthPageProps {
   showWelcome?: boolean
 }
 
-export function AuthPage({ onAuth, showWelcome }: AuthPageProps) {
+export function AuthPage({ onAuth, showWelcome: initialShowWelcome }: AuthPageProps) {
   const { t } = useI18n()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showWelcome, setShowWelcome] = useState(initialShowWelcome)
   const { signIn, signUp } = useAuthStore()
 
   async function handleLogin(e: React.FormEvent) {
@@ -154,6 +155,15 @@ export function AuthPage({ onAuth, showWelcome }: AuthPageProps) {
               </button>
             </div>
           )}
+
+          <div className="mt-4 text-center">
+            <button
+              onClick={() => setShowWelcome(!showWelcome)}
+              className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+            >
+              {showWelcome ? t('auth.hasAccount') + t('auth.signIn') : t('auth.noAccount') + t('auth.signUp')}
+            </button>
+          </div>
 
           <div className="mt-4 text-center">
             <button
