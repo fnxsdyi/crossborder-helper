@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { supabase } from '@/lib/supabase'
-import { Upload, CheckCircle, AlertCircle, Database } from 'lucide-react'
+import { Upload, CheckCircle, Database } from 'lucide-react'
 
 interface LogEntry {
   message: string
@@ -45,20 +45,6 @@ interface OldClient {
   country: string
   vatNumber?: string
   createdAt: Date
-}
-
-interface OldSettings {
-  businessName?: string
-  businessAddress?: string
-  businessEmail?: string
-  businessCountry?: string
-  defaultCurrency?: string
-  defaultVatType?: string
-  defaultVatNumber?: string
-  defaultTemplate?: string
-  taxRate?: number
-  invoicePrefix?: string
-  nextInvoiceNumber?: number
 }
 
 export function MigrateData() {
