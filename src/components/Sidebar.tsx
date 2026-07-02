@@ -117,12 +117,12 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
           })}
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 p-4" style={{ borderTop: '1px solid var(--border-color)' }}>
+        <div className="shrink-0 p-3 space-y-1" style={{ borderTop: '1px solid var(--border-color)' }}>
           {/* Language Switcher */}
-          <div className="relative mb-3">
+          <div className="relative">
             <button
               onClick={() => setShowLangMenu(!showLangMenu)}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm w-full hover:bg-slate-800 transition-colors"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm w-full hover:bg-slate-800 transition-colors"
               style={{ color: 'var(--sidebar-text)' }}
             >
               <Globe size={16} />
@@ -141,7 +141,7 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
                       setShowLangMenu(false)
                     }}
                     className={cn(
-                      'w-full px-3 py-2 text-left text-sm hover:bg-slate-800 transition-colors',
+                      'w-full px-3 py-1.5 text-left text-sm hover:bg-slate-800 transition-colors',
                       locale === lang.code && 'bg-primary text-white'
                     )}
                   >
@@ -152,7 +152,7 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
             )}
           </div>
 
-          <div className="flex justify-center mb-3">
+          <div className="flex justify-center">
             <ThemeToggle />
           </div>
           <button
@@ -160,7 +160,7 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
               localStorage.removeItem('app_entered')
               window.location.reload()
             }}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-slate-800 transition-colors mb-2"
+            className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm hover:bg-slate-800 transition-colors"
             style={{ color: 'var(--text-muted)' }}
           >
             <Home size={16} />
@@ -173,7 +173,7 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
                 localStorage.removeItem('is_guest')
                 window.location.reload()
               }}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-slate-800 transition-colors mb-2"
+              className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm hover:bg-slate-800 transition-colors"
               style={{ color: 'var(--text-muted)' }}
             >
               <LogOut size={16} />
@@ -185,7 +185,7 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
                 signOut()
                 onSignOut?.()
               }}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-slate-800 transition-colors mb-2"
+              className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm hover:bg-slate-800 transition-colors"
               style={{ color: 'var(--text-muted)' }}
             >
               <LogOut size={16} />
@@ -193,11 +193,11 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
             </button>
           )}
           {/* Our Projects */}
-          <div className="mb-3 pt-3" style={{ borderTop: '1px solid var(--border-color)' }}>
-            <p className="text-[10px] font-semibold uppercase tracking-wider mb-2 px-3" style={{ color: 'var(--text-muted)' }}>
+          <div className="pt-2" style={{ borderTop: '1px solid var(--border-color)' }}>
+            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1 px-3" style={{ color: 'var(--text-muted)' }}>
               Our Projects
             </p>
-            <div className="space-y-1 px-3">
+            <div className="space-y-0.5 px-3">
               <a href="https://hooki.io" target="_blank" rel="noopener noreferrer" className="block text-[11px] hover:opacity-80 transition-opacity" style={{ color: 'var(--text-muted)' }}>
                 Hooki — Webhook Console
               </a>
@@ -212,7 +212,7 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
               </a>
             </div>
           </div>
-          <p className="text-xs text-center flex items-center justify-center gap-1 group relative" style={{ color: 'var(--text-muted)' }}>
+          <p className="text-xs text-center flex items-center justify-center gap-1 group relative pt-1" style={{ color: 'var(--text-muted)' }}>
             v0.1.0 • Secure Sync 🔒
             <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-slate-800 text-white text-xs rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
               {t('nav.privacyTooltip')}
