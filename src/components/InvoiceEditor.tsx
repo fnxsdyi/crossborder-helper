@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useAuthStore } from '@/stores/authStore'
-import { getClients, upsertClient, upsertInvoice, getSettings, upsertSettings, type SyncClient, type SyncInvoice, type SyncInvoiceItem } from '@/lib/sync'
+import { getClients, upsertInvoice, getSettings, upsertSettings, type SyncClient, type SyncInvoice, type SyncInvoiceItem } from '@/lib/sync'
 import { Save, Plus, Trash2, Download, RefreshCw, Info } from 'lucide-react'
 import { generateInvoicePDF } from '@/lib/generateInvoicePDF'
 import { getExchangeRate, CURRENCIES, calculateFXGainLoss } from '@/lib/exchangeRate'
@@ -41,7 +41,7 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
   const [buyerVatNumber, setBuyerVatNumber] = useState(invoice?.buyerVatNumber || '')
   const [template, setTemplate] = useState<'us' | 'eu' | 'uk'>(invoice?.template || 'us')
   const [notes, setNotes] = useState(invoice?.notes || '')
-  const [items, setItems] = useState<InvoiceItem[]>(
+  const [items, setItems] = useState<SyncInvoiceItem[]>(
     invoice?.items || [{ description: '', quantity: 1, unitPrice: 0, amount: 0 }]
   )
 
@@ -74,7 +74,7 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
     }
   }
 
-  function handleItemChange(index: number, field: keyof InvoiceItem, value: string | number) {
+  function handleItemChange(index: number, field: keyof SyncInvoiceItem, value: string | number) {
     const newItems = [...items]
     newItems[index] = { ...newItems[index], [field]: value }
     if (field === 'quantity' || field === 'unitPrice') {

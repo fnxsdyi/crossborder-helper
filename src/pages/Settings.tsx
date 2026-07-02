@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { getSettings, upsertSettings, type SyncSettings } from '@/lib/sync'
-import { Settings as SettingsIcon, Save, LogOut, User } from 'lucide-react'
+import { Settings as SettingsIcon, LogOut, User } from 'lucide-react'
 import { useI18n } from '@/hooks/useI18n'
 import { usePremium } from '@/components/PremiumGate'
 
@@ -27,7 +27,6 @@ export function SettingsPage({ onUpgrade, isGuest }: SettingsPageProps) {
   const [defaultTemplate, setDefaultTemplate] = useState<'us' | 'eu' | 'uk'>('us')
   const [taxRate, setTaxRate] = useState(0)
   const [invoicePrefix, setInvoicePrefix] = useState('INV')
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (user) loadSettings()
@@ -36,7 +35,6 @@ export function SettingsPage({ onUpgrade, isGuest }: SettingsPageProps) {
   async function loadSettings() {
     if (!user) return
     try {
-      setLoading(true)
       const data = await getSettings(user.id)
       setSettings(data)
       setBusinessName(data.businessName)
@@ -51,8 +49,6 @@ export function SettingsPage({ onUpgrade, isGuest }: SettingsPageProps) {
       setInvoicePrefix(data.invoicePrefix)
     } catch (err) {
       console.error('Failed to load settings:', err)
-    } finally {
-      setLoading(false)
     }
   }
 

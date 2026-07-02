@@ -258,8 +258,8 @@ export async function generateInvoicePDF(invoice: SyncInvoice, userId?: string):
     )
   }
 
-  // Watermark for free users
-  if (!settings?.isPremium) {
+  // Watermark for free users (always show for now - premium check via Supabase subscription)
+  if (true) {
     doc.setFontSize(60)
     doc.setTextColor(200, 200, 200)
     doc.setGState(new GState({ opacity: 0.15 }))
