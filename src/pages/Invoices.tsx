@@ -18,24 +18,21 @@ export function Invoices() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (user) loadInvoices()
+    if (user) {
+      loadInvoices()
+    } else {
+      setLoading(false)
+    }
   }, [user])
 
   async function loadInvoices() {
-    console.log('[Invoices] loadInvoices called, user:', user?.id)
-    if (!user) {
-      console.log('[Invoices] No user, skipping')
-      setLoading(false)
-      return
-    }
+    if (!user) return
     try {
       setLoading(true)
-      console.log('[Invoices] Fetching invoices for user:', user.id)
       const data = await getInvoices(user.id)
-      console.log('[Invoices] Got invoices:', data.length)
       setInvoices(data)
     } catch (err) {
-      console.error('[Invoices] Failed to load invoices:', err)
+      console.error('Failed to load invoices:', err)
     } finally {
       setLoading(false)
     }

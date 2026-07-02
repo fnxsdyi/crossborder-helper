@@ -123,8 +123,6 @@ function App() {
     )
   }
 
-  console.log('[App] state:', { loading, user: user?.id, showLanding, isGuest, hasEntered })
-
   if (showLanding) {
     return (
       <Suspense fallback={<Loading />}>

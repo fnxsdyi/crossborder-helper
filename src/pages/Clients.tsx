@@ -21,7 +21,11 @@ export function Clients() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (user) loadClients()
+    if (user) {
+      loadClients()
+    } else {
+      setLoading(false)
+    }
   }, [user])
 
   async function loadClients() {
