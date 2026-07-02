@@ -270,6 +270,7 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
             </div>
 
             {/* Pro Annual - Best Value */}
+            {PRO_ANNUAL_PLAN_ID && !PRO_ANNUAL_PLAN_ID.includes('PLACEHOLDER') ? (
             <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-6 text-left text-white relative overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-8 -mt-8" />
               <span className="inline-block px-2 py-0.5 bg-green-500 text-white text-[10px] font-bold rounded mb-2 uppercase tracking-wide">
@@ -320,6 +321,15 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
                 {t('landing.cancelAnytime')}
               </p>
             </div>
+            ) : (
+            <div className="bg-gradient-to-br from-slate-600 to-slate-700 rounded-2xl p-6 text-left text-white relative overflow-hidden flex items-center justify-center">
+              <div className="text-center">
+                <h3 className="text-lg font-semibold mb-2">{t('landing.proPlan')} Annual</h3>
+                <p className="text-slate-300 text-sm mb-4">$90/year — Coming Soon</p>
+                <p className="text-xs text-slate-400">{t('landing.cancelAnytime')}</p>
+              </div>
+            </div>
+            )}
           </div>
         </div>
       </section>
