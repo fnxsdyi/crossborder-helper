@@ -154,9 +154,8 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
                       />
                     </div>
 
-                    {/* Annual - only show if plan ID is configured */}
-                    {PRO_ANNUAL_PLAN_ID && !PRO_ANNUAL_PLAN_ID.includes('PLACEHOLDER') && (
-                      <div className="flex-1 relative">
+                    {/* Annual */}
+                    <div className="flex-1 relative">
                         <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded whitespace-nowrap">
                           {t('landing.bestValue')}
                         </span>
@@ -170,7 +169,6 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
                           {t('premium.annualSave')}
                         </p>
                       </div>
-                    )}
                   </div>
 
                   <p className="mt-4 text-xs text-slate-400 text-center">

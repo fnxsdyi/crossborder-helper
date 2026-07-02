@@ -99,16 +99,14 @@ export function OcrUsageLimit({ used, limit }: OcrUsageLimitProps) {
               onError={handleError}
             />
           </div>
-          {PRO_ANNUAL_PLAN_ID && !PRO_ANNUAL_PLAN_ID.includes('PLACEHOLDER') && (
-            <div className="flex-1">
-              <p className="text-center text-xs font-semibold mb-2 dark:text-white">{t('premium.payPalAnnual')}</p>
-              <PayPalSubscriptionButton
-                planId={PRO_ANNUAL_PLAN_ID}
-                onSuccess={(id) => handleSuccess(id, 'annual')}
-                onError={handleError}
-              />
-            </div>
-          )}
+          <div className="flex-1">
+            <p className="text-center text-xs font-semibold mb-2 dark:text-white">{t('premium.payPalAnnual')}</p>
+            <PayPalSubscriptionButton
+              planId={PRO_ANNUAL_PLAN_ID}
+              onSuccess={(id) => handleSuccess(id, 'annual')}
+              onError={handleError}
+            />
+          </div>
         </div>
       </div>
 
