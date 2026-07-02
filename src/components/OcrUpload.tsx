@@ -13,11 +13,19 @@ interface OcrUploadProps {
 
 export function OcrUpload({ onResult }: OcrUploadProps) {
   const { t } = useI18n()
-  const { user } = useAuthStore()
+  const { user, loading: authLoading } = useAuthStore()
   const { setImage, setResult, setLoading, setError, loading, error, usageCount, setUsageCount, hasSubscription, setHasSubscription } = useOcrStore()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = useState(false)
   const [checkedUsage, setCheckedUsage] = useState(false)
+
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+      </div>
+    )
+  }
 
   async function checkUsage() {
     if (!user?.id) {
