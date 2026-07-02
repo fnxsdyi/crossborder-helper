@@ -3,9 +3,10 @@
 import { useEffect, useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { getSettings, upsertSettings, type SyncSettings } from '@/lib/sync'
-import { Settings as SettingsIcon, LogOut, User } from 'lucide-react'
+import { Settings as SettingsIcon, LogOut, User, Database } from 'lucide-react'
 import { useI18n } from '@/hooks/useI18n'
 import { usePremium } from '@/components/PremiumGate'
+import { useAppStore } from '@/stores/appStore'
 
 interface SettingsPageProps {
   onUpgrade?: () => void
@@ -15,6 +16,7 @@ interface SettingsPageProps {
 export function SettingsPage({ onUpgrade, isGuest }: SettingsPageProps) {
   const { t } = useI18n()
   const { user, signOut } = useAuthStore()
+  const { setCurrentView } = useAppStore()
   const isPremium = usePremium()
   const [settings, setSettings] = useState<SyncSettings | null>(null)
   const [businessName, setBusinessName] = useState('')
@@ -245,6 +247,22 @@ export function SettingsPage({ onUpgrade, isGuest }: SettingsPageProps) {
           className="w-full py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors"
         >
           {t('settings.saveSettings')}
+        </button>
+      </div>
+
+      <div className="mt-6 bg-amber-50 border border-amber-200 rounded-xl p-4">
+        <div className="flex items-center gap-3 mb-2">
+          <Database size={18} className="text-amber-600" />
+          <h3 className="font-medium text-amber-800">数据迁移</h3>
+        </div>
+        <p className="text-sm text-amber-700 mb-3">
+          如果你在切换到云同步之前保存了发票数据，可以使用迁移工具将本地数据上传到云端。
+        </p>
+        <button
+          onClick={() => setCurrentView('migrate')}
+          className="px-4 py-2 bg-amber-600 text-white rounded-lg text-sm hover:bg-amber-700 transition-colors"
+        >
+          打开迁移工具
         </button>
       </div>
     </div>

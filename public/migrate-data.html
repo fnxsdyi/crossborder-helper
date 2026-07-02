@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TaxFlow Data Migration Tool</title>
+  <style>
+    body { font-family: system-ui; max-width: 600px; margin: 40px auto; padding: 20px; }
+    .log { background: #f5f5f5; padding: 10px; border-radius: 8px; margin-top: 20px; font-family: monospace; font-size: 12px; max-height: 400px; overflow-y: auto; white-space: pre-wrap; }
+    button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    .success { color: green; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <h1>TaxFlow Data Migration</h1>
+  <p>Upload your local data (from IndexedDB) to the cloud (Supabase).</p>
+  <p><strong>Steps:</strong></p>
+  <ol>
+    <li>Log in to TaxFlow in another tab</li>
+    <li>Come back here and click "Migrate"</li>
+  </ol>
+  <button id="migrateBtn" onclick="startMigration()">Migrate Data to Cloud</button>
+  <div id="log" class="log"></div>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+    const SUPABASE_URL = 'https://fimfpcaavclinkazvsvm.supabase.co'
+    const SUPABASE_ANON_KEY = 'sb_publishable_f9xk4mp19bkZY5kQOpwX_w_7XJjT-KY'
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+    function log(msg, type = '') {
+      const el = document.getElementById('log')
+      el.innerHTML += `<span class="${type}">${msg}</span>\n`
+      el.scrollTop = el.scrollHeight
+    }
+
+    window.startMigration = async function() {
+      document.getElementById('migrateBtn').disabled = true
+
+      // Check auth
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        log('ERROR: Not logged in. Please log in to TaxFlow first.', 'error')
+        return
+      }
+      log(`Logged in as: ${session.user.email}`)
+      const userId = session.user.id
+
+      // Open IndexedDB
+      const dbs = await indexedDB.databases()
+      const taxFlowDb = dbs.find(d => d.name === 'TaxFlowHelper')
+      if (!taxFlowDb) {
+        log('No TaxFlowHelper IndexedDB found. Nothing to migrate.', 'error')
+        return
+      }
+
+      const dbRequest = indexedDB.open('TaxFlowHelper')
+      dbRequest.onsuccess = async (e) => {
+        const db = e.target.result
+
+        // Migrate clients
+        try {
+          const clientStore = db.transaction('clients', 'readonly').objectStore('clients')
+          const clients = await new Promise((resolve, reject) => {
+            const req = clientStore.getAll()
+            req.onsuccess = () => resolve(req.result)
+            req.onerror = () => reject(req.error)
+          })
+
+          log(`Found ${clients.length} clients to migrate...`)
+
+          for (const client of clients) {
+            const { error } = await supabase.from('sf_clients').upsert({
+              id: crypto.randomUUID(),
+              user_id: userId,
+              name: client.name,
+              email: client.email || '',
+              company: client.company || null,
+              address: client.address || null,
+              country: client.country || '',
+              vat_number: client.vatNumber || null,
+              created_at: client.createdAt || new Date().toISOString()
+            }, { onConflict: 'id' })
+            if (error) log(`Client "${client.name}" error: ${error.message}`, 'error')
+            else log(`Client "${client.name}" migrated ✓`, 'success')
+          }
+        } catch (err) {
+          log(`Client migration error: ${err.message}`, 'error')
+        }
+
+        // Migrate invoices
+        try {
+          const invoiceStore = db.transaction('invoices', 'readonly').objectStore('invoices')
+          const invoices = await new Promise((resolve, reject) => {
+            const req = invoiceStore.getAll()
+            req.onsuccess = () => resolve(req.result)
+            req.onerror = () => reject(req.error)
+          })
+
+          log(`Found ${invoices.length} invoices to migrate...`)
+
+          for (const inv of invoices) {
+            const { error } = await supabase.from('sf_invoices').upsert({
+              id: crypto.randomUUID(),
+              user_id: userId,
+              invoice_number: inv.invoiceNumber,
+              client_id: null,
+              issue_date: inv.issueDate,
+              due_date: inv.dueDate,
+              status: inv.status || 'draft',
+              currency: inv.currency || 'USD',
+              local_currency: inv.localCurrency || null,
+              exchange_rate: inv.exchangeRate || null,
+              payment_date: inv.paymentDate || null,
+              payment_rate: inv.paymentRate || null,
+              vat_type: inv.vatType || 'none',
+              vat_number: inv.vatNumber || null,
+              buyer_vat_number: inv.buyerVatNumber || null,
+              template: inv.template || 'us',
+              subtotal: inv.subtotal || 0,
+              tax_rate: inv.taxRate || 0,
+              tax_amount: inv.taxAmount || 0,
+              total: inv.total || 0,
+              notes: inv.notes || null,
+              items: inv.items || [],
+              ocr_processed: inv.ocrProcessed || false,
+              ocr_confidence: inv.ocrConfidence || null,
+              created_at: inv.createdAt || new Date().toISOString(),
+              updated_at: inv.updatedAt || new Date().toISOString()
+            }, { onConflict: 'id' })
+            if (error) log(`Invoice "${inv.invoiceNumber}" error: ${error.message}`, 'error')
+            else log(`Invoice "${inv.invoiceNumber}" migrated ✓`, 'success')
+          }
+        } catch (err) {
+          log(`Invoice migration error: ${err.message}`, 'error')
+        }
+
+        log('\nMigration complete! Refresh TaxFlow to see your data.', 'success')
+        document.getElementById('migrateBtn').disabled = false
+      }
+
+      dbRequest.onerror = () => {
+        log('Failed to open IndexedDB', 'error')
+      }
+    }
+  </script>
+</body>
+</html>
