@@ -30,10 +30,12 @@ export function Dashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    console.log('[Dashboard] useEffect, user:', user?.id || 'null')
     if (user) loadStats()
   }, [user])
 
   async function loadStats() {
+    console.log('[Dashboard] loadStats called, user:', user?.id)
     if (!user) return
     try {
       setLoading(true)
