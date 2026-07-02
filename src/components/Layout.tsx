@@ -46,6 +46,7 @@ interface LayoutProps {
 
 export function Layout({ onSignOut, isGuest, onUpgrade }: LayoutProps) {
   const { currentView } = useAppStore()
+  console.log('[Layout] Rendering, currentView:', currentView, 'isGuest:', isGuest)
 
   const renderPage = () => {
     switch (currentView) {
