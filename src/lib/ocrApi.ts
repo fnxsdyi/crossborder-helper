@@ -116,10 +116,17 @@ export async function recognizeInvoice(
 
     // Parse JSON from response (handle markdown code blocks)
     const jsonStr = content.replace(/```json\n?|\n?```/g, '').trim()
-    const parsed = JSON.parse(jsonStr)
+    let parsed: unknown
+    try {
+      parsed = JSON.parse(jsonStr)
+    } catch (parseErr) {
+      console.error('[TaxFlow] JSON parse failed. Raw content:', content.slice(0, 500))
+      throw new Error('RECOGNITION_FAILED')
+    }
     const result = validateOcrResult(parsed)
 
     if (!result) {
+      console.error('[TaxFlow] Schema validation failed. Parsed:', JSON.stringify(parsed).slice(0, 500))
       throw new Error('INVALID_RESPONSE')
     }
 
