@@ -1,6 +1,6 @@
 import { validateOcrResult, type OcrResult } from './ocrSchema'
 
-const API2D_URL = 'https://api.api2d.com/v1/chat/completions'
+const API2D_URL = 'https://oa.api2d.net/v1/chat/completions'
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024 // 10MB
 const MAX_DIMENSION = 2048
 
