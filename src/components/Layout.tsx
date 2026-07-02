@@ -3,7 +3,6 @@ import { Sidebar } from './Sidebar'
 import { Disclaimer } from './Disclaimer'
 import { GuestBanner } from './GuestBanner'
 import { useAppStore } from '@/stores/appStore'
-import { useAuthStore } from '@/stores/authStore'
 
 const Dashboard = lazy(() => import('@/pages/Dashboard').then(m => ({ default: m.Dashboard })))
 const Invoices = lazy(() => import('@/pages/Invoices').then(m => ({ default: m.Invoices })))
@@ -47,7 +46,6 @@ interface LayoutProps {
 
 export function Layout({ onSignOut, isGuest, onUpgrade }: LayoutProps) {
   const { currentView } = useAppStore()
-  const { user } = useAuthStore()
 
   const renderPage = () => {
     switch (currentView) {
@@ -56,22 +54,6 @@ export function Layout({ onSignOut, isGuest, onUpgrade }: LayoutProps) {
       case 'invoices':
         return <Invoices />
       case 'ocr':
-        if (!user) {
-          return (
-            <div className="text-center py-20">
-              <p className="text-slate-500 dark:text-slate-400 mb-4">Please sign in to use OCR scanning.</p>
-            <button
-              onClick={() => {
-                localStorage.removeItem('app_entered')
-                window.location.reload()
-              }}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Sign In
-            </button>
-            </div>
-          )
-        }
         return <OcrPage />
       case 'clients':
         return <Clients />
