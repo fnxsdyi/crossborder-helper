@@ -128,7 +128,7 @@ export function SettingsPage({ onUpgrade, isGuest }: SettingsPageProps) {
         {!isPremium && (
           <div className="mt-3">
             <button
-              onClick={onUpgrade}
+              onClick={() => onUpgrade?.()}
               className="w-full px-4 py-2 bg-amber-600 text-white rounded-lg text-sm hover:bg-amber-700"
             >
               {t('settings.upgradeToPremium')}

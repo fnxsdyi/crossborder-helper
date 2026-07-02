@@ -25,7 +25,7 @@ export function GuestBanner({ onUpgrade }: GuestBannerProps) {
       </div>
       <div className="flex items-center gap-2">
         <button
-          onClick={onUpgrade}
+          onClick={() => onUpgrade?.()}
           className="px-4 py-2 bg-amber-600 text-white rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors"
         >
           {t('guest.upgradeNow')}

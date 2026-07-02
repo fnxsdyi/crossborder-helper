@@ -88,10 +88,8 @@ function App() {
   }
 
   function handleBuyNow(plan: 'monthly' | 'annual' = 'monthly') {
-    console.log('[TaxFlow] handleBuyNow called, plan:', plan)
     const token = Date.now().toString(36) + Math.random().toString(36).slice(2)
     const planId = plan === 'annual' ? PRO_ANNUAL_PLAN_ID : PRO_MONTHLY_PLAN_ID
-    console.log('[TaxFlow] planId:', planId)
     localStorage.setItem('paypal_pending_token', JSON.stringify({
       token,
       timestamp: Date.now(),
@@ -99,9 +97,7 @@ function App() {
       planId
     }))
     const returnUrl = encodeURIComponent(window.location.origin + `/?token=${token}&plan=${plan}`)
-    const url = `https://www.paypal.com/ncp/payment/${planId}?return=${returnUrl}`
-    console.log('[TaxFlow] redirecting to:', url)
-    window.location.href = url
+    window.location.href = `https://www.paypal.com/ncp/payment/${planId}?return=${returnUrl}`
   }
 
   function handleAuth() {
