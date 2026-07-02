@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- SEO Meta Tags -->
-    <title>TaxFlow - AI Invoice Scanner, W-8BEN Tax Forms & Multi-Currency Tracking | $19 Lifetime</title>
-    <meta name="description" content="AI-powered invoice scanning, professional invoicing with US/EU/UK templates, W-8BEN tax form wizard, and multi-currency tracking for freelancers and digital nomads. One-time $19 payment." />
+    <title>TaxFlow - AI Invoice Scanner, W-8BEN Tax Forms & Multi-Currency Tracking | Pro from $9/month</title>
+    <meta name="description" content="AI-powered invoice scanning, professional invoicing with US/EU/UK templates, W-8BEN tax form wizard, and multi-currency tracking for freelancers and digital nomads. Free plan available, Pro from $9/month." />
     <meta name="keywords" content="invoice scanner, AI invoice, freelancer invoice, W-8BEN tax form, digital nomad tools, cross-border tax, VAT, GST, multi-currency, contractor invoice, self-employed taxes, invoice OCR, receipt scanner, tax compliance, invoice generator" />
     <meta name="author" content="TaxFlow" />
 
@@ -49,10 +49,30 @@
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web Browser",
       "offers": {
-        "@type": "Offer",
-        "price": "19",
+        "@type": "AggregateOffer",
+        "lowPrice": "0",
+        "highPrice": "90",
         "priceCurrency": "USD",
-        "description": "Lifetime access with one-time payment"
+        "offers": [
+          {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "description": "Free plan with basic features"
+          },
+          {
+            "@type": "Offer",
+            "price": "9",
+            "priceCurrency": "USD",
+            "description": "Pro Monthly subscription"
+          },
+          {
+            "@type": "Offer",
+            "price": "90",
+            "priceCurrency": "USD",
+            "description": "Pro Annual subscription (save $18/year)"
+          }
+        ]
       },
       "featureList": [
         "AI Invoice Scanner - snap photo, auto-extract details",
@@ -89,7 +109,7 @@
           "name": "How much does TaxFlow cost?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "TaxFlow costs a one-time payment of $19 for lifetime access. There are no recurring fees. An optional OCR add-on is available for $9/month for unlimited AI invoice scans."
+            "text": "TaxFlow offers a free plan with basic features. Pro plans start at $9/month or $90/year (saving $18/year). Pro includes unlimited AI invoice scanning, watermark-free PDFs, and multi-currency tracking."
           }
         },
         {

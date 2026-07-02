@@ -2,9 +2,10 @@ import { Lock, ArrowLeft, CheckCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useI18n } from '@/hooks/useI18n'
 import { useAppStore } from '@/stores/appStore'
+import { useAuthStore } from '@/stores/authStore'
+import { supabase } from '@/lib/supabase'
+import { PRO_MONTHLY_PLAN_ID, PRO_ANNUAL_PLAN_ID } from '@/lib/config'
 import { PayPalSubscriptionButton } from './PayPalSubscriptionButton'
-
-const PAYPAL_OCR_PLAN_ID = 'P-29E1204392902382CNJCROFI'
 
 interface OcrUsageLimitProps {
   used: number
@@ -14,12 +15,23 @@ interface OcrUsageLimitProps {
 export function OcrUsageLimit({ used, limit }: OcrUsageLimitProps) {
   const { t } = useI18n()
   const { setCurrentView } = useAppStore()
+  const { user } = useAuthStore()
   const [success, setSuccess] = useState(false)
 
-  function handleSuccess(subscriptionId: string) {
-    console.log('OCR subscription created:', subscriptionId)
+  async function handleSuccess(subscriptionId: string, _planType: string) {
+    if (user) {
+      try {
+        await supabase.from('licenses').insert({
+          user_id: user.id,
+          key: `PAYPAL-SUB-${subscriptionId}`,
+          active: true,
+        })
+      } catch (err) {
+        console.error('Failed to record subscription:', err)
+      }
+    }
     setSuccess(true)
-    // TODO: Record subscription in Supabase
+    setTimeout(() => setCurrentView('ocr'), 2000)
   }
 
   function handleError(error: unknown) {
@@ -69,19 +81,30 @@ export function OcrUsageLimit({ used, limit }: OcrUsageLimitProps) {
         <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
           {t('ocr.upgradeDesc')}
         </p>
-        <div className="text-3xl font-bold text-slate-900 dark:text-white mb-4">
-          $9<span className="text-sm font-normal text-slate-500">/月</span>
-        </div>
         <ul className="text-sm text-slate-600 dark:text-slate-300 space-y-2 mb-6">
           <li>✓ {t('ocr.unlimitedScans')}</li>
           <li>✓ {t('ocr.prioritySupport')}</li>
           <li>✓ {t('ocr.cancelAnytime')}</li>
         </ul>
-        <PayPalSubscriptionButton
-          planId={PAYPAL_OCR_PLAN_ID}
-          onSuccess={handleSuccess}
-          onError={handleError}
-        />
+
+        <div className="flex gap-4">
+          <div className="flex-1">
+            <p className="text-center text-xs font-semibold mb-2 dark:text-white">{t('premium.payPalMonthly')}</p>
+            <PayPalSubscriptionButton
+              planId={PRO_MONTHLY_PLAN_ID}
+              onSuccess={(id) => handleSuccess(id, 'monthly')}
+              onError={handleError}
+            />
+          </div>
+          <div className="flex-1">
+            <p className="text-center text-xs font-semibold mb-2 dark:text-white">{t('premium.payPalAnnual')}</p>
+            <PayPalSubscriptionButton
+              planId={PRO_ANNUAL_PLAN_ID}
+              onSuccess={(id) => handleSuccess(id, 'annual')}
+              onError={handleError}
+            />
+          </div>
+        </div>
       </div>
 
       <button

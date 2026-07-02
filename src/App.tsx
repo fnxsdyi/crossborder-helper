@@ -1,6 +1,7 @@
 import { useState, useEffect, Suspense, lazy } from 'react'
 import { useAuthStore } from './stores/authStore'
 import { CookieConsent } from './components/CookieConsent'
+import { PRO_MONTHLY_PLAN_ID, PRO_ANNUAL_PLAN_ID } from '@/lib/config'
 
 const Layout = lazy(() => import('./components/Layout').then(m => ({ default: m.Layout })))
 const LandingPage = lazy(() => import('./pages/LandingPage').then(m => ({ default: m.LandingPage })))
@@ -77,14 +78,17 @@ function App() {
     setShowLanding(false)
   }
 
-  function handleBuyNow() {
+  function handleBuyNow(plan: 'monthly' | 'annual' = 'monthly') {
     const token = Date.now().toString(36) + Math.random().toString(36).slice(2)
+    const planId = plan === 'annual' ? PRO_ANNUAL_PLAN_ID : PRO_MONTHLY_PLAN_ID
     localStorage.setItem('paypal_pending_token', JSON.stringify({
       token,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      planType: plan,
+      planId
     }))
-    const returnUrl = encodeURIComponent(window.location.origin + `/?token=${token}`)
-    window.location.href = `https://www.paypal.com/ncp/payment/7CFGKT9FM3ER2?return=${returnUrl}`
+    const returnUrl = encodeURIComponent(window.location.origin + `/?token=${token}&plan=${plan}`)
+    window.location.href = `https://www.paypal.com/ncp/payment/${planId}?return=${returnUrl}`
   }
 
   function handleAuth() {
@@ -143,7 +147,7 @@ function App() {
         <Layout
           onSignOut={handleSignOut}
           isGuest={isGuest}
-          onUpgrade={() => handleBuyNow()}
+          onUpgrade={(plan?: 'monthly' | 'annual') => handleBuyNow(plan)}
         />
         <CookieConsent />
       </Suspense>

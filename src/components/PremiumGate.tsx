@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/authStore'
 import { isAdmin } from '@/lib/config'
-import { Lock, X, CreditCard, ExternalLink } from 'lucide-react'
+import { PRO_MONTHLY_PLAN_ID, PRO_ANNUAL_PLAN_ID } from '@/lib/config'
+import { Lock, X, CheckCircle } from 'lucide-react'
 import { useI18n } from '@/hooks/useI18n'
+import { PayPalSubscriptionButton } from './PayPalSubscriptionButton'
 
 interface PremiumGateProps {
   children: React.ReactNode
@@ -15,6 +17,7 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
   const { user } = useAuthStore()
   const [isPremium, setIsPremium] = useState<boolean | null>(null)
   const [showUpgrade, setShowUpgrade] = useState(false)
+  const [success, setSuccess] = useState(false)
 
   useEffect(() => {
     if (user) {
@@ -41,13 +44,36 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
         .select('id')
         .eq('user_id', user.id)
         .eq('active', true)
-        .single()
+        .maybeSingle()
 
       setIsPremium(!!data)
     } catch (err) {
       console.error('Failed to check premium status:', err)
       setIsPremium(false)
     }
+  }
+
+  async function handleSubscriptionSuccess(subscriptionId: string, _planType: string) {
+    if (!user) return
+    try {
+      await supabase.from('licenses').insert({
+        user_id: user.id,
+        key: `PAYPAL-SUB-${subscriptionId}`,
+        active: true,
+      })
+    } catch (err) {
+      console.error('Failed to record subscription:', err)
+    }
+    setSuccess(true)
+    await checkPremiumStatus()
+    setTimeout(() => {
+      setShowUpgrade(false)
+      setSuccess(false)
+    }, 2000)
+  }
+
+  function handleSubscriptionError(error: unknown) {
+    console.error('Payment failed:', error)
   }
 
   if (isPremium === null) {
@@ -67,7 +93,7 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
         <div className="absolute inset-0 flex items-center justify-center">
           <button
             onClick={() => setShowUpgrade(true)}
-            className="flex items-center gap-2 px-6 py-3 bg-amber-500 text-white rounded-xl shadow-lg hover:bg-amber-600 transition-colors"
+            className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl shadow-lg hover:bg-blue-700 transition-colors"
           >
             <Lock size={18} />
             {t('premium.unlock')} {feature}
@@ -77,61 +103,83 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
 
       {showUpgrade && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
-            <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-6 text-white">
+          <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6 text-white">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold">{t('premium.title')}</h2>
                 <button onClick={() => setShowUpgrade(false)} className="p-1 hover:bg-white/20 rounded-lg">
                   <X size={20} />
                 </button>
               </div>
-              <p className="text-amber-100">{t('premium.subtitle')}</p>
+              <p className="text-blue-100">{t('premium.subtitle')}</p>
             </div>
 
             <div className="p-6">
-              <div className="mb-6">
-                <h3 className="font-semibold mb-3 dark:text-white">{t('premium.features')}</h3>
-                <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-500">✓</span>
-                    {t('premium.unlimitedPdf')}
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-500">✓</span>
-                    {t('premium.multiCurrency')}
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-500">✓</span>
-                    {t('premium.advancedTax')}
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-500">✓</span>
-                    {t('premium.lifetimeAccess')}
-                  </li>
-                </ul>
-              </div>
+              {success ? (
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle size={32} className="text-green-600 dark:text-green-400" />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{t('ocr.upgradeSuccess')}</h3>
+                  <p className="text-slate-500 dark:text-slate-400">{t('ocr.upgradeSuccessDesc')}</p>
+                </div>
+              ) : (
+                <>
+                  <div className="mb-6">
+                    <h3 className="font-semibold mb-3 dark:text-white">{t('premium.features')}</h3>
+                    <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+                      <li className="flex items-center gap-2">
+                        <span className="text-green-500">✓</span>
+                        {t('premium.unlimitedPdf')}
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-green-500">✓</span>
+                        {t('premium.multiCurrency')}
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-green-500">✓</span>
+                        {t('premium.advancedTax')}
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-green-500">✓</span>
+                        {t('premium.lifetimeAccess')}
+                      </li>
+                    </ul>
+                  </div>
 
-              <div className="space-y-4">
-                <button
-                  onClick={() => {
-                    const token = Date.now().toString(36) + Math.random().toString(36).slice(2)
-                    localStorage.setItem('paypal_pending_token', JSON.stringify({
-                      token,
-                      timestamp: Date.now()
-                    }))
-                    window.location.href = `https://www.paypal.com/ncp/payment/7CFGKT9FM3ER2?return=${encodeURIComponent(window.location.origin + `/?token=${token}`)}`
-                  }}
-                  className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
-                >
-                  <CreditCard size={18} />
-                  {t('premium.payPal')}
-                  <ExternalLink size={14} />
-                </button>
-              </div>
+                  <div className="flex gap-4">
+                    {/* Monthly */}
+                    <div className="flex-1">
+                      <p className="text-center text-sm font-semibold mb-2 dark:text-white">{t('premium.payPalMonthly')}</p>
+                      <PayPalSubscriptionButton
+                        planId={PRO_MONTHLY_PLAN_ID}
+                        onSuccess={(id) => handleSubscriptionSuccess(id, 'monthly')}
+                        onError={handleSubscriptionError}
+                      />
+                    </div>
 
-              <p className="mt-4 text-xs text-slate-400 text-center">
-                {t('premium.oneTime')}
-              </p>
+                    {/* Annual */}
+                    <div className="flex-1 relative">
+                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded whitespace-nowrap">
+                        {t('landing.bestValue')}
+                      </span>
+                      <p className="text-center text-sm font-semibold mb-2 dark:text-white">{t('premium.payPalAnnual')}</p>
+                      <PayPalSubscriptionButton
+                        planId={PRO_ANNUAL_PLAN_ID}
+                        onSuccess={(id) => handleSubscriptionSuccess(id, 'annual')}
+                        onError={handleSubscriptionError}
+                      />
+                      <p className="text-center text-xs text-green-600 dark:text-green-400 mt-1">
+                        {t('premium.annualSave')}
+                      </p>
+                    </div>
+                  </div>
+
+                  <p className="mt-4 text-xs text-slate-400 text-center">
+                    {t('landing.cancelAnytime')}
+                  </p>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -166,7 +214,7 @@ export function usePremium() {
       .select('id')
       .eq('user_id', user.id)
       .eq('active', true)
-      .single()
+      .maybeSingle()
 
     setIsPremium(!!data)
   }

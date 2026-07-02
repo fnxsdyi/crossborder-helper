@@ -6,7 +6,6 @@ import {
   BarChart3,
   Shield,
   Globe,
-  CreditCard,
   Check,
   ArrowRight,
   X,
@@ -17,7 +16,7 @@ import type { Locale } from '@/lib/i18n'
 
 interface LandingPageProps {
   onEnterApp: () => void
-  onBuyNow?: () => void
+  onBuyNow?: (plan: 'monthly' | 'annual') => void
   onMemberLogin?: () => void
 }
 
@@ -185,7 +184,7 @@ export function LandingPage({ onEnterApp, onBuyNow, onMemberLogin }: LandingPage
 
       {/* Pricing */}
       <section id="pricing" className="py-20 px-6">
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-slate-900 mb-4">
             {t('landing.pricingTitle')}
           </h2>
@@ -193,75 +192,127 @@ export function LandingPage({ onEnterApp, onBuyNow, onMemberLogin }: LandingPage
             {t('landing.pricingDesc')}
           </p>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {/* Free Plan */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-8 text-left">
-              <h3 className="text-xl font-semibold text-slate-900 mb-2">{t('landing.freePlan')}</h3>
-              <p className="text-slate-500 mb-6">{t('landing.freePlanDesc')}</p>
-              <div className="text-4xl font-bold text-slate-900 mb-6">$0</div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center gap-3 text-slate-600">
-                  <Check size={18} className="text-green-500 flex-shrink-0" />
+            <div className="bg-white rounded-2xl border border-slate-200 p-6 text-left">
+              <h3 className="text-lg font-semibold text-slate-900 mb-1">{t('landing.freePlan')}</h3>
+              <p className="text-slate-500 text-sm mb-4">{t('landing.freePlanDesc')}</p>
+              <div className="text-3xl font-bold text-slate-900 mb-4">$0</div>
+              <ul className="space-y-2 mb-6 text-sm">
+                <li className="flex items-center gap-2 text-slate-600">
+                  <Check size={16} className="text-green-500 flex-shrink-0" />
                   {t('landing.freeFeature1')}
                 </li>
-                <li className="flex items-center gap-3 text-slate-600">
-                  <Check size={18} className="text-green-500 flex-shrink-0" />
+                <li className="flex items-center gap-2 text-slate-600">
+                  <Check size={16} className="text-green-500 flex-shrink-0" />
                   {t('landing.freeFeature2')}
                 </li>
-                <li className="flex items-center gap-3 text-slate-600">
-                  <Check size={18} className="text-green-500 flex-shrink-0" />
+                <li className="flex items-center gap-2 text-slate-600">
+                  <Check size={16} className="text-green-500 flex-shrink-0" />
                   {t('landing.freeFeature3')}
                 </li>
-                <li className="flex items-center gap-3 text-slate-600">
-                  <Check size={18} className="text-green-500 flex-shrink-0" />
+                <li className="flex items-center gap-2 text-slate-600">
+                  <Check size={16} className="text-green-500 flex-shrink-0" />
                   {t('landing.freeFeature4')}
                 </li>
               </ul>
               <button
                 onClick={onEnterApp}
-                className="w-full py-3 border border-slate-300 text-slate-700 rounded-xl font-medium hover:bg-slate-50 transition-colors"
+                className="w-full py-2.5 border border-slate-300 text-slate-700 rounded-xl font-medium hover:bg-slate-50 transition-colors text-sm"
               >
                 {t('landing.freeTrial')}
               </button>
             </div>
 
-            {/* Premium Plan */}
-            <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-8 text-left text-white relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-10 -mt-10" />
-              <h3 className="text-xl font-semibold mb-2">{t('landing.premiumPlan')}</h3>
-              <p className="text-blue-100 mb-6">{t('landing.premiumPlanDesc')}</p>
-              <div className="text-4xl font-bold mb-6">$19</div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center gap-3">
-                  <Check size={18} className="text-green-300 flex-shrink-0" />
-                  {t('landing.premiumFeature1')}
+            {/* Pro Monthly */}
+            <div className="bg-white rounded-2xl border border-slate-200 p-6 text-left relative">
+              <h3 className="text-lg font-semibold text-slate-900 mb-1">{t('landing.proPlan')}</h3>
+              <p className="text-slate-500 text-sm mb-4">{t('landing.proPlanMonthlyDesc')}</p>
+              <div className="flex items-baseline gap-1 mb-1">
+                <span className="text-3xl font-bold text-slate-900">{t('landing.monthlyPrice')}</span>
+                <span className="text-sm text-slate-500">{t('landing.perMonth')}</span>
+              </div>
+              <ul className="space-y-2 mb-6 text-sm">
+                <li className="flex items-center gap-2 text-slate-600">
+                  <Check size={16} className="text-green-500 flex-shrink-0" />
+                  {t('landing.proFeature1')}
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check size={18} className="text-green-300 flex-shrink-0" />
-                  {t('landing.premiumFeature2')}
+                <li className="flex items-center gap-2 text-slate-600">
+                  <Check size={16} className="text-green-500 flex-shrink-0" />
+                  {t('landing.proFeature2')}
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check size={18} className="text-green-300 flex-shrink-0" />
-                  {t('landing.premiumFeature3')}
+                <li className="flex items-center gap-2 text-slate-600">
+                  <Check size={16} className="text-green-500 flex-shrink-0" />
+                  {t('landing.proFeature3')}
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check size={18} className="text-green-300 flex-shrink-0" />
-                  {t('landing.premiumFeature4')}
+                <li className="flex items-center gap-2 text-slate-600">
+                  <Check size={16} className="text-green-500 flex-shrink-0" />
+                  {t('landing.proFeature4')}
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check size={18} className="text-green-300 flex-shrink-0" />
-                  {t('landing.premiumFeature5')}
+                <li className="flex items-center gap-2 text-slate-600">
+                  <Check size={16} className="text-green-500 flex-shrink-0" />
+                  {t('landing.proFeature5')}
+                </li>
+                <li className="flex items-center gap-2 text-slate-600">
+                  <Check size={16} className="text-green-500 flex-shrink-0" />
+                  {t('landing.proFeature6')}
                 </li>
               </ul>
               <button
-                onClick={onBuyNow}
-                className="w-full py-3 bg-white text-blue-600 rounded-xl font-medium hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"
+                onClick={() => onBuyNow?.('monthly')}
+                className="w-full py-2.5 bg-slate-900 text-white rounded-xl font-medium hover:bg-slate-800 transition-colors text-sm"
               >
-                <CreditCard size={18} />
-                {t('landing.buyNow')}
+                {t('landing.subscribeMonthly')}
+              </button>
+            </div>
+
+            {/* Pro Annual - Best Value */}
+            <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-6 text-left text-white relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-8 -mt-8" />
+              <span className="inline-block px-2 py-0.5 bg-green-500 text-white text-[10px] font-bold rounded mb-2 uppercase tracking-wide">
+                {t('landing.bestValue')}
+              </span>
+              <h3 className="text-lg font-semibold mb-1">{t('landing.proPlan')}</h3>
+              <p className="text-blue-100 text-sm mb-4">{t('landing.proPlanAnnualDesc')}</p>
+              <div className="flex items-baseline gap-1 mb-1">
+                <span className="text-3xl font-bold">{t('landing.annualPrice')}</span>
+                <span className="text-sm text-blue-200">{t('landing.perYear')}</span>
+              </div>
+              <p className="text-xs text-blue-200 mb-4">{t('landing.monthlySubtext')}</p>
+              <ul className="space-y-2 mb-6 text-sm">
+                <li className="flex items-center gap-2">
+                  <Check size={16} className="text-green-300 flex-shrink-0" />
+                  {t('landing.proFeature1')}
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check size={16} className="text-green-300 flex-shrink-0" />
+                  {t('landing.proFeature2')}
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check size={16} className="text-green-300 flex-shrink-0" />
+                  {t('landing.proFeature3')}
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check size={16} className="text-green-300 flex-shrink-0" />
+                  {t('landing.proFeature4')}
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check size={16} className="text-green-300 flex-shrink-0" />
+                  {t('landing.proFeature5')}
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check size={16} className="text-green-300 flex-shrink-0" />
+                  {t('landing.proFeature6')}
+                </li>
+              </ul>
+              <button
+                onClick={() => onBuyNow?.('annual')}
+                className="w-full py-2.5 bg-white text-blue-600 rounded-xl font-medium hover:bg-blue-50 transition-colors text-sm"
+              >
+                {t('landing.subscribeAnnual')}
               </button>
               <p className="text-xs text-blue-200 text-center mt-3">
-                {t('landing.orUseKey')}
+                {t('landing.cancelAnytime')}
               </p>
             </div>
           </div>

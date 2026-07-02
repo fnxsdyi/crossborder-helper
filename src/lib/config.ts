@@ -6,3 +6,7 @@ export function isAdmin(email: string | null | undefined): boolean {
   if (!email) return false
   return SUPER_ADMIN_EMAILS.includes(email.toLowerCase())
 }
+
+/** PayPal Subscription Plan IDs */
+export const PRO_MONTHLY_PLAN_ID = 'P-29E1204392902382CNJCROFI'
+export const PRO_ANNUAL_PLAN_ID = 'ANNUAL_PLAN_ID_PLACEHOLDER'

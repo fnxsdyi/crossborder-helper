@@ -55,7 +55,6 @@ export async function hasOcrSubscription(userId: string): Promise<boolean> {
       .from('licenses')
       .select('id')
       .eq('user_id', userId)
-      .eq('key', 'OCR_ADDON')
       .eq('active', true)
       .maybeSingle()
 

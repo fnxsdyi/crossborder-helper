@@ -42,7 +42,7 @@ function PageLoader() {
 interface LayoutProps {
   onSignOut?: () => void
   isGuest?: boolean
-  onUpgrade?: () => void
+  onUpgrade?: (plan?: 'monthly' | 'annual') => void
 }
 
 export function Layout({ onSignOut, isGuest, onUpgrade }: LayoutProps) {
@@ -60,12 +60,12 @@ export function Layout({ onSignOut, isGuest, onUpgrade }: LayoutProps) {
           return (
             <div className="text-center py-20">
               <p className="text-slate-500 dark:text-slate-400 mb-4">Please sign in to use OCR scanning.</p>
-              <button
-                onClick={onUpgrade}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Sign In
-              </button>
+            <button
+              onClick={() => onUpgrade?.()}
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Sign In
+            </button>
             </div>
           )
         }
