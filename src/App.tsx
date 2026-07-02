@@ -128,7 +128,6 @@ function App() {
       <Suspense fallback={<Loading />}>
         <LandingPage
           onEnterApp={handleEnterApp}
-          onBuyNow={handleBuyNow}
           onMemberLogin={() => {
             setHasEntered(true)
             if (user) {

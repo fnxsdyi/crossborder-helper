@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { useI18n } from '@/hooks/useI18n'
 import { PRO_MONTHLY_PLAN_ID } from '@/lib/config'
-import { Mail, Lock, LogIn, Globe, CreditCard, UserPlus } from 'lucide-react'
+import { PayPalSubscriptionButton } from '@/components/PayPalSubscriptionButton'
+import { Mail, Lock, LogIn, Globe, UserPlus } from 'lucide-react'
 
 interface AuthPageProps {
   onAuth: () => void
@@ -46,18 +47,6 @@ export function AuthPage({ onAuth, showWelcome: initialShowWelcome }: AuthPagePr
     } else {
       onAuth()
     }
-  }
-
-  function handleBecomeMember() {
-    const token = Date.now().toString(36) + Math.random().toString(36).slice(2)
-    localStorage.setItem('paypal_pending_token', JSON.stringify({
-      token,
-      timestamp: Date.now(),
-      planType: 'monthly',
-      planId: PRO_MONTHLY_PLAN_ID
-    }))
-    const returnUrl = encodeURIComponent(window.location.origin + `/?token=${token}&plan=monthly`)
-    window.location.href = `https://www.paypal.com/ncp/payment/${PRO_MONTHLY_PLAN_ID}?return=${returnUrl}`
   }
 
   return (
@@ -152,13 +141,15 @@ export function AuthPage({ onAuth, showWelcome: initialShowWelcome }: AuthPagePr
           </form>
 
           <div className="mt-6 pt-4 border-t border-slate-200">
-            <button
-              onClick={handleBecomeMember}
-              className="w-full flex items-center justify-center gap-2 py-2.5 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors"
-            >
-              <CreditCard size={18} />
-              {t('auth.becomeMember')}
-            </button>
+            <p className="text-sm text-center text-slate-500 mb-3">{t('auth.becomeMember')}</p>
+            <PayPalSubscriptionButton
+              planId={PRO_MONTHLY_PLAN_ID}
+              onSuccess={(id) => {
+                console.log('Subscription:', id)
+                onAuth()
+              }}
+              onError={(err) => console.error('Payment error:', err)}
+            />
           </div>
 
           <div className="mt-4 text-center">

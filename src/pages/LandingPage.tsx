@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useI18n } from '@/hooks/useI18n'
+import { PRO_MONTHLY_PLAN_ID, PRO_ANNUAL_PLAN_ID } from '@/lib/config'
+import { PayPalSubscriptionButton } from '@/components/PayPalSubscriptionButton'
 import {
   FileText,
   Calculator,
@@ -16,11 +18,10 @@ import type { Locale } from '@/lib/i18n'
 
 interface LandingPageProps {
   onEnterApp: () => void
-  onBuyNow?: (plan: 'monthly' | 'annual') => void
   onMemberLogin?: () => void
 }
 
-export function LandingPage({ onEnterApp, onBuyNow, onMemberLogin }: LandingPageProps) {
+export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
   const { t, locale, changeLocale, locales } = useI18n()
   const [showPrivacy, setShowPrivacy] = useState(false)
   const [showTerms, setShowTerms] = useState(false)
@@ -258,12 +259,14 @@ export function LandingPage({ onEnterApp, onBuyNow, onMemberLogin }: LandingPage
                   {t('landing.proFeature6')}
                 </li>
               </ul>
-              <button
-                onClick={() => onBuyNow?.('monthly')}
-                className="w-full py-2.5 bg-slate-900 text-white rounded-xl font-medium hover:bg-slate-800 transition-colors text-sm"
-              >
-                {t('landing.subscribeMonthly')}
-              </button>
+              <PayPalSubscriptionButton
+                planId={PRO_MONTHLY_PLAN_ID}
+                onSuccess={(id) => {
+                  console.log('Monthly subscription:', id)
+                  window.location.href = '/register'
+                }}
+                onError={(err) => console.error('Monthly payment error:', err)}
+              />
             </div>
 
             {/* Pro Annual - Best Value */}
@@ -305,12 +308,14 @@ export function LandingPage({ onEnterApp, onBuyNow, onMemberLogin }: LandingPage
                   {t('landing.proFeature6')}
                 </li>
               </ul>
-              <button
-                onClick={() => onBuyNow?.('annual')}
-                className="w-full py-2.5 bg-white text-blue-600 rounded-xl font-medium hover:bg-blue-50 transition-colors text-sm"
-              >
-                {t('landing.subscribeAnnual')}
-              </button>
+              <PayPalSubscriptionButton
+                planId={PRO_ANNUAL_PLAN_ID}
+                onSuccess={(id) => {
+                  console.log('Annual subscription:', id)
+                  window.location.href = '/register'
+                }}
+                onError={(err) => console.error('Annual payment error:', err)}
+              />
               <p className="text-xs text-blue-200 text-center mt-3">
                 {t('landing.cancelAnytime')}
               </p>
