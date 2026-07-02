@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { CheckCircle, RefreshCw, AlertTriangle } from 'lucide-react'
 import { useI18n } from '@/hooks/useI18n'
 import { useOcrStore } from '@/stores/ocrStore'
+import { useAuthStore } from '@/stores/authStore'
 import type { OcrResult as OcrResultType } from '@/lib/ocrSchema'
-import db from '@/db'
+import { getClients, upsertClient, upsertInvoice, getSettings, upsertSettings } from '@/lib/sync'
 
 interface OcrResultProps {
   onRescan: () => void
@@ -13,6 +14,7 @@ interface OcrResultProps {
 export function OcrResult({ onRescan, onSaved }: OcrResultProps) {
   const { t } = useI18n()
   const { result, image } = useOcrStore()
+  const { user } = useAuthStore()
   const [editing, setEditing] = useState<OcrResultType | null>(result)
   const [saving, setSaving] = useState(false)
 
@@ -38,37 +40,36 @@ export function OcrResult({ onRescan, onSaved }: OcrResultProps) {
   }
 
   async function handleSave() {
-    if (!editing) return
+    if (!editing || !user) return
     setSaving(true)
 
     try {
       // Find or create client by vendor_name
-      let clientId = 1
-      const clients = await db.clients.toArray()
+      let clientId: string | null = null
+      const clients = await getClients(user.id)
       const existingClient = clients.find(c => c.name === editing.vendor_name)
       if (existingClient) {
-        clientId = existingClient.id!
+        clientId = existingClient.id
       } else {
-        const newId = await db.clients.add({
+        const newClient = await upsertClient(user.id, {
           name: editing.vendor_name || 'Unknown Vendor',
           email: '',
           company: editing.vendor_name || '',
           country: '',
-          createdAt: new Date(),
         })
-        clientId = newId ?? 1
+        clientId = newClient.id
       }
 
       // Create invoice
-      const settings = await db.settings.toCollection().first()
-      const prefix = settings?.invoicePrefix || 'INV'
-      const nextNum = settings?.nextInvoiceNumber || 1
+      const settings = await getSettings(user.id)
+      const prefix = settings.invoicePrefix || 'INV'
+      const nextNum = settings.nextInvoiceNumber || 1
 
-      await db.invoices.add({
+      await upsertInvoice(user.id, {
         invoiceNumber: editing.invoice_number || `${prefix}-${String(nextNum).padStart(4, '0')}`,
         clientId,
-        issueDate: editing.date ? new Date(editing.date) : new Date(),
-        dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        issueDate: editing.date || new Date().toISOString().split('T')[0],
+        dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         status: 'draft',
         currency: editing.currency || 'USD',
         vatType: 'none',
@@ -84,15 +85,11 @@ export function OcrResult({ onRescan, onSaved }: OcrResultProps) {
           amount: editing.amount || 0,
         }],
         ocrProcessed: true,
-        ocrConfidence: result?.confidence,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        ocrConfidence: result?.confidence || null,
       })
 
       // Update next invoice number
-      if (settings) {
-        await db.settings.update(settings.id!, { nextInvoiceNumber: nextNum + 1 })
-      }
+      await upsertSettings(user.id, { nextInvoiceNumber: nextNum + 1 })
 
       onSaved()
     } catch (err) {

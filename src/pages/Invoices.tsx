@@ -1,5 +1,8 @@
+'use client'
+
 import { useEffect, useState } from 'react'
-import db, { type Invoice } from '@/db'
+import { useAuthStore } from '@/stores/authStore'
+import { getInvoices, deleteInvoice, type SyncInvoice } from '@/lib/sync'
 import { Plus, FileText, Edit, Trash2, Download } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { InvoiceEditor } from '@/components/InvoiceEditor'
@@ -8,17 +11,27 @@ import { useI18n } from '@/hooks/useI18n'
 
 export function Invoices() {
   const { t } = useI18n()
-  const [invoices, setInvoices] = useState<Invoice[]>([])
+  const { user } = useAuthStore()
+  const [invoices, setInvoices] = useState<SyncInvoice[]>([])
   const [showEditor, setShowEditor] = useState(false)
-  const [editingInvoice, setEditingInvoice] = useState<Invoice | null>(null)
+  const [editingInvoice, setEditingInvoice] = useState<SyncInvoice | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    loadInvoices()
-  }, [])
+    if (user) loadInvoices()
+  }, [user])
 
   async function loadInvoices() {
-    const data = await db.invoices.orderBy('createdAt').reverse().toArray()
-    setInvoices(data)
+    if (!user) return
+    try {
+      setLoading(true)
+      const data = await getInvoices(user.id)
+      setInvoices(data)
+    } catch (err) {
+      console.error('Failed to load invoices:', err)
+    } finally {
+      setLoading(false)
+    }
   }
 
   function handleCreate() {
@@ -26,14 +39,14 @@ export function Invoices() {
     setShowEditor(true)
   }
 
-  function handleEdit(invoice: Invoice) {
+  function handleEdit(invoice: SyncInvoice) {
     setEditingInvoice(invoice)
     setShowEditor(true)
   }
 
-  async function handleDelete(id: number) {
-    if (confirm(t('common.confirm'))) {
-      await db.invoices.delete(id)
+  async function handleDelete(id: string) {
+    if (confirm(t('common.confirm')) && user) {
+      await deleteInvoice(user.id, id)
       loadInvoices()
     }
   }
@@ -73,7 +86,12 @@ export function Invoices() {
         </button>
       </div>
 
-      {invoices.length === 0 ? (
+      {loading ? (
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-slate-400">{t('common.loading')}</p>
+        </div>
+      ) : invoices.length === 0 ? (
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center">
           <FileText size={48} className="mx-auto text-slate-300 mb-4" />
           <h3 className="text-lg font-medium text-slate-700 mb-2">{t('invoices.noInvoices')}</h3>
@@ -104,7 +122,7 @@ export function Invoices() {
                     <p className="font-medium">{invoice.invoiceNumber}</p>
                   </td>
                   <td className="px-5 py-4 text-sm text-slate-500">
-                    {formatDate(invoice.issueDate)}
+                    {formatDate(new Date(invoice.issueDate))}
                   </td>
                   <td className="px-5 py-4">
                     <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
@@ -122,7 +140,7 @@ export function Invoices() {
                   <td className="px-5 py-4 text-right">
                     <div className="flex items-center justify-end gap-1">
                       <button
-                        onClick={() => generateInvoicePDF(invoice)}
+                        onClick={() => generateInvoicePDF(invoice as any)}
                         className="p-1.5 rounded-lg hover:bg-blue-50 text-slate-500 hover:text-blue-600"
                         title={t('common.download')}
                       >
@@ -135,7 +153,7 @@ export function Invoices() {
                         <Edit size={16} />
                       </button>
                       <button
-                        onClick={() => handleDelete(invoice.id!)}
+                        onClick={() => handleDelete(invoice.id)}
                         className="p-1.5 rounded-lg hover:bg-red-50 text-slate-500 hover:text-red-600"
                       >
                         <Trash2 size={16} />

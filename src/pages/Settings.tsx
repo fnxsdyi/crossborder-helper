@@ -1,8 +1,10 @@
+'use client'
+
 import { useEffect, useState } from 'react'
-import db, { type Settings as SettingsType } from '@/db'
+import { useAuthStore } from '@/stores/authStore'
+import { getSettings, upsertSettings, type SyncSettings } from '@/lib/sync'
 import { Settings as SettingsIcon, Save, LogOut, User } from 'lucide-react'
 import { useI18n } from '@/hooks/useI18n'
-import { useAuthStore } from '@/stores/authStore'
 import { usePremium } from '@/components/PremiumGate'
 
 interface SettingsPageProps {
@@ -14,7 +16,7 @@ export function SettingsPage({ onUpgrade, isGuest }: SettingsPageProps) {
   const { t } = useI18n()
   const { user, signOut } = useAuthStore()
   const isPremium = usePremium()
-  const [settings, setSettings] = useState<SettingsType | null>(null)
+  const [settings, setSettings] = useState<SyncSettings | null>(null)
   const [businessName, setBusinessName] = useState('')
   const [businessAddress, setBusinessAddress] = useState('')
   const [businessEmail, setBusinessEmail] = useState('')
@@ -25,30 +27,38 @@ export function SettingsPage({ onUpgrade, isGuest }: SettingsPageProps) {
   const [defaultTemplate, setDefaultTemplate] = useState<'us' | 'eu' | 'uk'>('us')
   const [taxRate, setTaxRate] = useState(0)
   const [invoicePrefix, setInvoicePrefix] = useState('INV')
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    loadSettings()
-  }, [])
+    if (user) loadSettings()
+  }, [user])
 
   async function loadSettings() {
-    const data = await db.settings.toCollection().first()
-    if (data) {
+    if (!user) return
+    try {
+      setLoading(true)
+      const data = await getSettings(user.id)
       setSettings(data)
       setBusinessName(data.businessName)
       setBusinessAddress(data.businessAddress)
       setBusinessEmail(data.businessEmail)
       setBusinessCountry(data.businessCountry)
       setDefaultCurrency(data.defaultCurrency)
-      setDefaultVatType(data.defaultVatType || 'none')
+      setDefaultVatType((data.defaultVatType as typeof defaultVatType) || 'none')
       setDefaultVatNumber(data.defaultVatNumber || '')
-      setDefaultTemplate(data.defaultTemplate || 'us')
+      setDefaultTemplate((data.defaultTemplate as typeof defaultTemplate) || 'us')
       setTaxRate(data.taxRate)
       setInvoicePrefix(data.invoicePrefix)
+    } catch (err) {
+      console.error('Failed to load settings:', err)
+    } finally {
+      setLoading(false)
     }
   }
 
   async function handleSave() {
-    const settingsData = {
+    if (!user) return
+    await upsertSettings(user.id, {
       businessName,
       businessAddress,
       businessEmail,
@@ -60,14 +70,7 @@ export function SettingsPage({ onUpgrade, isGuest }: SettingsPageProps) {
       taxRate,
       invoicePrefix,
       nextInvoiceNumber: settings?.nextInvoiceNumber || 1,
-      isPremium: settings?.isPremium || false,
-    }
-
-    if (settings?.id) {
-      await db.settings.update(settings.id, settingsData)
-    } else {
-      await db.settings.add(settingsData as SettingsType)
-    }
+    })
     loadSettings()
   }
 
@@ -217,97 +220,35 @@ export function SettingsPage({ onUpgrade, isGuest }: SettingsPageProps) {
               />
             </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">{t('settings.defaultTemplate')}</label>
-            <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">{t('settings.templateUs')}</label>
               <button
                 onClick={() => setDefaultTemplate('us')}
-                className={`p-3 rounded-xl border-2 text-left transition-all ${
-                  defaultTemplate === 'us'
-                    ? 'border-primary bg-primary/5'
-                    : 'border-slate-200 hover:border-slate-300'
-                }`}
+                className={`w-full px-4 py-2 rounded-lg border transition-colors ${defaultTemplate === 'us' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-slate-200 hover:border-slate-300'}`}
               >
-                <p className="font-medium text-sm">{t('settings.templateUs')}</p>
-                <p className="text-xs text-slate-500 mt-1">{t('settings.templateUsDesc')}</p>
+                {t('settings.templateUsDesc')}
               </button>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">{t('settings.templateEu')}</label>
               <button
                 onClick={() => setDefaultTemplate('eu')}
-                className={`p-3 rounded-xl border-2 text-left transition-all ${
-                  defaultTemplate === 'eu'
-                    ? 'border-primary bg-primary/5'
-                    : 'border-slate-200 hover:border-slate-300'
-                }`}
+                className={`w-full px-4 py-2 rounded-lg border transition-colors ${defaultTemplate === 'eu' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-slate-200 hover:border-slate-300'}`}
               >
-                <p className="font-medium text-sm">{t('settings.templateEu')}</p>
-                <p className="text-xs text-slate-500 mt-1">{t('settings.templateEuDesc')}</p>
-              </button>
-              <button
-                onClick={() => setDefaultTemplate('uk')}
-                className={`p-3 rounded-xl border-2 text-left transition-all ${
-                  defaultTemplate === 'uk'
-                    ? 'border-primary bg-primary/5'
-                    : 'border-slate-200 hover:border-slate-300'
-                }`}
-              >
-                <p className="font-medium text-sm">{t('settings.templateUk')}</p>
-                <p className="text-xs text-slate-500 mt-1">{t('settings.templateUkDesc')}</p>
+                {t('settings.templateEuDesc')}
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mt-6">
-        <h2 className="font-semibold mb-4">{t('settings.vatGstSettings')}</h2>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">{t('settings.defaultVatType')}</label>
-            <select
-              value={defaultVatType}
-              onChange={(e) => setDefaultVatType(e.target.value as typeof defaultVatType)}
-              className="w-full px-3 py-2 border border-slate-200 rounded-lg"
-            >
-              <option value="none">{t('editor.vatNone')}</option>
-              <option value="standard">{t('editor.vatStandard')}</option>
-              <option value="reverse_charge">{t('editor.vatReverseCharge')}</option>
-              <option value="exempt">{t('editor.vatExempt')}</option>
-            </select>
-          </div>
-          {defaultVatType === 'standard' && (
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">{t('editor.yourVatNumber')}</label>
-              <input
-                type="text"
-                value={defaultVatNumber}
-                onChange={(e) => setDefaultVatNumber(e.target.value)}
-                placeholder="e.g. DE123456789"
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg"
-              />
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="mt-6 flex justify-end">
+      <div className="mt-6">
         <button
           onClick={handleSave}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
+          className="w-full py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors"
         >
-          <Save size={16} />
           {t('settings.saveSettings')}
-        </button>
-      </div>
-
-      <div className="mt-8 p-4 bg-slate-50 rounded-xl">
-        <button
-          onClick={() => {
-            localStorage.removeItem('app_entered')
-            window.location.reload()
-          }}
-          className="text-sm text-slate-500 hover:text-slate-700"
-        >
-          ← Back to Home
         </button>
       </div>
     </div>

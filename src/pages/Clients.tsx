@@ -1,27 +1,40 @@
+'use client'
+
 import { useEffect, useState } from 'react'
-import db, { type Client } from '@/db'
+import { useAuthStore } from '@/stores/authStore'
+import { getClients, upsertClient, deleteClient, type SyncClient } from '@/lib/sync'
 import { Plus, Users, Edit, Trash2, Mail, Globe } from 'lucide-react'
 import { useI18n } from '@/hooks/useI18n'
 
 export function Clients() {
   const { t } = useI18n()
-  const [clients, setClients] = useState<Client[]>([])
+  const { user } = useAuthStore()
+  const [clients, setClients] = useState<SyncClient[]>([])
   const [showForm, setShowForm] = useState(false)
-  const [editingClient, setEditingClient] = useState<Client | null>(null)
+  const [editingClient, setEditingClient] = useState<SyncClient | null>(null)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [company, setCompany] = useState('')
   const [address, setAddress] = useState('')
   const [country, setCountry] = useState('')
   const [vatNumber, setVatNumber] = useState('')
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    loadClients()
-  }, [])
+    if (user) loadClients()
+  }, [user])
 
   async function loadClients() {
-    const data = await db.clients.toArray()
-    setClients(data)
+    if (!user) return
+    try {
+      setLoading(true)
+      const data = await getClients(user.id)
+      setClients(data)
+    } catch (err) {
+      console.error('Failed to load clients:', err)
+    } finally {
+      setLoading(false)
+    }
   }
 
   function handleCreate() {
@@ -35,7 +48,7 @@ export function Clients() {
     setShowForm(true)
   }
 
-  function handleEdit(client: Client) {
+  function handleEdit(client: SyncClient) {
     setEditingClient(client)
     setName(client.name)
     setEmail(client.email)
@@ -47,28 +60,23 @@ export function Clients() {
   }
 
   async function handleSave() {
-    const clientData = {
+    if (!user) return
+    await upsertClient(user.id, {
+      id: editingClient?.id,
       name,
       email,
-      company,
-      address,
+      company: company || null,
+      address: address || null,
       country,
-      vatNumber,
-      createdAt: editingClient?.createdAt || new Date(),
-    }
-
-    if (editingClient?.id) {
-      await db.clients.update(editingClient.id, clientData)
-    } else {
-      await db.clients.add(clientData as Client)
-    }
+      vatNumber: vatNumber || null,
+    })
     setShowForm(false)
     loadClients()
   }
 
-  async function handleDelete(id: number) {
-    if (confirm(t('common.confirm'))) {
-      await db.clients.delete(id)
+  async function handleDelete(id: string) {
+    if (confirm(t('common.confirm')) && user) {
+      await deleteClient(user.id, id)
       loadClients()
     }
   }
@@ -172,7 +180,12 @@ export function Clients() {
         </button>
       </div>
 
-      {clients.length === 0 ? (
+      {loading ? (
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-slate-400">{t('common.loading')}</p>
+        </div>
+      ) : clients.length === 0 ? (
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center">
           <Users size={48} className="mx-auto text-slate-300 mb-4" />
           <h3 className="text-lg font-medium text-slate-700 mb-2">{t('clients.noClients')}</h3>
@@ -194,7 +207,7 @@ export function Clients() {
                   <button onClick={() => handleEdit(client)} className="p-1.5 rounded hover:bg-slate-100 text-slate-400">
                     <Edit size={14} />
                   </button>
-                  <button onClick={() => handleDelete(client.id!)} className="p-1.5 rounded hover:bg-red-50 text-slate-400 hover:text-red-500">
+                  <button onClick={() => handleDelete(client.id)} className="p-1.5 rounded hover:bg-red-50 text-slate-400 hover:text-red-500">
                     <Trash2 size={14} />
                   </button>
                 </div>

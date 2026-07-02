@@ -1,5 +1,8 @@
+'use client'
+
 import { useEffect, useState } from 'react'
-import db, { type Invoice } from '@/db'
+import { useAuthStore } from '@/stores/authStore'
+import { getInvoices, getClients, type SyncInvoice } from '@/lib/sync'
 import { FileText, Users, DollarSign, Clock, Plus } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { useI18n } from '@/hooks/useI18n'
@@ -14,6 +17,7 @@ interface CurrencyStats {
 
 export function Dashboard() {
   const { t } = useI18n()
+  const { user } = useAuthStore()
   const { setCurrentView } = useAppStore()
   const [stats, setStats] = useState({
     totalInvoices: 0,
@@ -21,54 +25,63 @@ export function Dashboard() {
     totalRevenue: 0,
     pendingAmount: 0,
   })
-  const [recentInvoices, setRecentInvoices] = useState<Invoice[]>([])
+  const [recentInvoices, setRecentInvoices] = useState<SyncInvoice[]>([])
   const [currencyStats, setCurrencyStats] = useState<CurrencyStats[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    loadStats()
-  }, [])
+    if (user) loadStats()
+  }, [user])
 
   async function loadStats() {
-    const invoices = await db.invoices.toArray()
-    const clients = await db.clients.toArray()
+    if (!user) return
+    try {
+      setLoading(true)
+      const invoices = await getInvoices(user.id)
+      const clients = await getClients(user.id)
 
-    const totalRevenue = invoices
-      .filter((i) => i.status === 'paid')
-      .reduce((sum: number, i) => sum + i.total, 0)
+      const totalRevenue = invoices
+        .filter((i) => i.status === 'paid')
+        .reduce((sum: number, i) => sum + i.total, 0)
 
-    const pendingAmount = invoices
-      .filter((i) => i.status === 'sent' || i.status === 'overdue')
-      .reduce((sum: number, i) => sum + i.total, 0)
+      const pendingAmount = invoices
+        .filter((i) => i.status === 'sent' || i.status === 'overdue')
+        .reduce((sum: number, i) => sum + i.total, 0)
 
-    // Currency breakdown
-    const currencyMap = new Map<string, CurrencyStats>()
-    invoices.forEach((inv) => {
-      const existing = currencyMap.get(inv.currency) || {
-        currency: inv.currency,
-        revenue: 0,
-        pending: 0,
-        count: 0,
-      }
-      existing.count++
-      if (inv.status === 'paid') existing.revenue += inv.total
-      if (inv.status === 'sent' || inv.status === 'overdue') existing.pending += inv.total
-      currencyMap.set(inv.currency, existing)
-    })
+      // Currency breakdown
+      const currencyMap = new Map<string, CurrencyStats>()
+      invoices.forEach((inv) => {
+        const existing = currencyMap.get(inv.currency) || {
+          currency: inv.currency,
+          revenue: 0,
+          pending: 0,
+          count: 0,
+        }
+        existing.count++
+        if (inv.status === 'paid') existing.revenue += inv.total
+        if (inv.status === 'sent' || inv.status === 'overdue') existing.pending += inv.total
+        currencyMap.set(inv.currency, existing)
+      })
 
-    setStats({
-      totalInvoices: invoices.length,
-      totalClients: clients.length,
-      totalRevenue,
-      pendingAmount,
-    })
+      setStats({
+        totalInvoices: invoices.length,
+        totalClients: clients.length,
+        totalRevenue,
+        pendingAmount,
+      })
 
-    setRecentInvoices(
-      invoices
-        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-        .slice(0, 5)
-    )
+      setRecentInvoices(
+        invoices
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          .slice(0, 5)
+      )
 
-    setCurrencyStats(Array.from(currencyMap.values()))
+      setCurrencyStats(Array.from(currencyMap.values()))
+    } catch (err) {
+      console.error('Failed to load dashboard stats:', err)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const statCards = [
@@ -125,7 +138,12 @@ export function Dashboard() {
           <h2 className="font-semibold">{t('dashboard.recentInvoices')}</h2>
         </div>
         <div className="p-5">
-          {recentInvoices.length === 0 ? (
+          {loading ? (
+            <div className="text-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-slate-400">{t('common.loading')}</p>
+            </div>
+          ) : recentInvoices.length === 0 ? (
             <div className="text-center py-8">
               <p className="text-slate-400 mb-4">
                 {t('dashboard.noInvoices')}
@@ -144,7 +162,7 @@ export function Dashboard() {
                 <div key={invoice.id} className="flex items-center justify-between p-3 rounded-lg bg-slate-50">
                   <div>
                     <p className="font-medium">{invoice.invoiceNumber}</p>
-                    <p className="text-sm text-slate-500">{formatDate(invoice.issueDate)}</p>
+                    <p className="text-sm text-slate-500">{formatDate(new Date(invoice.issueDate))}</p>
                   </div>
                   <div className="text-right">
                     <p className="font-semibold">{formatCurrency(invoice.total, invoice.currency)}</p>

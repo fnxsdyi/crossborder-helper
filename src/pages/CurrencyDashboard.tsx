@@ -1,5 +1,8 @@
+'use client'
+
 import { useEffect, useState } from 'react'
-import db, { type Invoice } from '@/db'
+import { useAuthStore } from '@/stores/authStore'
+import { getInvoices, getSettings, type SyncInvoice } from '@/lib/sync'
 import {
   TrendingUp,
   TrendingDown,
@@ -52,6 +55,7 @@ interface StatusCount {
 
 export function CurrencyDashboard() {
   const { t } = useI18n()
+  const { user } = useAuthStore()
   const [currencyRevenue, setCurrencyRevenue] = useState<CurrencyRevenue[]>([])
   const [fxEntries, setFxEntries] = useState<FXEntry[]>([])
   const [monthlyRevenue, setMonthlyRevenue] = useState<MonthlyRevenue[]>([])
@@ -68,26 +72,33 @@ export function CurrencyDashboard() {
   const [rateHistory, setRateHistory] = useState<RateHistory[]>([])
 
   useEffect(() => {
-    loadData()
-    loadRateHistory()
-  }, [])
+    if (user) {
+      loadData()
+      loadRateHistory()
+    }
+  }, [user])
 
   async function loadData() {
-    const invoiceData = await db.invoices.toArray()
-    const settings = await db.settings.toCollection().first()
+    if (!user) return
+    try {
+      const invoiceData = await getInvoices(user.id)
+      const settings = await getSettings(user.id)
 
-    if (settings?.defaultCurrency) {
-      setBaseCurrency(settings.defaultCurrency)
+      if (settings.defaultCurrency) {
+        setBaseCurrency(settings.defaultCurrency)
+      }
+
+      processCurrencyRevenue(invoiceData)
+      processFXEntries(invoiceData)
+      processMonthlyRevenue(invoiceData)
+      processStatusBreakdown(invoiceData)
+      await convertTotalToBase(invoiceData, settings.defaultCurrency || 'USD')
+    } catch (err) {
+      console.error('Failed to load currency data:', err)
     }
-
-    processCurrencyRevenue(invoiceData)
-    processFXEntries(invoiceData)
-    processMonthlyRevenue(invoiceData)
-    processStatusBreakdown(invoiceData)
-    await convertTotalToBase(invoiceData, settings?.defaultCurrency || 'USD')
   }
 
-  function processCurrencyRevenue(invoices: Invoice[]) {
+  function processCurrencyRevenue(invoices: SyncInvoice[]) {
     const map = new Map<string, CurrencyRevenue>()
 
     invoices.forEach((inv) => {
@@ -114,7 +125,7 @@ export function CurrencyDashboard() {
     setCurrencyRevenue(Array.from(map.values()).sort((a, b) => b.totalRevenue - a.totalRevenue))
   }
 
-  function processFXEntries(invoices: Invoice[]) {
+  function processFXEntries(invoices: SyncInvoice[]) {
     const entries: FXEntry[] = []
 
     invoices
@@ -150,7 +161,7 @@ export function CurrencyDashboard() {
     setTotalFXGainLoss(total)
   }
 
-  function processMonthlyRevenue(invoices: Invoice[]) {
+  function processMonthlyRevenue(invoices: SyncInvoice[]) {
     const monthlyMap = new Map<string, MonthlyRevenue>()
 
     invoices
@@ -179,7 +190,7 @@ export function CurrencyDashboard() {
     setMonthlyRevenue(sorted)
   }
 
-  function processStatusBreakdown(invoices: Invoice[]) {
+  function processStatusBreakdown(invoices: SyncInvoice[]) {
     const map = new Map<string, StatusCount>()
 
     invoices.forEach((inv) => {
@@ -192,7 +203,7 @@ export function CurrencyDashboard() {
     setStatusBreakdown(Array.from(map.values()))
   }
 
-  async function convertTotalToBase(invoices: Invoice[], targetCurrency: string) {
+  async function convertTotalToBase(invoices: SyncInvoice[], targetCurrency: string) {
     let totalRevenue = 0
     let totalPending = 0
 

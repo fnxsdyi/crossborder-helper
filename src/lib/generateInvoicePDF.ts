@@ -1,6 +1,6 @@
 import { jsPDF, GState } from 'jspdf'
-import type { Invoice } from '@/db'
-import db from '@/db'
+import type { SyncInvoice } from './sync'
+import { getSettings, getClients } from './sync'
 
 type TemplateConfig = {
   title: string
@@ -46,9 +46,19 @@ const TEMPLATES: Record<string, TemplateConfig> = {
   },
 }
 
-export async function generateInvoicePDF(invoice: Invoice): Promise<void> {
-  const settings = await db.settings.toCollection().first()
-  const client = await db.clients.get(invoice.clientId)
+export async function generateInvoicePDF(invoice: SyncInvoice, userId?: string): Promise<void> {
+  let settings = null
+  let client = null
+
+  if (userId) {
+    try {
+      settings = await getSettings(userId)
+      const clients = await getClients(userId)
+      client = clients.find(c => c.id === invoice.clientId) || null
+    } catch (err) {
+      console.error('Failed to load settings/client for PDF:', err)
+    }
+  }
 
   const templateKey = invoice.template || 'us'
   const config = TEMPLATES[templateKey] || TEMPLATES.us

@@ -1,20 +1,22 @@
 import { useState, useEffect } from 'react'
-import db, { type Invoice, type InvoiceItem, type Client } from '@/db'
+import { useAuthStore } from '@/stores/authStore'
+import { getClients, upsertClient, upsertInvoice, getSettings, upsertSettings, type SyncClient, type SyncInvoice, type SyncInvoiceItem } from '@/lib/sync'
 import { Save, Plus, Trash2, Download, RefreshCw, Info } from 'lucide-react'
 import { generateInvoicePDF } from '@/lib/generateInvoicePDF'
 import { getExchangeRate, CURRENCIES, calculateFXGainLoss } from '@/lib/exchangeRate'
 import { useI18n } from '@/hooks/useI18n'
 
 interface InvoiceEditorProps {
-  invoice: Invoice | null
+  invoice: SyncInvoice | null
   onSave: () => void
   onCancel: () => void
 }
 
 export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps) {
   const { t } = useI18n()
-  const [clients, setClients] = useState<Client[]>([])
-  const [clientId, setClientId] = useState<number>(invoice?.clientId || 0)
+  const { user } = useAuthStore()
+  const [clients, setClients] = useState<SyncClient[]>([])
+  const [clientId, setClientId] = useState<string>(invoice?.clientId || '')
   const [invoiceNumber, setInvoiceNumber] = useState(invoice?.invoiceNumber || '')
   const [issueDate, setIssueDate] = useState(
     invoice?.issueDate ? new Date(invoice.issueDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]
@@ -44,20 +46,32 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
   )
 
   useEffect(() => {
-    loadClients()
-    if (!invoice) generateInvoiceNumber()
-  }, [])
+    if (user) {
+      loadClients()
+      if (!invoice) generateInvoiceNumber()
+    }
+  }, [user])
 
   async function loadClients() {
-    const data = await db.clients.toArray()
-    setClients(data)
+    if (!user) return
+    try {
+      const data = await getClients(user.id)
+      setClients(data)
+    } catch (err) {
+      console.error('Failed to load clients:', err)
+    }
   }
 
   async function generateInvoiceNumber() {
-    const settings = await db.settings.toCollection().first()
-    const prefix = settings?.invoicePrefix || 'INV'
-    const nextNum = settings?.nextInvoiceNumber || 1
-    setInvoiceNumber(`${prefix}-${String(nextNum).padStart(4, '0')}`)
+    if (!user) return
+    try {
+      const settings = await getSettings(user.id)
+      const prefix = settings.invoicePrefix || 'INV'
+      const nextNum = settings.nextInvoiceNumber || 1
+      setInvoiceNumber(`${prefix}-${String(nextNum).padStart(4, '0')}`)
+    } catch (err) {
+      console.error('Failed to get settings:', err)
+    }
   }
 
   function handleItemChange(index: number, field: keyof InvoiceItem, value: string | number) {
@@ -108,43 +122,46 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
   }
 
   async function handleSave() {
-    const invoiceData: Invoice = {
+    if (!user) return
+
+    const invoiceData = {
       id: invoice?.id,
       invoiceNumber,
-      clientId,
-      issueDate: new Date(issueDate),
-      dueDate: new Date(dueDate),
-      status: invoice?.status || 'draft',
+      clientId: clientId || null,
+      issueDate,
+      dueDate,
+      status: (invoice?.status || 'draft') as SyncInvoice['status'],
       currency,
-      localCurrency: localCurrency || undefined,
-      exchangeRate: exchangeRate || undefined,
-      paymentDate: paymentDate ? new Date(paymentDate) : undefined,
-      paymentRate: paymentRate || undefined,
+      localCurrency: localCurrency || null,
+      exchangeRate: exchangeRate || null,
+      paymentDate: paymentDate || null,
+      paymentRate: paymentRate || null,
       vatType,
-      vatNumber: vatNumber || undefined,
-      buyerVatNumber: buyerVatNumber || undefined,
+      vatNumber: vatNumber || null,
+      buyerVatNumber: buyerVatNumber || null,
       template,
       subtotal,
       taxRate: effectiveTaxRate,
       taxAmount,
       total,
-      notes,
-      items,
-      createdAt: invoice?.createdAt || new Date(),
-      updatedAt: new Date(),
+      notes: notes || null,
+      items: items as SyncInvoiceItem[],
+      ocrProcessed: invoice?.ocrProcessed || false,
+      ocrConfidence: invoice?.ocrConfidence || null,
     }
 
-    if (invoice?.id) {
-      await db.invoices.delete(invoice.id)
-      await db.invoices.add({ ...invoiceData, id: invoice.id })
-    } else {
-      await db.invoices.add(invoiceData)
-      // Increment next invoice number
-      const settings = await db.settings.toCollection().first()
-      if (settings?.id) {
-        await db.settings.update(settings.id, { nextInvoiceNumber: (settings.nextInvoiceNumber || 1) + 1 })
+    await upsertInvoice(user.id, invoiceData)
+
+    // Increment next invoice number for new invoices
+    if (!invoice?.id) {
+      try {
+        const settings = await getSettings(user.id)
+        await upsertSettings(user.id, { nextInvoiceNumber: (settings.nextInvoiceNumber || 1) + 1 })
+      } catch (err) {
+        console.error('Failed to update invoice number:', err)
       }
     }
+
     onSave()
   }
 
@@ -193,7 +210,7 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
                 <label className="block text-sm font-medium text-slate-700 mb-1">{t('editor.client')}</label>
                 <select
                   value={clientId}
-                  onChange={(e) => setClientId(Number(e.target.value))}
+                  onChange={(e) => setClientId(e.target.value)}
                   className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary"
                 >
                   <option value="">{t('editor.selectClient')}</option>
