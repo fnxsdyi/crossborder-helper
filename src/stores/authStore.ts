@@ -52,25 +52,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       if (error) return { error: error.message }
 
       if (data.user) {
-        const pendingData = localStorage.getItem('paypal_pending_token')
-        if (pendingData) {
-          try {
-            const { token, timestamp, planType } = JSON.parse(pendingData)
-            const thirtyMinutes = 30 * 60 * 1000
-            if ((Date.now() - timestamp) < thirtyMinutes) {
-              // Create subscription record
-              await supabase.from('subscriptions').insert({
-                user_id: data.user.id,
-                paypal_subscription_id: `PENDING-${token}`,
-                plan_type: planType || 'monthly',
-                status: 'active',
-                current_period_start: new Date().toISOString(),
-                current_period_end: new Date(Date.now() + (planType === 'annual' ? 365 : 30) * 24 * 60 * 60 * 1000).toISOString(),
-              })
-            }
-          } catch (e) {}
-        }
-
         if (isAdmin(email)) {
           await supabase.from('licenses').insert({
             user_id: data.user.id,

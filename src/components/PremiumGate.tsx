@@ -156,19 +156,19 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
 
                     {/* Annual */}
                     <div className="flex-1 relative">
-                        <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded whitespace-nowrap">
-                          {t('landing.bestValue')}
-                        </span>
-                        <p className="text-center text-sm font-semibold mb-2 dark:text-white">{t('premium.payPalAnnual')}</p>
-                        <PayPalSubscriptionButton
-                          planId={PRO_ANNUAL_PLAN_ID}
-                          onSuccess={(id) => handleSubscriptionSuccess(id, 'annual')}
-                          onError={handleSubscriptionError}
-                        />
-                        <p className="text-center text-xs text-green-600 dark:text-green-400 mt-1">
-                          {t('premium.annualSave')}
-                        </p>
-                      </div>
+                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded whitespace-nowrap">
+                        {t('landing.bestValue')}
+                      </span>
+                      <p className="text-center text-sm font-semibold mb-2 dark:text-white">{t('premium.payPalAnnual')}</p>
+                      <PayPalSubscriptionButton
+                        planId={PRO_ANNUAL_PLAN_ID}
+                        onSuccess={(id) => handleSubscriptionSuccess(id, 'annual')}
+                        onError={handleSubscriptionError}
+                      />
+                      <p className="text-center text-xs text-green-600 dark:text-green-400 mt-1">
+                        {t('premium.annualSave')}
+                      </p>
+                    </div>
                   </div>
 
                   <p className="mt-4 text-xs text-slate-400 text-center">
