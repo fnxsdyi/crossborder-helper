@@ -2,11 +2,7 @@ import { X, CreditCard } from 'lucide-react'
 import { useState } from 'react'
 import { useI18n } from '@/hooks/useI18n'
 
-interface GuestBannerProps {
-  onUpgrade?: () => void
-}
-
-export function GuestBanner({ onUpgrade }: GuestBannerProps) {
+export function GuestBanner() {
   const { t } = useI18n()
   const [dismissed, setDismissed] = useState(false)
 

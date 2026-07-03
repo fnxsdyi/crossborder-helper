@@ -42,10 +42,9 @@ function PageLoader() {
 interface LayoutProps {
   onSignOut?: () => void
   isGuest?: boolean
-  onUpgrade?: (plan?: 'monthly' | 'annual') => void
 }
 
-export function Layout({ onSignOut, isGuest, onUpgrade }: LayoutProps) {
+export function Layout({ onSignOut, isGuest }: LayoutProps) {
   const { currentView } = useAppStore()
 
   const renderPage = () => {
@@ -80,7 +79,7 @@ export function Layout({ onSignOut, isGuest, onUpgrade }: LayoutProps) {
       <Sidebar onSignOut={onSignOut} isGuest={isGuest} />
       <main className="lg:ml-64">
         <div className="p-6 lg:p-8">
-          {isGuest && <GuestBanner onUpgrade={onUpgrade} />}
+          {isGuest && <GuestBanner />}
           <ErrorBoundary fallback={<div className="p-4 text-red-500">Something went wrong. Please refresh.</div>}>
             <Suspense fallback={<PageLoader />}>
               {renderPage()}
