@@ -131,7 +131,15 @@ export function SettingsPage({ isGuest }: SettingsPageProps) {
         {!isPremium && (
           <div className="mt-3">
             <button
-              onClick={() => setShowUpgradeModal(true)}
+              onClick={() => {
+                if (isGuest) {
+                  localStorage.removeItem('app_entered')
+                  localStorage.removeItem('is_guest')
+                  window.location.href = '/'
+                  return
+                }
+                setShowUpgradeModal(true)
+              }}
               className="w-full px-4 py-2 bg-amber-600 text-white rounded-lg text-sm hover:bg-amber-700"
             >
               {t('settings.upgradeToPremium')}

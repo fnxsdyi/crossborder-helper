@@ -90,24 +90,37 @@ export function OcrUsageLimit({ used, limit }: OcrUsageLimitProps) {
           <li>✓ {t('ocr.cancelAnytime')}</li>
         </ul>
 
-        <div className="flex gap-4">
-          <div className="flex-1">
-            <p className="text-center text-xs font-semibold mb-2 dark:text-white">{t('premium.payPalMonthly')}</p>
-            <PayPalSubscriptionButton
-              planId={PRO_MONTHLY_PLAN_ID}
-              onSuccess={(id) => handleSuccess(id, 'monthly')}
-              onError={handleError}
-            />
+        {!user ? (
+          <button
+            onClick={() => {
+              localStorage.removeItem('app_entered')
+              localStorage.removeItem('is_guest')
+              window.location.href = '/'
+            }}
+            className="w-full px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors"
+          >
+            {t('premium.unlock')}
+          </button>
+        ) : (
+          <div className="flex gap-4">
+            <div className="flex-1">
+              <p className="text-center text-xs font-semibold mb-2 dark:text-white">{t('premium.payPalMonthly')}</p>
+              <PayPalSubscriptionButton
+                planId={PRO_MONTHLY_PLAN_ID}
+                onSuccess={(id) => handleSuccess(id, 'monthly')}
+                onError={handleError}
+              />
+            </div>
+            <div className="flex-1">
+              <p className="text-center text-xs font-semibold mb-2 dark:text-white">{t('premium.payPalAnnual')}</p>
+              <PayPalSubscriptionButton
+                planId={PRO_ANNUAL_PLAN_ID}
+                onSuccess={(id) => handleSuccess(id, 'annual')}
+                onError={handleError}
+              />
+            </div>
           </div>
-          <div className="flex-1">
-            <p className="text-center text-xs font-semibold mb-2 dark:text-white">{t('premium.payPalAnnual')}</p>
-            <PayPalSubscriptionButton
-              planId={PRO_ANNUAL_PLAN_ID}
-              onSuccess={(id) => handleSuccess(id, 'annual')}
-              onError={handleError}
-            />
-          </div>
-        </div>
+        )}
       </div>
 
       <button

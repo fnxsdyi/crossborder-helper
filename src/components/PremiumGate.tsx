@@ -88,7 +88,15 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
         </div>
         <div className="absolute inset-0 flex items-center justify-center">
           <button
-            onClick={() => setShowUpgrade(true)}
+            onClick={() => {
+              if (!user) {
+                localStorage.removeItem('app_entered')
+                localStorage.removeItem('is_guest')
+                window.location.href = '/'
+                return
+              }
+              setShowUpgrade(true)
+            }}
             className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl shadow-lg hover:bg-blue-700 transition-colors"
           >
             <Lock size={18} />
