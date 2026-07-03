@@ -154,10 +154,7 @@ export function AuthPage({ onAuth, showWelcome: initialShowWelcome }: AuthPagePr
 
           <div className="mt-4 text-center">
             <button
-              onClick={() => {
-                localStorage.removeItem('app_entered')
-                window.location.reload()
-              }}
+              onClick={() => useAuthStore.getState().resetToLanding()}
               className="text-sm text-slate-400 hover:text-slate-600"
             >
               ← {t('auth.backToHome')}
