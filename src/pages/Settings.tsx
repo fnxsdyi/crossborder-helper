@@ -133,9 +133,7 @@ export function SettingsPage({ isGuest }: SettingsPageProps) {
             <button
               onClick={() => {
                 if (isGuest) {
-                  localStorage.removeItem('app_entered')
-                  localStorage.removeItem('is_guest')
-                  window.location.href = '/'
+                  useAuthStore.getState().resetToLanding()
                   return
                 }
                 setShowUpgradeModal(true)

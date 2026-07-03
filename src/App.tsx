@@ -15,12 +15,9 @@ function Loading() {
 }
 
 function App() {
-  const [showLanding, setShowLanding] = useState(true)
-  const [isGuest, setIsGuest] = useState(false)
   const [showRegister, setShowRegister] = useState(false)
-  const [hasEntered, setHasEntered] = useState(false)
   const [isRegister, setIsRegister] = useState(false)
-  const { user, loading, initialize } = useAuthStore()
+  const { user, loading, isGuest, hasEntered, initialize, enterAsGuest, enterAsUser, signOut } = useAuthStore()
 
   useEffect(() => {
     async function init() {
@@ -38,35 +35,19 @@ function App() {
 
           if (isValid) {
             localStorage.removeItem('paypal_pending_token')
-            setShowLanding(false)
             setShowRegister(true)
           }
         } catch (e) {}
         window.history.replaceState({}, '', window.location.pathname)
       } else {
-        // Handle URL-based routing for key pages
         const path = window.location.pathname
         if (path === '/login' || path === '/register') {
-          setShowLanding(false)
+          setShowRegister(true)
           if (path === '/register') setIsRegister(true)
         } else if (path === '/pricing') {
-          setShowLanding(false)
-        } else {
-          const entered = localStorage.getItem('app_entered')
-          const guest = localStorage.getItem('is_guest')
-          const currentUser = useAuthStore.getState().user
-
-          if (currentUser && guest === 'true') {
-            localStorage.removeItem('is_guest')
-            setIsGuest(false)
-            setHasEntered(true)
-            setShowLanding(false)
-          } else if (entered === 'true') {
-            setHasEntered(true)
-            setShowLanding(false)
-            setIsGuest(guest === 'true')
-          }
+          // Stay on landing but allow access to pricing
         }
+        // All other routing is handled by authStore state
       }
     }
     init()
@@ -74,31 +55,16 @@ function App() {
 
   function handleEnterApp() {
     const currentUser = useAuthStore.getState().user
-    localStorage.setItem('app_entered', 'true')
-    setHasEntered(true)
     if (currentUser) {
-      localStorage.removeItem('is_guest')
-      setIsGuest(false)
+      enterAsUser()
     } else {
-      localStorage.setItem('is_guest', 'true')
-      setIsGuest(true)
+      enterAsGuest()
     }
-    setShowLanding(false)
-  }
-
-  function handleAuth() {
-    localStorage.setItem('app_entered', 'true')
-    localStorage.removeItem('is_guest')
-    setIsGuest(false)
-    setShowRegister(false)
-    setShowLanding(false)
   }
 
   function handleSignOut() {
-    localStorage.removeItem('app_entered')
-    localStorage.removeItem('is_guest')
-    setIsGuest(false)
-    setShowLanding(true)
+    signOut()
+    setShowRegister(false)
   }
 
   if (loading) {
@@ -109,42 +75,54 @@ function App() {
     )
   }
 
-  if (showLanding) {
+  // Show register/login page
+  if (showRegister || (!user && !isGuest && !hasEntered)) {
+    return (
+      <Suspense fallback={<Loading />}>
+        <AuthPage
+          onAuth={() => setShowRegister(false)}
+          showWelcome={showRegister || isRegister}
+        />
+      </Suspense>
+    )
+  }
+
+  // Show landing page
+  if (!hasEntered && !showRegister) {
     return (
       <Suspense fallback={<Loading />}>
         <LandingPage
           onEnterApp={handleEnterApp}
           onMemberLogin={() => {
-            setHasEntered(true)
             if (user) {
-              localStorage.setItem('app_entered', 'true')
-              localStorage.removeItem('is_guest')
-              setIsGuest(false)
+              enterAsUser()
+            } else {
+              setShowRegister(true)
             }
-            setShowLanding(false)
           }}
         />
       </Suspense>
     )
   }
 
-  if (showRegister || (!user && !isGuest && !hasEntered)) {
+  // Auth guard: must have user OR be guest
+  if (!user && !isGuest) {
     return (
       <Suspense fallback={<Loading />}>
-        <AuthPage onAuth={handleAuth} showWelcome={showRegister || isRegister} />
+        <AuthPage onAuth={() => setShowRegister(false)} showWelcome={false} />
       </Suspense>
     )
   }
 
-    return (
-      <Suspense fallback={<Loading />}>
-        <Layout
-          onSignOut={handleSignOut}
-          isGuest={isGuest}
-        />
-        <CookieConsent />
-      </Suspense>
-    )
+  return (
+    <Suspense fallback={<Loading />}>
+      <Layout
+        onSignOut={handleSignOut}
+        isGuest={isGuest}
+      />
+      <CookieConsent />
+    </Suspense>
+  )
 }
 
 export default App

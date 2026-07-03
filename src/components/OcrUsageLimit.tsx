@@ -92,11 +92,7 @@ export function OcrUsageLimit({ used, limit }: OcrUsageLimitProps) {
 
         {!user ? (
           <button
-            onClick={() => {
-              localStorage.removeItem('app_entered')
-              localStorage.removeItem('is_guest')
-              window.location.href = '/'
-            }}
+            onClick={() => useAuthStore.getState().resetToLanding()}
             className="w-full px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors"
           >
             {t('premium.unlock')}

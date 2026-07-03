@@ -18,7 +18,6 @@ import {
 import { useAppStore } from '@/stores/appStore'
 import { ThemeToggle } from './ThemeToggle'
 import { useI18n } from '@/hooks/useI18n'
-import { useAuthStore } from '@/stores/authStore'
 import { useState } from 'react'
 import type { Locale } from '@/lib/i18n'
 
@@ -30,7 +29,6 @@ interface SidebarProps {
 export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
   const { currentView, setCurrentView, sidebarOpen, toggleSidebar } = useAppStore()
   const { t, locale, changeLocale, locales } = useI18n()
-  const { signOut } = useAuthStore()
   const [showLangMenu, setShowLangMenu] = useState(false)
 
   const navItems = [
@@ -201,10 +199,7 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
             </>
           ) : (
             <button
-              onClick={() => {
-                signOut()
-                onSignOut?.()
-              }}
+              onClick={() => onSignOut?.()}
               className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm hover:bg-slate-800 transition-colors"
               style={{ color: 'var(--text-muted)' }}
             >

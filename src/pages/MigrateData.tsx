@@ -63,19 +63,13 @@ export function MigrateData() {
       return
     }
 
-    let currentUser = user
-    if (!currentUser) {
-      const { data: { session } } = await supabase.auth.getSession()
-      currentUser = session?.user || null
-    }
-
-    if (!currentUser) {
+    if (!user) {
       log('请先登录', 'error')
       return
     }
 
     setMigrating(true)
-    log(`开始迁移，用户: ${currentUser.email}`)
+    log(`开始迁移，用户: ${user.email}`)
 
     // Open IndexedDB
     const dbRequest = indexedDB.open('TaxFlowHelper')
@@ -101,7 +95,7 @@ export function MigrateData() {
 
         for (const client of clients) {
           const { error } = await supabase.from('sf_clients').insert({
-            user_id: currentUser.id,
+            user_id: user.id,
             name: client.name,
             email: client.email || '',
             company: client.company || null,
@@ -129,7 +123,7 @@ export function MigrateData() {
 
         for (const inv of invoices) {
           const { error } = await supabase.from('sf_invoices').insert({
-            user_id: currentUser.id,
+            user_id: user.id,
             invoice_number: inv.invoiceNumber,
             issue_date: inv.issueDate instanceof Date ? inv.issueDate.toISOString().split('T')[0] : String(inv.issueDate),
             due_date: inv.dueDate instanceof Date ? inv.dueDate.toISOString().split('T')[0] : String(inv.dueDate),

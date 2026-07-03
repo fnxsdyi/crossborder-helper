@@ -1,9 +1,11 @@
 import { X, CreditCard } from 'lucide-react'
 import { useState } from 'react'
 import { useI18n } from '@/hooks/useI18n'
+import { useAuthStore } from '@/stores/authStore'
 
 export function GuestBanner() {
   const { t } = useI18n()
+  const { resetToLanding } = useAuthStore()
   const [dismissed, setDismissed] = useState(false)
 
   if (dismissed) return null
@@ -21,11 +23,7 @@ export function GuestBanner() {
       </div>
       <div className="flex items-center gap-2">
         <button
-          onClick={() => {
-            localStorage.removeItem('app_entered')
-            localStorage.removeItem('is_guest')
-            window.location.href = '/'
-          }}
+          onClick={() => resetToLanding()}
           className="px-4 py-2 bg-amber-600 text-white rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors"
         >
           {t('guest.upgradeNow')}
