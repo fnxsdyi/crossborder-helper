@@ -18,6 +18,7 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState('')
   const [clients, setClients] = useState<SyncClient[]>([])
+  const [loadingClients, setLoadingClients] = useState(true)
   const [clientId, setClientId] = useState<string>(invoice?.clientId || '')
   const [invoiceNumber, setInvoiceNumber] = useState(invoice?.invoiceNumber || '')
   const [issueDate, setIssueDate] = useState(
@@ -61,6 +62,8 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
       setClients(data)
     } catch (err) {
       console.error('Failed to load clients:', err)
+    } finally {
+      setLoadingClients(false)
     }
   }
 
@@ -157,7 +160,6 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
 
       await upsertInvoice(user.id, invoiceData)
 
-      // Increment next invoice number for new invoices
       if (!invoice?.id) {
         try {
           const settings = await getSettings(user.id)
@@ -208,6 +210,48 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
         </div>
       )}
 
+      {loadingClients && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-pulse">
+          <div className="lg:col-span-2 space-y-6">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+              <div className="h-5 bg-slate-200 rounded w-32 mb-4"></div>
+              <div className="grid grid-cols-2 gap-4">
+                <div><div className="h-4 bg-slate-200 rounded w-24 mb-2"></div><div className="h-10 bg-slate-100 rounded-lg"></div></div>
+                <div><div className="h-4 bg-slate-200 rounded w-16 mb-2"></div><div className="h-10 bg-slate-100 rounded-lg"></div></div>
+                <div><div className="h-4 bg-slate-200 rounded w-20 mb-2"></div><div className="h-10 bg-slate-100 rounded-lg"></div></div>
+                <div><div className="h-4 bg-slate-200 rounded w-18 mb-2"></div><div className="h-10 bg-slate-100 rounded-lg"></div></div>
+              </div>
+            </div>
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+              <div className="h-5 bg-slate-200 rounded w-28 mb-4"></div>
+              <div className="grid grid-cols-3 gap-3">
+                <div className="h-20 bg-slate-100 rounded-xl"></div>
+                <div className="h-20 bg-slate-100 rounded-xl"></div>
+                <div className="h-20 bg-slate-100 rounded-xl"></div>
+              </div>
+            </div>
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+              <div className="h-5 bg-slate-200 rounded w-24 mb-4"></div>
+              <div className="space-y-3">
+                <div className="h-10 bg-slate-100 rounded-lg"></div>
+                <div className="h-10 bg-slate-100 rounded-lg"></div>
+              </div>
+            </div>
+          </div>
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+              <div className="h-5 bg-slate-200 rounded w-20 mb-4"></div>
+              <div className="space-y-3">
+                <div className="flex justify-between"><div className="h-4 bg-slate-200 rounded w-16"></div><div className="h-4 bg-slate-200 rounded w-20"></div></div>
+                <div className="flex justify-between"><div className="h-4 bg-slate-200 rounded w-12"></div><div className="h-4 bg-slate-200 rounded w-24"></div></div>
+                <div className="border-t border-slate-200 pt-3 flex justify-between"><div className="h-5 bg-slate-200 rounded w-12"></div><div className="h-5 bg-slate-200 rounded w-28"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {!loadingClients && (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           {/* Invoice Details */}
@@ -603,6 +647,7 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
           )}
         </div>
       </div>
+      )}
     </div>
   )
 }
