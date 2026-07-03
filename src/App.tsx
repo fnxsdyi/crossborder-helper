@@ -17,7 +17,7 @@ function Loading() {
 function App() {
   const [showRegister, setShowRegister] = useState(false)
   const [isRegister, setIsRegister] = useState(false)
-  const { user, loading, isGuest, hasEntered, initialize, enterAsGuest, enterAsUser, signOut } = useAuthStore()
+  const { user, loading, isGuest, showLanding, initialize, enterAsGuest, enterAsUser, signOut } = useAuthStore()
 
   useEffect(() => {
     async function init() {
@@ -35,6 +35,7 @@ function App() {
 
           if (isValid) {
             localStorage.removeItem('paypal_pending_token')
+            useAuthStore.setState({ showLanding: false })
             setShowRegister(true)
           }
         } catch (e) {}
@@ -42,12 +43,13 @@ function App() {
       } else {
         const path = window.location.pathname
         if (path === '/login' || path === '/register') {
+          useAuthStore.setState({ showLanding: false })
           setShowRegister(true)
           if (path === '/register') setIsRegister(true)
         } else if (path === '/pricing') {
-          // Stay on landing but allow access to pricing
+          useAuthStore.setState({ showLanding: false })
         }
-        // All other routing is handled by authStore state
+        // Otherwise authStore state determines showLanding
       }
     }
     init()
@@ -76,11 +78,14 @@ function App() {
   }
 
   // Show register/login page
-  if (showRegister || (!user && !isGuest && !hasEntered)) {
+  if (showRegister) {
     return (
       <Suspense fallback={<Loading />}>
         <AuthPage
-          onAuth={() => setShowRegister(false)}
+          onAuth={() => {
+            setShowRegister(false)
+            useAuthStore.setState({ showLanding: false })
+          }}
           showWelcome={showRegister || isRegister}
         />
       </Suspense>
@@ -88,7 +93,7 @@ function App() {
   }
 
   // Show landing page
-  if (!hasEntered && !showRegister) {
+  if (showLanding) {
     return (
       <Suspense fallback={<Loading />}>
         <LandingPage
@@ -97,6 +102,7 @@ function App() {
             if (user) {
               enterAsUser()
             } else {
+              useAuthStore.setState({ showLanding: false })
               setShowRegister(true)
             }
           }}

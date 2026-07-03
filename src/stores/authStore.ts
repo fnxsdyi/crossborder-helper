@@ -9,6 +9,7 @@ interface AuthState {
   loading: boolean
   isGuest: boolean
   hasEntered: boolean
+  showLanding: boolean
   signIn: (email: string, password: string) => Promise<{ error?: string }>
   signUp: (email: string, password: string) => Promise<{ error?: string }>
   signOut: () => Promise<void>
@@ -31,6 +32,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   loading: true,
   isGuest: false,
   hasEntered: false,
+  showLanding: true,
 
   initialize: async () => {
     if (initialized) return
@@ -69,14 +71,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       if (user && guest) {
         // Had a session while marked as guest — promote
         clearGuestStorage()
-        set({ user, loading: false, isGuest: false, hasEntered: true })
+        set({ user, loading: false, isGuest: false, hasEntered: true, showLanding: false })
       } else if (user) {
-        set({ user, loading: false, hasEntered: entered })
+        set({ user, loading: false, hasEntered: entered, showLanding: !entered })
       } else if (entered) {
         // No session but was in-app — treat as guest
-        set({ loading: false, isGuest: true, hasEntered: true })
+        set({ loading: false, isGuest: true, hasEntered: true, showLanding: false })
       } else {
-        set({ loading: false })
+        set({ loading: false, showLanding: true })
       }
     } catch (err) {
       console.error('[TaxFlow] Failed to initialize auth:', err)
@@ -134,18 +136,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   enterAsGuest: () => {
     localStorage.setItem('app_entered', 'true')
     localStorage.setItem('is_guest', 'true')
-    set({ isGuest: true, hasEntered: true })
+    set({ isGuest: true, hasEntered: true, showLanding: false })
   },
 
   enterAsUser: () => {
     localStorage.setItem('app_entered', 'true')
     localStorage.removeItem('is_guest')
-    set({ isGuest: false, hasEntered: true })
+    set({ isGuest: false, hasEntered: true, showLanding: false })
   },
 
   resetToLanding: () => {
     clearGuestStorage()
-    set({ isGuest: false, hasEntered: false })
+    set({ isGuest: false, hasEntered: false, showLanding: true })
   },
 
   checkPremium: async () => {
