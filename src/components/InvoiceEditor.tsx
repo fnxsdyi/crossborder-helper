@@ -15,6 +15,8 @@ interface InvoiceEditorProps {
 export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps) {
   const { t } = useI18n()
   const { user } = useAuthStore()
+  const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState('')
   const [clients, setClients] = useState<SyncClient[]>([])
   const [clientId, setClientId] = useState<string>(invoice?.clientId || '')
   const [invoiceNumber, setInvoiceNumber] = useState(invoice?.invoiceNumber || '')
@@ -123,46 +125,55 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
 
   async function handleSave() {
     if (!user) return
+    setSaving(true)
+    setSaveError('')
 
-    const invoiceData = {
-      id: invoice?.id,
-      invoiceNumber,
-      clientId: clientId || null,
-      issueDate,
-      dueDate,
-      status: (invoice?.status || 'draft') as SyncInvoice['status'],
-      currency,
-      localCurrency: localCurrency || null,
-      exchangeRate: exchangeRate || null,
-      paymentDate: paymentDate || null,
-      paymentRate: paymentRate || null,
-      vatType,
-      vatNumber: vatNumber || null,
-      buyerVatNumber: buyerVatNumber || null,
-      template,
-      subtotal,
-      taxRate: effectiveTaxRate,
-      taxAmount,
-      total,
-      notes: notes || null,
-      items: items as SyncInvoiceItem[],
-      ocrProcessed: invoice?.ocrProcessed || false,
-      ocrConfidence: invoice?.ocrConfidence || null,
-    }
-
-    await upsertInvoice(user.id, invoiceData)
-
-    // Increment next invoice number for new invoices
-    if (!invoice?.id) {
-      try {
-        const settings = await getSettings(user.id)
-        await upsertSettings(user.id, { nextInvoiceNumber: (settings.nextInvoiceNumber || 1) + 1 })
-      } catch (err) {
-        console.error('Failed to update invoice number:', err)
+    try {
+      const invoiceData = {
+        id: invoice?.id,
+        invoiceNumber,
+        clientId: clientId || null,
+        issueDate,
+        dueDate,
+        status: (invoice?.status || 'draft') as SyncInvoice['status'],
+        currency,
+        localCurrency: localCurrency || null,
+        exchangeRate: exchangeRate || null,
+        paymentDate: paymentDate || null,
+        paymentRate: paymentRate || null,
+        vatType,
+        vatNumber: vatNumber || null,
+        buyerVatNumber: buyerVatNumber || null,
+        template,
+        subtotal,
+        taxRate: effectiveTaxRate,
+        taxAmount,
+        total,
+        notes: notes || null,
+        items: items as SyncInvoiceItem[],
+        ocrProcessed: invoice?.ocrProcessed || false,
+        ocrConfidence: invoice?.ocrConfidence || null,
       }
-    }
 
-    onSave()
+      await upsertInvoice(user.id, invoiceData)
+
+      // Increment next invoice number for new invoices
+      if (!invoice?.id) {
+        try {
+          const settings = await getSettings(user.id)
+          await upsertSettings(user.id, { nextInvoiceNumber: (settings.nextInvoiceNumber || 1) + 1 })
+        } catch (err) {
+          console.error('Failed to update invoice number:', err)
+        }
+      }
+
+      onSave()
+    } catch (err) {
+      console.error('Failed to save invoice:', err)
+      setSaveError(err instanceof Error ? err.message : 'Failed to save invoice. Please try again.')
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -184,12 +195,18 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
               {t('editor.exportPdf')}
             </button>
           )}
-          <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90">
+          <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50">
             <Save size={16} />
-            {t('editor.save')}
+            {saving ? 'Saving...' : t('editor.save')}
           </button>
         </div>
       </div>
+
+      {saveError && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
+          {saveError}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
