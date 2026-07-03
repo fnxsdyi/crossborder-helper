@@ -83,11 +83,11 @@ export function OcrUpload({ onResult }: OcrUploadProps) {
       // Read file as base64
       const reader = new FileReader()
       reader.onload = async () => {
-        const base64 = reader.result as string
-        setImage(base64)
-        setLoading(true)
-
         try {
+          const base64 = reader.result as string
+          setImage(base64)
+          setLoading(true)
+
           const result = await recognizeInvoice(base64)
           setResult(result)
 
