@@ -211,7 +211,7 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
       )}
 
       {loadingClients && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-pulse">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-pulse transition-opacity duration-300 opacity-0" style={{ animation: 'fadeIn 0.3s ease-in forwards' }}>
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
               <div className="h-5 bg-slate-200 rounded w-32 mb-4"></div>

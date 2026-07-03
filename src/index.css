@@ -155,3 +155,8 @@ tbody tr:hover {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--border-hover);
 }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
