@@ -225,6 +225,12 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
               <a href="https://flowingpulse.com" target="_blank" rel="noopener noreferrer" className="block text-[11px] hover:opacity-80 transition-opacity" style={{ color: 'var(--text-muted)' }}>
                 FlowingPulse — Studio
               </a>
+              <a href="https://dash.kaki.llc" target="_blank" rel="noopener noreferrer" className="block text-[11px] hover:opacity-80 transition-opacity" style={{ color: 'var(--text-muted)' }}>
+                DashCore — Unified Console
+              </a>
+              <a href="https://comply.kaki.llc" target="_blank" rel="noopener noreferrer" className="block text-[11px] hover:opacity-80 transition-opacity" style={{ color: 'var(--text-muted)' }}>
+                Comply — Compliance Scanner
+              </a>
             </div>
           </div>
           <p className="text-[10px] text-center pt-1" style={{ color: 'var(--text-muted)' }}>

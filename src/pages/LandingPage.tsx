@@ -390,6 +390,11 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
                     </a>
                   </li>
                   <li>
+                    <a href="https://kaki.llc" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors">
+                      KAKI — AI Career Toolkit
+                    </a>
+                  </li>
+                  <li>
                     <a href="https://hooki.io" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors">
                       Hooki — Webhook Debug Console
                     </a>
