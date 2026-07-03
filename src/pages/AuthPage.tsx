@@ -155,7 +155,7 @@ export function AuthPage({ onAuth, showWelcome: initialShowWelcome }: AuthPagePr
           <div className="mt-4 text-center">
             <button
               onClick={() => {
-                useAuthStore.getState().resetToLanding()
+                localStorage.removeItem('app_entered')
                 window.location.reload()
               }}
               className="text-sm text-slate-400 hover:text-slate-600"

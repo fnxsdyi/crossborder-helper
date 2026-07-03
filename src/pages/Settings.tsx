@@ -133,7 +133,8 @@ export function SettingsPage({ isGuest }: SettingsPageProps) {
             <button
               onClick={() => {
                 if (isGuest) {
-                  useAuthStore.getState().resetToLanding()
+                  localStorage.removeItem('app_entered')
+                  localStorage.removeItem('is_guest')
                   window.location.reload()
                   return
                 }

@@ -16,7 +16,6 @@ import {
   UserPlus,
 } from 'lucide-react'
 import { useAppStore } from '@/stores/appStore'
-import { useAuthStore } from '@/stores/authStore'
 import { ThemeToggle } from './ThemeToggle'
 import { useI18n } from '@/hooks/useI18n'
 import { useState } from 'react'
@@ -72,7 +71,7 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
             <div className="flex items-center gap-1">
               <button
                 onClick={() => {
-                  useAuthStore.getState().resetToLanding()
+                  localStorage.removeItem('app_entered')
                   window.location.reload()
                 }}
                 className="p-1.5 rounded-md hover:bg-slate-800 transition-colors"
@@ -175,7 +174,8 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
             <>
               <button
                 onClick={() => {
-                  useAuthStore.getState().resetToLanding()
+                  localStorage.removeItem('app_entered')
+                  localStorage.removeItem('is_guest')
                   window.location.reload()
                 }}
                 className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm hover:bg-slate-800 transition-colors"
@@ -186,7 +186,8 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
               </button>
               <button
                 onClick={() => {
-                  useAuthStore.getState().resetToLanding()
+                  localStorage.removeItem('app_entered')
+                  localStorage.removeItem('is_guest')
                   window.location.href = '/register'
                 }}
                 className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm hover:bg-slate-800 transition-colors"

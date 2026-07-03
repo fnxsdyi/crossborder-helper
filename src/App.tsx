@@ -16,10 +16,11 @@ function Loading() {
 
 function App() {
   const [showLanding, setShowLanding] = useState(true)
-  const [showRegister, setShowRegister] = useState(false)
-  const [isRegister, setIsRegister] = useState(false)
   const [isGuest, setIsGuest] = useState(false)
-  const { user, loading, initialize, enterAsGuest, enterAsUser, signOut } = useAuthStore()
+  const [showRegister, setShowRegister] = useState(false)
+  const [hasEntered, setHasEntered] = useState(false)
+  const [isRegister, setIsRegister] = useState(false)
+  const { user, loading, initialize } = useAuthStore()
 
   useEffect(() => {
     async function init() {
@@ -34,6 +35,7 @@ function App() {
           const { token, timestamp } = JSON.parse(pendingData)
           const thirtyMinutes = 30 * 60 * 1000
           const isValid = token === registerToken && (Date.now() - timestamp) < thirtyMinutes
+
           if (isValid) {
             localStorage.removeItem('paypal_pending_token')
             setShowLanding(false)
@@ -45,18 +47,23 @@ function App() {
         const path = window.location.pathname
         if (path === '/login' || path === '/register') {
           setShowLanding(false)
-          setShowRegister(true)
           if (path === '/register') setIsRegister(true)
         } else if (path === '/pricing') {
           setShowLanding(false)
         } else {
-          const { isGuest: guest, user: currentUser } = useAuthStore.getState()
-          if (currentUser && guest) {
+          const entered = localStorage.getItem('app_entered')
+          const guest = localStorage.getItem('is_guest')
+          const currentUser = useAuthStore.getState().user
+
+          if (currentUser && guest === 'true') {
+            localStorage.removeItem('is_guest')
             setIsGuest(false)
+            setHasEntered(true)
             setShowLanding(false)
-          } else if (useAuthStore.getState().hasEntered) {
-            setIsGuest(guest)
+          } else if (entered === 'true') {
+            setHasEntered(true)
             setShowLanding(false)
+            setIsGuest(guest === 'true')
           }
         }
       }
@@ -66,13 +73,10 @@ function App() {
 
   function handleEnterApp() {
     const currentUser = useAuthStore.getState().user
-    if (currentUser) {
-      enterAsUser()
-    } else {
-      enterAsGuest()
-    }
     localStorage.setItem('app_entered', 'true')
+    setHasEntered(true)
     if (currentUser) {
+      localStorage.removeItem('is_guest')
       setIsGuest(false)
     } else {
       localStorage.setItem('is_guest', 'true')
@@ -81,28 +85,28 @@ function App() {
     setShowLanding(false)
   }
 
-  function handleSignOut() {
-    signOut()
+  function handleAuth() {
+    localStorage.setItem('app_entered', 'true')
+    localStorage.removeItem('is_guest')
     setIsGuest(false)
     setShowRegister(false)
+    setShowLanding(false)
+  }
+
+  function handleSignOut() {
+    localStorage.removeItem('app_entered')
+    localStorage.removeItem('is_guest')
+    useAuthStore.getState().signOut()
+    setIsGuest(false)
+    setHasEntered(false)
     setShowLanding(true)
   }
 
   if (loading) {
-    return <Loading />
-  }
-
-  if (showRegister) {
     return (
-      <Suspense fallback={<Loading />}>
-        <AuthPage
-          onAuth={() => {
-            setShowRegister(false)
-            setShowLanding(false)
-          }}
-          showWelcome={showRegister || isRegister}
-        />
-      </Suspense>
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
     )
   }
 
@@ -112,24 +116,23 @@ function App() {
         <LandingPage
           onEnterApp={handleEnterApp}
           onMemberLogin={() => {
+            setHasEntered(true)
             if (user) {
-              enterAsUser()
+              localStorage.setItem('app_entered', 'true')
+              localStorage.removeItem('is_guest')
               setIsGuest(false)
-              setShowLanding(false)
-            } else {
-              setShowLanding(false)
-              setShowRegister(true)
             }
+            setShowLanding(false)
           }}
         />
       </Suspense>
     )
   }
 
-  if (!user && !isGuest) {
+  if (showRegister || (!user && !isGuest && !hasEntered)) {
     return (
       <Suspense fallback={<Loading />}>
-        <AuthPage onAuth={() => setShowRegister(false)} showWelcome={false} />
+        <AuthPage onAuth={handleAuth} showWelcome={showRegister || isRegister} />
       </Suspense>
     )
   }

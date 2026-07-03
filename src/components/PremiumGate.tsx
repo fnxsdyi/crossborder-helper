@@ -90,7 +90,8 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
           <button
             onClick={() => {
               if (!user) {
-                useAuthStore.getState().resetToLanding()
+                localStorage.removeItem('app_entered')
+                localStorage.removeItem('is_guest')
                 window.location.reload()
                 return
               }
