@@ -134,6 +134,7 @@ export function SettingsPage({ isGuest }: SettingsPageProps) {
               onClick={() => {
                 if (isGuest) {
                   useAuthStore.getState().resetToLanding()
+                  window.location.reload()
                   return
                 }
                 setShowUpgradeModal(true)

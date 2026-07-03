@@ -91,6 +91,7 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
             onClick={() => {
               if (!user) {
                 useAuthStore.getState().resetToLanding()
+                window.location.reload()
                 return
               }
               setShowUpgrade(true)

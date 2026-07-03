@@ -92,7 +92,10 @@ export function OcrUsageLimit({ used, limit }: OcrUsageLimitProps) {
 
         {!user ? (
           <button
-            onClick={() => useAuthStore.getState().resetToLanding()}
+            onClick={() => {
+              useAuthStore.getState().resetToLanding()
+              window.location.reload()
+            }}
             className="w-full px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors"
           >
             {t('premium.unlock')}

@@ -71,7 +71,10 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
             </div>
             <div className="flex items-center gap-1">
               <button
-                onClick={() => useAuthStore.getState().resetToLanding()}
+                onClick={() => {
+                  useAuthStore.getState().resetToLanding()
+                  window.location.reload()
+                }}
                 className="p-1.5 rounded-md hover:bg-slate-800 transition-colors"
                 style={{ color: 'var(--text-muted)' }}
                 title={t('nav.home')}
@@ -171,7 +174,10 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
           {isGuest ? (
             <>
               <button
-                onClick={() => useAuthStore.getState().resetToLanding()}
+                onClick={() => {
+                  useAuthStore.getState().resetToLanding()
+                  window.location.reload()
+                }}
                 className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm hover:bg-slate-800 transition-colors"
                 style={{ color: 'var(--text-muted)' }}
               >
