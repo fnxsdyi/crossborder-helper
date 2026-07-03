@@ -402,6 +402,21 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
                   <li>
                     <span className="text-slate-400">TaxFlow — Invoice & Tax Helper</span>
                   </li>
+                  <li>
+                    <a href="https://chart.flowingpulse.com" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors">
+                      ChartFlow — Notion Chart Builder
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://dash.kaki.llc" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors">
+                      DashCore — Unified Solo Dashboard
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://comply.kaki.llc" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors">
+                      Comply — Free Compliance Scanner
+                    </a>
+                  </li>
                 </ul>
               </div>
             </div>
