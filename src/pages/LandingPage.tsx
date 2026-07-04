@@ -189,47 +189,28 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
       <section className="py-16 px-6 bg-slate-50">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10">
-            <p className="text-sm font-medium text-blue-600 mb-2">{t('social.trustedBy')}</p>
-            <h2 className="text-2xl font-bold text-slate-900">{t('social.loveTitle')}</h2>
+            <h2 className="text-2xl font-bold text-slate-900">{t('social.joinEarlyUsers')}</h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            {[
-              { quote: t('social.quote1'), author: t('social.author1'), role: t('social.role1') },
-              { quote: t('social.quote2'), author: t('social.author2'), role: t('social.role2') },
-              { quote: t('social.quote3'), author: t('social.author3'), role: t('social.role3') },
-            ].map((item, i) => (
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            {[1, 2, 3].map((i) => (
               <div key={i} className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-                <div className="flex gap-1 mb-3">
-                  {[1,2,3,4,5].map(star => (
-                    <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                      <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                    </svg>
-                  ))}
+                <div className="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center mb-4">
+                  <svg className="w-6 h-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
                 </div>
-                <p className="text-slate-600 text-sm mb-4">"{item.quote}"</p>
-                <div>
-                  <p className="font-medium text-slate-900 text-sm">{item.author}</p>
-                  <p className="text-xs text-slate-500">{item.role}</p>
-                </div>
+                <p className="font-medium text-slate-900 text-sm mb-1">{t('social.firstReviewerTitle')}</p>
+                <p className="text-slate-600 text-sm">
+                  {t('social.firstReviewerBody')}
+                </p>
               </div>
             ))}
           </div>
 
-          <div className="flex flex-wrap justify-center gap-8 text-center">
-            <div>
-              <p className="text-3xl font-bold text-slate-900">2,500+</p>
-              <p className="text-sm text-slate-500">{t('social.users')}</p>
-            </div>
-            <div>
-              <p className="text-3xl font-bold text-slate-900">50+</p>
-              <p className="text-sm text-slate-500">{t('social.countries')}</p>
-            </div>
-            <div>
-              <p className="text-3xl font-bold text-slate-900">15,000+</p>
-              <p className="text-sm text-slate-500">{t('social.invoices')}</p>
-            </div>
-          </div>
+          <p className="text-center text-slate-500 text-sm">
+            {t('home.earlyAdopter')}
+          </p>
         </div>
       </section>
 
