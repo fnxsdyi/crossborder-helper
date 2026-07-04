@@ -5,6 +5,7 @@ import { useOcrStore } from '@/stores/ocrStore'
 import { useAuthStore } from '@/stores/authStore'
 import { recognizeInvoice } from '@/lib/ocrApi'
 import { checkOcrUsage, recordOcrUsage, simpleHash } from '@/lib/ocrUsage'
+import { OCR_FREE_LIMIT } from '@/lib/config'
 import { OcrUsageLimit } from './OcrUsageLimit'
 
 interface OcrUploadProps {
@@ -35,9 +36,9 @@ export function OcrUpload({ onResult }: OcrUploadProps) {
       setHasSubscription(false)
       setCheckedUsage(true)
       return {
-        allowed: guestUsed < 3,
+        allowed: guestUsed < OCR_FREE_LIMIT,
         used: guestUsed,
-        limit: 3,
+        limit: OCR_FREE_LIMIT,
         hasSubscription: false,
       }
     }
@@ -49,7 +50,7 @@ export function OcrUpload({ onResult }: OcrUploadProps) {
       return usage
     } catch (err) {
       console.error('Failed to check OCR usage:', err)
-      return { allowed: true, used: 0, limit: 3, hasSubscription: false }
+      return { allowed: true, used: 0, limit: OCR_FREE_LIMIT, hasSubscription: false }
     }
   }
 
@@ -142,7 +143,7 @@ export function OcrUpload({ onResult }: OcrUploadProps) {
   }
 
   if (checkedUsage && !hasSubscription && usageCount >= 3) {
-    return <OcrUsageLimit used={usageCount} limit={3} />
+    return <OcrUsageLimit used={usageCount} limit={OCR_FREE_LIMIT} />
   }
 
   return (
@@ -204,7 +205,7 @@ export function OcrUpload({ onResult }: OcrUploadProps) {
 
       {!hasSubscription && (
         <div className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
-          {t('ocr.freeUsed', { used: String(usageCount), limit: '3' })}
+          {t('ocr.freeUsed', { used: String(usageCount), limit: String(OCR_FREE_LIMIT) })}
         </div>
       )}
 
