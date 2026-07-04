@@ -116,7 +116,7 @@ export function TaxWizard() {
                 className="w-full px-3 py-2 border border-slate-200 rounded-lg"
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">{t('tax.dateOfBirth')}</label>
                 <input

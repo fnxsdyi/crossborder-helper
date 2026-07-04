@@ -151,7 +151,7 @@ export function SettingsPage({ isGuest }: SettingsPageProps) {
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
         <h2 className="font-semibold mb-4">{t('settings.businessInfo')}</h2>
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">{t('settings.businessName')}</label>
               <input
@@ -180,7 +180,7 @@ export function SettingsPage({ isGuest }: SettingsPageProps) {
               className="w-full px-3 py-2 border border-slate-200 rounded-lg"
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">{t('clients.country')}</label>
               <input
@@ -209,7 +209,7 @@ export function SettingsPage({ isGuest }: SettingsPageProps) {
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mt-6">
         <h2 className="font-semibold mb-4">{t('settings.invoiceDefaults')}</h2>
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">{t('settings.invoicePrefix')}</label>
               <input
@@ -229,7 +229,7 @@ export function SettingsPage({ isGuest }: SettingsPageProps) {
               />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">{t('settings.templateUs')}</label>
               <button

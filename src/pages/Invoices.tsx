@@ -108,8 +108,8 @@ export function Invoices() {
           </button>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-          <table className="w-full">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
+          <table className="w-full min-w-[600px]">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
                 <th className="text-left px-5 py-3 text-sm font-medium text-slate-600">{t('invoices.invoice')}</th>

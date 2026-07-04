@@ -215,7 +215,7 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
               <div className="h-5 bg-slate-200 rounded w-32 mb-4"></div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div><div className="h-4 bg-slate-200 rounded w-24 mb-2"></div><div className="h-10 bg-slate-100 rounded-lg"></div></div>
                 <div><div className="h-4 bg-slate-200 rounded w-16 mb-2"></div><div className="h-10 bg-slate-100 rounded-lg"></div></div>
                 <div><div className="h-4 bg-slate-200 rounded w-20 mb-2"></div><div className="h-10 bg-slate-100 rounded-lg"></div></div>
@@ -224,7 +224,7 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
             </div>
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
               <div className="h-5 bg-slate-200 rounded w-28 mb-4"></div>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="h-20 bg-slate-100 rounded-xl"></div>
                 <div className="h-20 bg-slate-100 rounded-xl"></div>
                 <div className="h-20 bg-slate-100 rounded-xl"></div>
@@ -257,7 +257,7 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
           {/* Invoice Details */}
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
             <h2 className="font-semibold mb-4">{t('editor.invoiceDetails')}</h2>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">{t('editor.invoiceNumber')}</label>
                 <input
@@ -306,7 +306,7 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
           {/* Invoice Template */}
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
             <h2 className="font-semibold mb-4">{t('editor.invoiceTemplate')}</h2>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <button
                 onClick={() => setTemplate('us')}
                 className={`p-4 rounded-xl border-2 text-left transition-all ${
