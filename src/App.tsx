@@ -5,6 +5,7 @@ import { CookieConsent } from './components/CookieConsent'
 const Layout = lazy(() => import('./components/Layout').then(m => ({ default: m.Layout })))
 const LandingPage = lazy(() => import('./pages/LandingPage').then(m => ({ default: m.LandingPage })))
 const AuthPage = lazy(() => import('./pages/AuthPage').then(m => ({ default: m.AuthPage })))
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })))
 
 function Loading() {
   return (
@@ -14,12 +15,15 @@ function Loading() {
   )
 }
 
+const KNOWN_ROUTES = ['/', '/login', '/register', '/pricing']
+
 function App() {
   const [showLanding, setShowLanding] = useState(true)
   const [isGuest, setIsGuest] = useState(false)
   const [showRegister, setShowRegister] = useState(false)
   const [hasEntered, setHasEntered] = useState(false)
   const [isRegister, setIsRegister] = useState(false)
+  const [notFound, setNotFound] = useState(false)
   const { user, loading, initialize } = useAuthStore()
 
   useEffect(() => {
@@ -49,6 +53,9 @@ function App() {
           setShowLanding(false)
           if (path === '/register') setIsRegister(true)
         } else if (path === '/pricing') {
+          setShowLanding(false)
+        } else if (!KNOWN_ROUTES.includes(path)) {
+          setNotFound(true)
           setShowLanding(false)
         } else {
           const entered = localStorage.getItem('app_entered')
@@ -107,6 +114,14 @@ function App() {
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
+    )
+  }
+
+  if (notFound) {
+    return (
+      <Suspense fallback={<Loading />}>
+        <NotFoundPage />
+      </Suspense>
     )
   }
 

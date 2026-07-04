@@ -13,6 +13,7 @@ import {
   X,
   Mail,
   Camera,
+  ChevronDown,
 } from 'lucide-react'
 import type { Locale } from '@/lib/i18n'
 
@@ -26,6 +27,7 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
   const [showPrivacy, setShowPrivacy] = useState(false)
   const [showTerms, setShowTerms] = useState(false)
   const [showLangMenu, setShowLangMenu] = useState(false)
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   const currentLang = locales.find(l => l.code === locale)
 
@@ -320,6 +322,39 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
                 {t('landing.cancelAnytime')}
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-16 px-6 bg-slate-50">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-2xl font-bold text-center text-slate-900 mb-8">{t('landing.faqTitle')}</h2>
+          <div className="space-y-3">
+            {[
+              { q: t('landing.faq1Q'), a: t('landing.faq1A') },
+              { q: t('landing.faq2Q'), a: t('landing.faq2A') },
+              { q: t('landing.faq3Q'), a: t('landing.faq3A') },
+              { q: t('landing.faq4Q'), a: t('landing.faq4A') },
+            ].map((faq, i) => (
+              <div key={i} className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+                <button
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="w-full flex items-center justify-between p-4 text-left"
+                >
+                  <span className="font-medium text-slate-900">{faq.q}</span>
+                  <ChevronDown
+                    size={20}
+                    className={`text-slate-400 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}
+                  />
+                </button>
+                {openFaq === i && (
+                  <div className="px-4 pb-4 text-slate-600 text-sm leading-relaxed">
+                    {faq.a}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </section>
