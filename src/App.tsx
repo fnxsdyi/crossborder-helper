@@ -6,6 +6,7 @@ const Layout = lazy(() => import('./components/Layout').then(m => ({ default: m.
 const LandingPage = lazy(() => import('./pages/LandingPage').then(m => ({ default: m.LandingPage })))
 const AuthPage = lazy(() => import('./pages/AuthPage').then(m => ({ default: m.AuthPage })))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })))
+const TermsPage = lazy(() => import('./pages/TermsPage').then(m => ({ default: m.TermsPage })))
 
 function Loading() {
   return (
@@ -15,7 +16,7 @@ function Loading() {
   )
 }
 
-const KNOWN_ROUTES = ['/', '/login', '/register', '/pricing']
+const KNOWN_ROUTES = ['/', '/login', '/register', '/pricing', '/terms']
 
 function App() {
   const [showLanding, setShowLanding] = useState(true)
@@ -52,7 +53,7 @@ function App() {
         if (path === '/login' || path === '/register') {
           setShowLanding(false)
           if (path === '/register') setIsRegister(true)
-        } else if (path === '/pricing') {
+        } else if (path === '/pricing' || path === '/terms') {
           setShowLanding(false)
         } else if (!KNOWN_ROUTES.includes(path)) {
           setNotFound(true)
@@ -121,6 +122,14 @@ function App() {
     return (
       <Suspense fallback={<Loading />}>
         <NotFoundPage />
+      </Suspense>
+    )
+  }
+
+  if (window.location.pathname === '/terms') {
+    return (
+      <Suspense fallback={<Loading />}>
+        <TermsPage />
       </Suspense>
     )
   }

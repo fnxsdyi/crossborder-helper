@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 
 interface AppState {
-  currentView: 'dashboard' | 'invoices' | 'clients' | 'tax' | 'currency' | 'settings' | 'contract' | 'ocr' | 'migrate'
+  currentView: 'dashboard' | 'invoices' | 'clients' | 'tax' | 'currency' | 'settings' | 'contract' | 'ocr'
   setCurrentView: (view: AppState['currentView']) => void
   sidebarOpen: boolean
   toggleSidebar: () => void
