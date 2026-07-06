@@ -6,7 +6,6 @@ import { getSettings, upsertSettings, type SyncSettings } from '@/lib/sync'
 import { Settings as SettingsIcon, LogOut, User, X } from 'lucide-react'
 import { useI18n } from '@/hooks/useI18n'
 import { usePremium } from '@/components/PremiumGate'
-import { useAppStore } from '@/stores/appStore'
 import { PayPalSubscriptionButton } from '@/components/PayPalSubscriptionButton'
 import { PRO_MONTHLY_PLAN_ID, PRO_ANNUAL_PLAN_ID } from '@/lib/config'
 import { supabase } from '@/lib/supabase'
@@ -18,7 +17,6 @@ interface SettingsPageProps {
 export function SettingsPage({ isGuest }: SettingsPageProps) {
   const { t } = useI18n()
   const { user, signOut } = useAuthStore()
-  const { setCurrentView } = useAppStore()
   const isPremium = usePremium()
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   const [settings, setSettings] = useState<SyncSettings | null>(null)
