@@ -1,6 +1,5 @@
 import { validateOcrResult, type OcrResult } from './ocrSchema'
 
-const API2D_URL = 'https://oa.api2d.net/v1/chat/completions'
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024 // 10MB
 const MAX_DIMENSION = 2048
 
@@ -64,25 +63,18 @@ export async function recognizeInvoice(
 
   const compressed = await compressImage(imageBase64)
 
-  const apiKey = import.meta.env.VITE_API2D_KEY
-  if (!apiKey) {
-    console.error('[TaxFlow] VITE_API2D_KEY is not set')
-    throw new Error('API_KEY_MISSING')
-  }
   console.log('[TaxFlow] OCR request starting, image size:', Math.round(imageBase64.length / 1024), 'KB')
 
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), 60000)
 
   try {
-    const response = await fetch(API2D_URL, {
+    const response = await fetch('/api/ocr', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
         messages: [
           {
             role: 'user',
@@ -92,8 +84,6 @@ export async function recognizeInvoice(
             ],
           },
         ],
-        max_tokens: 500,
-        temperature: 0,
       }),
       signal: controller.signal,
     })
@@ -136,7 +126,6 @@ export async function recognizeInvoice(
     if (err instanceof Error) {
       if (err.name === 'AbortError') throw new Error('TIMEOUT')
       if (err.message === 'IMAGE_TOO_LARGE') throw err
-      if (err.message === 'API_KEY_MISSING') throw err
     }
     throw new Error('RECOGNITION_FAILED')
   }
