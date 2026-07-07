@@ -45,7 +45,7 @@ export default async function handler(req, res) {
       return
     }
 
-    if (!body || !body.messages) {
+    if (!body || !Array.isArray(body.messages) || body.messages.length === 0) {
       res.statusCode = 400
       res.setHeader('Content-Type', 'application/json')
       res.end(JSON.stringify({ error: 'Invalid request body' }))
