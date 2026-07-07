@@ -1,36 +1,64 @@
-import type { IncomingMessage } from 'http'
+export default async function handler(req: any, res: any) {
+  // CORS headers (allow same-origin + common preflight)
+  res.setHeader('Access-Control-Allow-Origin', 'https://tax.flowingpulse.com')
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 
-interface VercelRequest extends IncomingMessage {
-  body: any
-  query: Record<string, string>
-}
+  if (req.method === 'OPTIONS') {
+    res.statusCode = 204
+    res.end()
+    return
+  }
 
-interface VercelResponse {
-  status(code: number): VercelResponse
-  json(data: unknown): void
-}
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' })
+    res.statusCode = 405
+    res.setHeader('Content-Type', 'application/json')
+    res.end(JSON.stringify({ error: 'Method not allowed' }))
+    return
   }
 
   const apiKey = process.env.API2D_KEY
   if (!apiKey) {
     console.error('[TaxFlow OCR] API2D_KEY is not set')
-    return res.status(500).json({ error: 'API_KEY_MISSING' })
+    res.statusCode = 500
+    res.setHeader('Content-Type', 'application/json')
+    res.end(JSON.stringify({ error: 'API_KEY_MISSING' }))
+    return
+  }
+
+  // Parse body (Vercel auto-parses JSON, but fallback to manual if needed)
+  let body: any = {}
+  try {
+    if (req.body !== undefined) {
+      body = req.body
+    } else {
+      const raw = await new Promise<string>((resolve, reject) => {
+        let data = ''
+        req.on('data', (chunk: any) => (data += chunk))
+        req.on('end', () => resolve(data))
+        req.on('error', reject)
+      })
+      body = raw ? JSON.parse(raw) : {}
+    }
+  } catch (e) {
+    res.statusCode = 400
+    res.setHeader('Content-Type', 'application/json')
+    res.end(JSON.stringify({ error: 'Invalid request body' }))
+    return
+  }
+
+  if (!body || !body.messages) {
+    res.statusCode = 400
+    res.setHeader('Content-Type', 'application/json')
+    res.end(JSON.stringify({ error: 'Invalid request body' }))
+    return
   }
 
   try {
-    const body = req.body
-    if (!body || !body.messages) {
-      return res.status(400).json({ error: 'Invalid request body' })
-    }
-
     const response = await fetch('https://oa.api2d.net/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
+        Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -42,9 +70,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     })
 
     const data = await response.json()
-    return res.status(200).json(data)
+
+    res.statusCode = 200
+    res.setHeader('Content-Type', 'application/json')
+    res.end(JSON.stringify(data))
   } catch (err) {
     console.error('[TaxFlow OCR] Error:', err)
-    return res.status(500).json({ error: 'RECOGNITION_FAILED' })
+    res.statusCode = 500
+    res.setHeader('Content-Type', 'application/json')
+    res.end(JSON.stringify({ error: 'RECOGNITION_FAILED' }))
   }
 }
