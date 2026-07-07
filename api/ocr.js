@@ -1,4 +1,4 @@
-export default async function handler(req: any, res: any) {
+export default async function handler(req, res) {
   try {
     res.setHeader('Access-Control-Allow-Origin', 'https://tax.flowingpulse.com')
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
@@ -25,14 +25,14 @@ export default async function handler(req: any, res: any) {
       return
     }
 
-    let body: any = {}
+    let body = {}
     try {
       if (req.body !== undefined) {
         body = req.body
       } else {
-        const raw = await new Promise<string>((resolve, reject) => {
+        const raw = await new Promise((resolve, reject) => {
           let data = ''
-          req.on('data', (chunk: any) => (data += chunk))
+          req.on('data', (chunk) => (data += chunk))
           req.on('end', () => resolve(data))
           req.on('error', reject)
         })
@@ -71,10 +71,10 @@ export default async function handler(req: any, res: any) {
     res.statusCode = 200
     res.setHeader('Content-Type', 'application/json')
     res.end(JSON.stringify(data))
-  } catch (err: any) {
+  } catch (err) {
     console.error('[TaxFlow OCR] Fatal error:', err)
     res.statusCode = 500
     res.setHeader('Content-Type', 'application/json')
-    res.end(JSON.stringify({ error: 'FUNCTION_ERROR', message: err?.message || String(err) }))
+    res.end(JSON.stringify({ error: 'FUNCTION_ERROR', message: err && err.message ? err.message : String(err) }))
   }
 }
