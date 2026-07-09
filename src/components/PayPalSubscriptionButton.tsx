@@ -66,7 +66,7 @@ function loadPayPalSDK(): Promise<void> {
 
     // Load SDK
     const script = document.createElement('script')
-    script.src = `${PAYPAL_SDK_URL}?client-id=${CLIENT_ID}&vault=true&intent=subscription`
+    script.src = `${PAYPAL_SDK_URL}?client-id=${CLIENT_ID}&vault=true&intent=subscription&locale=en_US`
     script.async = true
     script.onload = () => {
       // Wait for window.paypal to be defined
