@@ -3,6 +3,8 @@ import { Calculator, ChevronRight, ChevronLeft, Download, Loader2, Lock } from '
 import { generateW8BENPDF, loadW8BENTemplate } from '@/lib/generateW8BEN'
 import { useI18n } from '@/hooks/useI18n'
 import { W8BEN_FREE_LIMIT } from '@/lib/config'
+import { useAuthStore } from '@/stores/authStore'
+import { checkSubscription } from '@/lib/subscription'
 
 const countries = [
   'China', 'United Kingdom', 'Germany', 'France', 'Japan', 'Canada',
@@ -20,16 +22,31 @@ const treatyCountries = [
 
 export function TaxWizard() {
   const { t } = useI18n()
+  const { user } = useAuthStore()
   const [step, setStep] = useState(0)
   const [generating, setGenerating] = useState(false)
   const [usageCount, setUsageCount] = useState(0)
   const [limitReached, setLimitReached] = useState(false)
+  const [isPremium, setIsPremium] = useState(false)
 
   useEffect(() => {
-    const used = parseInt(localStorage.getItem('w8ben_guest_used') || '0', 10)
-    setUsageCount(used)
-    setLimitReached(used >= W8BEN_FREE_LIMIT)
-  }, [])
+    async function checkUsage() {
+      // Premium users have unlimited access
+      if (user) {
+        const sub = await checkSubscription(user.id)
+        if (sub.isPremium) {
+          setIsPremium(true)
+          setLimitReached(false)
+          return
+        }
+      }
+      // Free users: check localStorage
+      const used = parseInt(localStorage.getItem('w8ben_guest_used') || '0', 10)
+      setUsageCount(used)
+      setLimitReached(used >= W8BEN_FREE_LIMIT)
+    }
+    checkUsage()
+  }, [user])
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -75,7 +92,7 @@ export function TaxWizard() {
       return
     }
 
-    if (limitReached) {
+    if (!isPremium && limitReached) {
       return
     }
 
@@ -106,6 +123,16 @@ export function TaxWizard() {
       a.click()
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
+
+      // Record usage for non-premium users
+      if (!isPremium) {
+        const newCount = usageCount + 1
+        setUsageCount(newCount)
+        localStorage.setItem('w8ben_guest_used', String(newCount))
+        if (newCount >= W8BEN_FREE_LIMIT) {
+          setLimitReached(true)
+        }
+      }
 
       // Record usage
       const newCount = usageCount + 1
@@ -379,7 +406,7 @@ export function TaxWizard() {
         {step === steps.length - 1 ? (
           <button
             onClick={handleGeneratePDF}
-            disabled={generating || limitReached}
+            disabled={generating || (!isPremium && limitReached)}
             className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50"
           >
             {generating ? (

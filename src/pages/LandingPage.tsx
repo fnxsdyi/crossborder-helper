@@ -101,10 +101,10 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="relative z-10 animate-fade-in-up">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 mb-8">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Early product &middot; <span className="text-indigo-200 font-semibold">Free tier available</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> {t('landing.badge')}
               </div>
-              <h1 className="text-5xl lg:text-6xl font-extrabold text-white leading-[1.1] tracking-tight mb-6">Freelancer Tax &amp;<br /><span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">Invoice Tool</span></h1>
-              <p className="text-lg text-slate-400 leading-relaxed max-w-lg mb-10">W-8BEN forms, professional invoices, and multi-currency payments. Built for freelancers working with international clients.</p>
+              <h1 className="text-5xl lg:text-6xl font-extrabold text-white leading-[1.1] tracking-tight mb-6">{t('landing.heroTitle')}</h1>
+              <p className="text-lg text-slate-400 leading-relaxed max-w-lg mb-10">{t('landing.heroDesc')}</p>
               <div className="flex flex-wrap gap-4 mb-12">
                 <button onClick={onEnterApp} className="inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-indigo-500 to-cyan-400 text-white rounded-xl font-semibold text-sm hover:shadow-xl hover:shadow-indigo-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all">{t('landing.freeTrial')}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
                 <a href="#pricing" className="inline-flex items-center gap-2 px-8 py-3.5 border border-white/10 text-slate-300 rounded-xl font-medium text-sm hover:bg-white/5 transition-all">{t('landing.seePricing')}</a>
