@@ -21,6 +21,9 @@ export function Invoices() {
     if (user) {
       loadInvoices()
     } else {
+      // Guest: load from localStorage
+      const guestInvoices = JSON.parse(localStorage.getItem('guest_invoices') || '[]')
+      setInvoices(guestInvoices)
       setLoading(false)
     }
   }, [user])
@@ -49,16 +52,29 @@ export function Invoices() {
   }
 
   async function handleDelete(id: string) {
-    if (confirm(t('common.confirm')) && user) {
+    if (!confirm(t('common.confirm'))) return
+    if (user) {
       await deleteInvoice(user.id, id)
       loadInvoices()
+    } else {
+      // Guest: delete from localStorage
+      const guestInvoices = JSON.parse(localStorage.getItem('guest_invoices') || '[]')
+      const filtered = guestInvoices.filter((inv: SyncInvoice) => inv.id !== id)
+      localStorage.setItem('guest_invoices', JSON.stringify(filtered))
+      setInvoices(filtered)
     }
   }
 
   function handleSave() {
     setShowEditor(false)
     setEditingInvoice(null)
-    loadInvoices()
+    if (user) {
+      loadInvoices()
+    } else {
+      // Guest: reload from localStorage
+      const guestInvoices = JSON.parse(localStorage.getItem('guest_invoices') || '[]')
+      setInvoices(guestInvoices)
+    }
   }
 
   if (showEditor) {

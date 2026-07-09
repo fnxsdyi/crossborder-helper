@@ -54,82 +54,107 @@ function splitAddress(address: string): [string, string, string] {
 export async function generateW8BENPDF(data: W8BENData, pdfBytes: ArrayBuffer): Promise<Uint8Array> {
   const pdfDoc = await PDFDocument.load(pdfBytes)
   const form = pdfDoc.getForm()
+  const allFields = form.getFields()
 
-  function safeSetText(fieldName: string, value: string) {
+  function findField(fieldName: string) {
+    return allFields.find(f => f.getName() === fieldName)
+  }
+
+  function safeSetTextField(fieldName: string, value: string) {
     try {
-      const field = form.getTextField(fieldName)
-      field.setText(value)
+      const field = findField(fieldName)
+      if (!field) {
+        console.warn(`[W8BEN] Field not found: ${fieldName}`)
+        return
+      }
+      if (field.constructor.name === 'PDFTextField') {
+        ;(field as any).setText(value)
+      } else {
+        console.warn(`[W8BEN] Field ${fieldName} is not a text field (type: ${field.constructor.name})`)
+      }
     } catch (e) {
-      console.warn(`[W8BEN] Field not found: ${fieldName}`)
+      console.warn(`[W8BEN] Failed to set ${fieldName}:`, e)
     }
   }
 
   function safeCheck(fieldName: string) {
     try {
-      const field = form.getCheckBox(fieldName)
-      field.check()
+      const field = findField(fieldName)
+      if (!field) {
+        console.warn(`[W8BEN] Checkbox not found: ${fieldName}`)
+        return
+      }
+      if (field.constructor.name === 'PDFCheckBox') {
+        ;(field as any).check()
+      } else {
+        console.warn(`[W8BEN] Field ${fieldName} is not a checkbox (type: ${field.constructor.name})`)
+      }
     } catch (e) {
-      console.warn(`[W8BEN] Checkbox not found: ${fieldName}`)
+      console.warn(`[W8BEN] Failed to check ${fieldName}:`, e)
     }
   }
 
   // Line 1: Full name
-  safeSetText(FIELDS.line1_name, data.fullName)
+  safeSetTextField(FIELDS.line1_name, data.fullName)
 
   // Line 2: Country of citizenship
-  safeSetText(FIELDS.line2_country, data.country)
+  safeSetTextField(FIELDS.line2_country, data.country)
 
   // Line 3: Permanent residence address (split into 3 lines)
   const [addr1, addr2, addr3] = splitAddress(data.permanentAddress)
-  safeSetText(FIELDS.line3_permanentAddress1, addr1)
-  if (addr2) safeSetText(FIELDS.line3_permanentAddress2, addr2)
-  if (addr3) safeSetText(FIELDS.line3_permanentAddress3, addr3)
+  safeSetTextField(FIELDS.line3_permanentAddress1, addr1)
+  if (addr2) safeSetTextField(FIELDS.line3_permanentAddress2, addr2)
+  if (addr3) safeSetTextField(FIELDS.line3_permanentAddress3, addr3)
 
   // Line 4: Mailing address (if different)
   if (data.mailingAddress) {
     const [mail1, mail2, mail3] = splitAddress(data.mailingAddress)
-    safeSetText(FIELDS.line4_mailingAddress1, mail1)
-    if (mail2) safeSetText(FIELDS.line4_mailingAddress2, mail2)
-    if (mail3) safeSetText(FIELDS.line4_mailingAddress3, mail3)
+    safeSetTextField(FIELDS.line4_mailingAddress1, mail1)
+    if (mail2) safeSetTextField(FIELDS.line4_mailingAddress2, mail2)
+    if (mail3) safeSetTextField(FIELDS.line4_mailingAddress3, mail3)
   }
 
   // Line 5: US TIN (if has)
   if (data.usTin) {
     safeCheck(FIELDS.hasUsTin)
-    safeSetText(FIELDS.line5_usTin, data.usTin)
+    safeSetTextField(FIELDS.line5_usTin, data.usTin)
   }
 
   // Line 6: Foreign tax identifying number
   if (data.foreignTin) {
-    safeSetText(FIELDS.line6_foreignTin, data.foreignTin)
+    safeSetTextField(FIELDS.line6_foreignTin, data.foreignTin)
   }
 
   // Line 8: Date of birth
   if (data.dateOfBirth) {
-    safeSetText(FIELDS.line8_dateOfBirth, data.dateOfBirth)
+    safeSetTextField(FIELDS.line8_dateOfBirth, data.dateOfBirth)
   }
 
   // Line 9: Treaty benefits
   if (data.claimTreaty) {
     safeCheck(FIELDS.line9_claimTreaty)
     if (data.treatyCountry) {
-      safeSetText(FIELDS.line9a_treatyCountry, data.treatyCountry)
+      safeSetTextField(FIELDS.line9a_treatyCountry, data.treatyCountry)
     }
     if (data.treatyArticle) {
-      safeSetText(FIELDS.line9b_articleAndParagraph, data.treatyArticle)
+      safeSetTextField(FIELDS.line9b_articleAndParagraph, data.treatyArticle)
     }
     if (data.treatyRate !== undefined) {
-      safeSetText(FIELDS.line9c_withholdingRate, `${data.treatyRate}%`)
+      safeSetTextField(FIELDS.line9c_withholdingRate, `${data.treatyRate}%`)
     }
   }
 
   // Signature
-  safeSetText(FIELDS.signature, data.signature)
-  safeSetText(FIELDS.signatureDate, new Date().toLocaleDateString('en-US'))
-  safeSetText(FIELDS.printName, data.fullName)
+  safeSetTextField(FIELDS.signature, data.signature)
+  safeSetTextField(FIELDS.signatureDate, new Date().toLocaleDateString('en-US'))
+  safeSetTextField(FIELDS.printName, data.fullName)
 
-  // Flatten form (makes fields non-editable in the PDF)
-  form.flatten()
+  // Flatten form (makes fields non-editable in the PDF) - wrapped in try-catch
+  try {
+    form.flatten()
+  } catch (e) {
+    console.warn('[W8BEN] form.flatten() failed, saving without flatten:', e)
+  }
 
   return pdfDoc.save()
 }
