@@ -13,7 +13,7 @@ import {
   Camera,
   ChevronDown,
 } from 'lucide-react'
-import type { Locale } from '@/lib/i18n'
+
 
 interface LandingPageProps {
   onEnterApp: () => void

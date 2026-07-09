@@ -1,0 +1,57 @@
+/// <reference types="vite/client" />
+
+declare module 'lucide-react' {
+  import type { FC, SVGProps } from 'react'
+  type IconProps = SVGProps<SVGSVGElement> & { size?: number }
+  export const Check: FC<IconProps>
+  export const ChevronDown: FC<IconProps>
+  export const ChevronRight: FC<IconProps>
+  export const ChevronLeft: FC<IconProps>
+  export const X: FC<IconProps>
+  export const Globe: FC<IconProps>
+  export const Camera: FC<IconProps>
+  export const FileText: FC<IconProps>
+  export const Calculator: FC<IconProps>
+  export const BarChart3: FC<IconProps>
+  export const Shield: FC<IconProps>
+  export const ShieldCheck: FC<IconProps>
+  export const Mail: FC<IconProps>
+  export const ArrowRight: FC<IconProps>
+  export const ArrowLeft: FC<IconProps>
+  export const ArrowRightLeft: FC<IconProps>
+  export const Save: FC<IconProps>
+  export const Plus: FC<IconProps>
+  export const Trash2: FC<IconProps>
+  export const Download: FC<IconProps>
+  export const Upload: FC<IconProps>
+  export const RefreshCw: FC<IconProps>
+  export const Info: FC<IconProps>
+  export const CreditCard: FC<IconProps>
+  export const CheckCircle: FC<IconProps>
+  export const CheckCircle2: FC<IconProps>
+  export const AlertTriangle: FC<IconProps>
+  export const AlertCircle: FC<IconProps>
+  export const Image: FC<IconProps>
+  export const Loader2: FC<IconProps>
+  export const Lock: FC<IconProps>
+  export const LogIn: FC<IconProps>
+  export const LogOut: FC<IconProps>
+  export const LayoutDashboard: FC<IconProps>
+  export const Users: FC<IconProps>
+  export const User: FC<IconProps>
+  export const UserPlus: FC<IconProps>
+  export const Settings: FC<IconProps>
+  export const Menu: FC<IconProps>
+  export const Home: FC<IconProps>
+  export const Sun: FC<IconProps>
+  export const Moon: FC<IconProps>
+  export const Monitor: FC<IconProps>
+  export const TrendingUp: FC<IconProps>
+  export const TrendingDown: FC<IconProps>
+  export const DollarSign: FC<IconProps>
+  export const Clock: FC<IconProps>
+  export const History: FC<IconProps>
+  export const Edit: FC<IconProps>
+  export const Database: FC<IconProps>
+  export const FileQuestion: FC<IconProps>
+}
