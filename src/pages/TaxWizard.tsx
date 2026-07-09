@@ -1,7 +1,8 @@
-import { useState } from 'react'
-import { Calculator, ChevronRight, ChevronLeft, Download, Loader2 } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Calculator, ChevronRight, ChevronLeft, Download, Loader2, Lock } from 'lucide-react'
 import { generateW8BENPDF, loadW8BENTemplate } from '@/lib/generateW8BEN'
 import { useI18n } from '@/hooks/useI18n'
+import { W8BEN_FREE_LIMIT } from '@/lib/config'
 
 const countries = [
   'China', 'United Kingdom', 'Germany', 'France', 'Japan', 'Canada',
@@ -21,6 +22,15 @@ export function TaxWizard() {
   const { t } = useI18n()
   const [step, setStep] = useState(0)
   const [generating, setGenerating] = useState(false)
+  const [usageCount, setUsageCount] = useState(0)
+  const [limitReached, setLimitReached] = useState(false)
+
+  useEffect(() => {
+    const used = parseInt(localStorage.getItem('w8ben_guest_used') || '0', 10)
+    setUsageCount(used)
+    setLimitReached(used >= W8BEN_FREE_LIMIT)
+  }, [])
+
   const [formData, setFormData] = useState({
     fullName: '',
     country: '',
@@ -65,6 +75,10 @@ export function TaxWizard() {
       return
     }
 
+    if (limitReached) {
+      return
+    }
+
     setGenerating(true)
     try {
       const templateBytes = await loadW8BENTemplate()
@@ -92,6 +106,14 @@ export function TaxWizard() {
       a.click()
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
+
+      // Record usage
+      const newCount = usageCount + 1
+      setUsageCount(newCount)
+      localStorage.setItem('w8ben_guest_used', String(newCount))
+      if (newCount >= W8BEN_FREE_LIMIT) {
+        setLimitReached(true)
+      }
     } catch (error) {
       console.error('Failed to generate PDF:', error)
       alert(t('common.error'))
@@ -357,7 +379,7 @@ export function TaxWizard() {
         {step === steps.length - 1 ? (
           <button
             onClick={handleGeneratePDF}
-            disabled={generating}
+            disabled={generating || limitReached}
             className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50"
           >
             {generating ? (
@@ -381,6 +403,16 @@ export function TaxWizard() {
           </button>
         )}
       </div>
+
+      {limitReached && (
+        <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-3">
+          <Lock size={20} className="text-amber-600 flex-shrink-0" />
+          <div>
+            <p className="text-sm font-medium text-amber-800">Free limit reached</p>
+            <p className="text-xs text-amber-600">You've used all {W8BEN_FREE_LIMIT} free W-8BEN generations. Please log in or upgrade to continue.</p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

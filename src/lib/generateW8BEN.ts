@@ -33,7 +33,7 @@ const FIELDS = {
   line9a_treatyCountry: 'topmostSubform[0].Page1[0].f_13[0]',
   line9b_articleAndParagraph: 'topmostSubform[0].Page1[0].f_14[0]',
   line9c_withholdingRate: 'topmostSubform[0].Page1[0].f_15[0]',
-  line9d特殊Rate: 'topmostSubform[0].Page1[0].f_16[0]',
+  line9d_specialRate: 'topmostSubform[0].Page1[0].f_16[0]',
   line9e_gaIncome: 'topmostSubform[0].Page1[0].f_17[0]',
   line9f_paragraph4: 'topmostSubform[0].Page1[0].f_18[0]',
   hasUsTin: 'topmostSubform[0].Page1[0].c1_02[0]',
@@ -55,60 +55,78 @@ export async function generateW8BENPDF(data: W8BENData, pdfBytes: ArrayBuffer): 
   const pdfDoc = await PDFDocument.load(pdfBytes)
   const form = pdfDoc.getForm()
 
+  function safeSetText(fieldName: string, value: string) {
+    try {
+      const field = form.getTextField(fieldName)
+      field.setText(value)
+    } catch (e) {
+      console.warn(`[W8BEN] Field not found: ${fieldName}`)
+    }
+  }
+
+  function safeCheck(fieldName: string) {
+    try {
+      const field = form.getCheckBox(fieldName)
+      field.check()
+    } catch (e) {
+      console.warn(`[W8BEN] Checkbox not found: ${fieldName}`)
+    }
+  }
+
   // Line 1: Full name
-  form.getTextField(FIELDS.line1_name).setText(data.fullName)
+  safeSetText(FIELDS.line1_name, data.fullName)
 
   // Line 2: Country of citizenship
-  form.getTextField(FIELDS.line2_country).setText(data.country)
+  safeSetText(FIELDS.line2_country, data.country)
 
   // Line 3: Permanent residence address (split into 3 lines)
   const [addr1, addr2, addr3] = splitAddress(data.permanentAddress)
-  form.getTextField(FIELDS.line3_permanentAddress1).setText(addr1)
-  if (addr2) form.getTextField(FIELDS.line3_permanentAddress2).setText(addr2)
-  if (addr3) form.getTextField(FIELDS.line3_permanentAddress3).setText(addr3)
+  safeSetText(FIELDS.line3_permanentAddress1, addr1)
+  if (addr2) safeSetText(FIELDS.line3_permanentAddress2, addr2)
+  if (addr3) safeSetText(FIELDS.line3_permanentAddress3, addr3)
 
   // Line 4: Mailing address (if different)
   if (data.mailingAddress) {
     const [mail1, mail2, mail3] = splitAddress(data.mailingAddress)
-    form.getTextField(FIELDS.line4_mailingAddress1).setText(mail1)
-    if (mail2) form.getTextField(FIELDS.line4_mailingAddress2).setText(mail2)
-    if (mail3) form.getTextField(FIELDS.line4_mailingAddress3).setText(mail3)
+    safeSetText(FIELDS.line4_mailingAddress1, mail1)
+    if (mail2) safeSetText(FIELDS.line4_mailingAddress2, mail2)
+    if (mail3) safeSetText(FIELDS.line4_mailingAddress3, mail3)
   }
 
   // Line 5: US TIN (if has)
   if (data.usTin) {
-    form.getCheckBox(FIELDS.hasUsTin).check()
-    form.getTextField(FIELDS.line5_usTin).setText(data.usTin)
+    safeCheck(FIELDS.hasUsTin)
+    safeSetText(FIELDS.line5_usTin, data.usTin)
   }
 
   // Line 6: Foreign tax identifying number
   if (data.foreignTin) {
-    form.getTextField(FIELDS.line6_foreignTin).setText(data.foreignTin)
+    safeSetText(FIELDS.line6_foreignTin, data.foreignTin)
   }
 
   // Line 8: Date of birth
   if (data.dateOfBirth) {
-    form.getTextField(FIELDS.line8_dateOfBirth).setText(data.dateOfBirth)
+    safeSetText(FIELDS.line8_dateOfBirth, data.dateOfBirth)
   }
 
   // Line 9: Treaty benefits
   if (data.claimTreaty) {
-    form.getCheckBox(FIELDS.line9_claimTreaty).check()
+    safeCheck(FIELDS.line9_claimTreaty)
     if (data.treatyCountry) {
-      form.getTextField(FIELDS.line9a_treatyCountry).setText(data.treatyCountry)
+      safeSetText(FIELDS.line9a_treatyCountry, data.treatyCountry)
     }
     if (data.treatyArticle) {
-      form.getTextField(FIELDS.line9b_articleAndParagraph).setText(data.treatyArticle)
+      safeSetText(FIELDS.line9b_articleAndParagraph, data.treatyArticle)
     }
     if (data.treatyRate !== undefined) {
-      form.getTextField(FIELDS.line9c_withholdingRate).setText(`${data.treatyRate}%`)
+      safeSetText(FIELDS.line9c_withholdingRate, `${data.treatyRate}%`)
     }
   }
 
   // Signature
-  form.getTextField(FIELDS.signature).setText(data.signature)
-  form.getTextField(FIELDS.signatureDate).setText(new Date().toLocaleDateString('en-US'))
-  form.getTextField(FIELDS.printName).setText(data.fullName)
+  safeSetText(FIELDS.signature, data.signature)
+  safeSetText(FIELDS.signatureDate, new Date().toLocaleDateString('en-US'))
+  safeSetText(FIELDS.printName, data.fullName)
 
   // Flatten form (makes fields non-editable in the PDF)
   form.flatten()

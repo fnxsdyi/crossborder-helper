@@ -131,13 +131,12 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
   }
 
   async function handleSave() {
-    if (!user) return
     setSaving(true)
     setSaveError('')
 
     try {
       const invoiceData = {
-        id: invoice?.id,
+        id: invoice?.id || `guest_${Date.now()}`,
         invoiceNumber,
         clientId: clientId || null,
         issueDate,
@@ -162,15 +161,26 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
         ocrConfidence: invoice?.ocrConfidence || null,
       }
 
-      await upsertInvoice(user.id, invoiceData)
-
-      if (!invoice?.id) {
-        try {
-          const settings = await getSettings(user.id)
-          await upsertSettings(user.id, { nextInvoiceNumber: (settings.nextInvoiceNumber || 1) + 1 })
-        } catch (err) {
-          console.error('Failed to update invoice number:', err)
+      if (user) {
+        await upsertInvoice(user.id, invoiceData)
+        if (!invoice?.id) {
+          try {
+            const settings = await getSettings(user.id)
+            await upsertSettings(user.id, { nextInvoiceNumber: (settings.nextInvoiceNumber || 1) + 1 })
+          } catch (err) {
+            console.error('Failed to update invoice number:', err)
+          }
         }
+      } else {
+        // Guest: save to localStorage
+        const guestInvoices = JSON.parse(localStorage.getItem('guest_invoices') || '[]')
+        const existingIndex = guestInvoices.findIndex((inv: SyncInvoice) => inv.id === invoiceData.id)
+        if (existingIndex >= 0) {
+          guestInvoices[existingIndex] = invoiceData
+        } else {
+          guestInvoices.push(invoiceData)
+        }
+        localStorage.setItem('guest_invoices', JSON.stringify(guestInvoices))
       }
 
       onSave()

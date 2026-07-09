@@ -13,3 +13,6 @@ export const PRO_ANNUAL_PLAN_ID = 'P-3D915014J7223963ENJDBLSY'
 
 /** OCR free tier limit */
 export const OCR_FREE_LIMIT = 3
+
+/** W-8BEN free tier limit */
+export const W8BEN_FREE_LIMIT = 3
