@@ -121,6 +121,15 @@ export function OcrUpload({ onResult }: OcrUploadProps) {
             case 'API_ERROR':
               setError(t('ocr.errorApi'))
               break
+            case 'EMPTY_RESPONSE':
+              setError(t('ocr.errorApi'))
+              break
+            case 'INVALID_RESPONSE':
+              setError(t('ocr.errorApi'))
+              break
+            case 'RECOGNITION_FAILED':
+              setError(t('ocr.errorApi'))
+              break
             case 'Failed to load image':
               setError('Failed to load image. Please try another file.')
               break

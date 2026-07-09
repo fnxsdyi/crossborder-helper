@@ -52,6 +52,10 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
     if (user) {
       loadClients()
       if (!invoice) generateInvoiceNumber()
+    } else {
+      // Guest mode: skip client loading, show form directly
+      setLoadingClients(false)
+      if (!invoice) generateInvoiceNumber()
     }
   }, [user])
 

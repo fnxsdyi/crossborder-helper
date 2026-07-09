@@ -126,6 +126,10 @@ export async function recognizeInvoice(
     if (err instanceof Error) {
       if (err.name === 'AbortError') throw new Error('TIMEOUT')
       if (err.message === 'IMAGE_TOO_LARGE') throw err
+      if (err.message === 'API_ERROR') throw err
+      if (err.message === 'EMPTY_RESPONSE') throw err
+      if (err.message === 'INVALID_RESPONSE') throw err
+      if (err.message === 'RECOGNITION_FAILED') throw err
     }
     throw new Error('RECOGNITION_FAILED')
   }
