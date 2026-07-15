@@ -53,6 +53,8 @@ type TranslationKeys = {
   'invoices.status': string
   'invoices.amount': string
   'invoices.actions': string
+  'invoices.exportAll': string
+  'invoices.freeUsed': string
 
   // Invoice Editor
   'editor.editInvoice': string
@@ -183,6 +185,7 @@ type TranslationKeys = {
   'tax.signaturePlaceholder': string
   'tax.generatePdf': string
   'tax.generating': string
+  'tax.freeUsed': string
   'tax.back': string
   'tax.next': string
 
@@ -456,6 +459,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'invoices.status': 'Status',
     'invoices.amount': 'Amount',
     'invoices.actions': 'Actions',
+    'invoices.exportAll': 'Export All PDF',
+    'invoices.freeUsed': 'free exports used this month',
 
     // Invoice Editor
     'editor.editInvoice': 'Edit Invoice',
@@ -586,6 +591,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'tax.signaturePlaceholder': 'Type your full legal name as signature',
     'tax.generatePdf': 'Generate PDF',
     'tax.generating': 'Generating...',
+    'tax.freeUsed': 'free forms used this month',
     'tax.back': 'Back',
     'tax.next': 'Next',
 
@@ -856,6 +862,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'invoices.status': '状态',
     'invoices.amount': '金额',
     'invoices.actions': '操作',
+    'invoices.exportAll': '批量导出 PDF',
+    'invoices.freeUsed': '本月免费导出已用',
 
     // Invoice Editor
     'editor.editInvoice': '编辑发票',
@@ -986,6 +994,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'tax.signaturePlaceholder': '输入您的法定全名作为签名',
     'tax.generatePdf': '生成 PDF',
     'tax.generating': '生成中...',
+    'tax.freeUsed': '本月免费表格已用',
     'tax.back': '上一步',
     'tax.next': '下一步',
 
@@ -1256,6 +1265,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'invoices.status': 'ステータス',
     'invoices.amount': '金額',
     'invoices.actions': '操作',
+    'invoices.exportAll': 'すべてPDFエクスポート',
+    'invoices.freeUsed': '今月の無料エクスポート使用済み',
 
     // Invoice Editor
     'editor.editInvoice': '請求書を編集',
@@ -1386,6 +1397,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'tax.signaturePlaceholder': '法的全名を署名として入力',
     'tax.generatePdf': 'PDF 生成',
     'tax.generating': '生成中...',
+    'tax.freeUsed': '今月の無料フォーム使用済み',
     'tax.back': '戻る',
     'tax.next': '次へ',
 
@@ -1652,6 +1664,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'invoices.status': '상태',
     'invoices.amount': '금액',
     'invoices.actions': '작업',
+    'invoices.exportAll': '전체 PDF 내보내기',
+    'invoices.freeUsed': '이번 달 무료 내보내기 사용됨',
     'editor.editInvoice': '송장 편집',
     'editor.newInvoice': '새 송장',
     'editor.cancel': '취소',
@@ -1774,6 +1788,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'tax.signaturePlaceholder': '법적 전체 이름을 서명으로 입력',
     'tax.generatePdf': 'PDF 생성',
     'tax.generating': '생성 중...',
+    'tax.freeUsed': '이번 달 무료 양식 사용됨',
     'tax.back': '뒤로',
     'tax.next': '다음',
     'settings.title': '설정',
@@ -2032,6 +2047,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'invoices.status': 'Status',
     'invoices.amount': 'Betrag',
     'invoices.actions': 'Aktionen',
+    'invoices.exportAll': 'Alle als PDF exportieren',
+    'invoices.freeUsed': 'Kostenlose Exportes diesen Monat verwendet',
     'editor.editInvoice': 'Rechnung bearbeiten',
     'editor.newInvoice': 'Neue Rechnung',
     'editor.cancel': 'Abbrechen',
@@ -2154,6 +2171,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'tax.signaturePlaceholder': 'Geben Sie Ihren vollständigen Namen als Unterschrift ein',
     'tax.generatePdf': 'PDF generieren',
     'tax.generating': 'Generieren...',
+    'tax.freeUsed': 'Kostenlose Formulare diesen Monat verwendet',
     'tax.back': 'Zurück',
     'tax.next': 'Weiter',
     'settings.title': 'Einstellungen',
@@ -2412,6 +2430,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'invoices.status': 'Statut',
     'invoices.amount': 'Montant',
     'invoices.actions': 'Actions',
+    'invoices.exportAll': 'Tout exporter en PDF',
+    'invoices.freeUsed': 'exports gratuits ce mois-ci',
     'editor.editInvoice': 'Modifier la facture',
     'editor.newInvoice': 'Nouvelle facture',
     'editor.cancel': 'Annuler',
@@ -2533,6 +2553,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'tax.signature': 'Signature',
     'tax.signaturePlaceholder': 'Tapez votre nom légal complet comme signature',
     'tax.generatePdf': 'Générer PDF',
+    'tax.freeUsed': 'formulaires gratuits ce mois-ci',
     'tax.generating': 'Génération...',
     'tax.back': 'Retour',
     'tax.next': 'Suivant',
@@ -2792,6 +2813,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'invoices.status': 'Estado',
     'invoices.amount': 'Monto',
     'invoices.actions': 'Acciones',
+    'invoices.exportAll': 'Exportar todo como PDF',
+    'invoices.freeUsed': 'exportaciones gratuitas usadas este mes',
     'editor.editInvoice': 'Editar factura',
     'editor.newInvoice': 'Nueva factura',
     'editor.cancel': 'Cancelar',
@@ -2912,6 +2935,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'tax.certificationText': 'Bajo penalidades de perjurio, certifico que: La información en este formulario es correcta; Soy el propietario beneficioso del ingreso; No soy persona estadounidense; Reclamo beneficios de tratado (si aplica).',
     'tax.signature': 'Firma',
     'tax.signaturePlaceholder': 'Escriba su nombre legal completo como firma',
+    'tax.freeUsed': 'formularios gratuitos usados este mes',
     'tax.generatePdf': 'Generar PDF',
     'tax.generating': 'Generando...',
     'tax.back': 'Atrás',
@@ -3172,6 +3196,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'invoices.status': 'Status',
     'invoices.amount': 'Valor',
     'invoices.actions': 'Ações',
+    'invoices.exportAll': 'Exportar tudo como PDF',
+    'invoices.freeUsed': 'exportações gratuitas usadas este mês',
     'editor.editInvoice': 'Editar fatura',
     'editor.newInvoice': 'Nova fatura',
     'editor.cancel': 'Cancelar',
@@ -3291,6 +3317,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'tax.certification': 'Certificação',
     'tax.certificationText': 'Sob pena de perjúrio, certifico que: As informações neste formulário estão corretas; Sou o proprietário benéfico da renda; Não sou pessoa americana; Reivindico benefícios de tratado (se aplicável).',
     'tax.signature': 'Assinatura',
+    'tax.freeUsed': 'formulários gratuitos usados este mês',
     'tax.signaturePlaceholder': 'Digite seu nome legal completo como assinatura',
     'tax.generatePdf': 'Gerar PDF',
     'tax.generating': 'Gerando...',

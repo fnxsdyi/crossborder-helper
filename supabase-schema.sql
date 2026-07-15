@@ -163,3 +163,47 @@ CREATE INDEX idx_sf_invoices_status ON sf_invoices(status);
 CREATE INDEX idx_sf_settings_user_id ON sf_settings(user_id);
 CREATE INDEX idx_ocr_usage_user_id ON ocr_usage(user_id);
 CREATE INDEX idx_ocr_usage_created_at ON ocr_usage(created_at);
+
+-- ==========================================
+-- W-8BEN Usage Tracking
+-- ==========================================
+CREATE TABLE w8ben_usage (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE w8ben_usage ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view own W8BEN usage" ON w8ben_usage
+  FOR SELECT TO authenticated
+  USING (user_id = auth.uid());
+
+CREATE POLICY "Users can insert own W8BEN usage" ON w8ben_usage
+  FOR INSERT TO authenticated
+  WITH CHECK (user_id = auth.uid());
+
+CREATE INDEX idx_w8ben_usage_user_id ON w8ben_usage(user_id);
+CREATE INDEX idx_w8ben_usage_created_at ON w8ben_usage(created_at);
+
+-- ==========================================
+-- Batch Export Usage Tracking
+-- ==========================================
+CREATE TABLE batch_export_usage (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE batch_export_usage ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view own batch export usage" ON batch_export_usage
+  FOR SELECT TO authenticated
+  USING (user_id = auth.uid());
+
+CREATE POLICY "Users can insert own batch export usage" ON batch_export_usage
+  FOR INSERT TO authenticated
+  WITH CHECK (user_id = auth.uid());
+
+CREATE INDEX idx_batch_export_usage_user_id ON batch_export_usage(user_id);
+CREATE INDEX idx_batch_export_usage_created_at ON batch_export_usage(created_at);

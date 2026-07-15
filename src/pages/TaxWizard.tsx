@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Calculator, ChevronRight, ChevronLeft, Download, Loader2, Lock } from 'lucide-react'
 import { generateW8BENPDF, loadW8BENTemplate } from '@/lib/generateW8BEN'
-import { useI18n } from '@/hooks/useI18n'
-import { W8BEN_FREE_LIMIT } from '@/lib/config'
+import { checkW8BENUsage, recordW8BENUsage } from '@/lib/w8benUsage'
 import { useAuthStore } from '@/stores/authStore'
-import { checkSubscription } from '@/lib/subscription'
+import { useI18n } from '@/hooks/useI18n'
 
 const countries = [
   'China', 'United Kingdom', 'Germany', 'France', 'Japan', 'Canada',
@@ -25,29 +24,7 @@ export function TaxWizard() {
   const { user } = useAuthStore()
   const [step, setStep] = useState(0)
   const [generating, setGenerating] = useState(false)
-  const [usageCount, setUsageCount] = useState(0)
-  const [limitReached, setLimitReached] = useState(false)
-  const [isPremium, setIsPremium] = useState(false)
-
-  useEffect(() => {
-    async function checkUsage() {
-      // Premium users have unlimited access
-      if (user) {
-        const sub = await checkSubscription(user.id)
-        if (sub.isPremium) {
-          setIsPremium(true)
-          setLimitReached(false)
-          return
-        }
-      }
-      // Free users: check localStorage
-      const used = parseInt(localStorage.getItem('w8ben_guest_used') || '0', 10)
-      setUsageCount(used)
-      setLimitReached(used >= W8BEN_FREE_LIMIT)
-    }
-    checkUsage()
-  }, [user])
-
+  const [usage, setUsage] = useState<{ allowed: boolean; used: number; limit: number; hasSubscription: boolean } | null>(null)
   const [formData, setFormData] = useState({
     fullName: '',
     country: '',
@@ -65,6 +42,10 @@ export function TaxWizard() {
     treatyRate: 10,
     signature: '',
   })
+
+  useEffect(() => {
+    checkW8BENUsage(user?.id).then(setUsage)
+  }, [user])
 
   const steps = [
     t('tax.personalInfo'),
@@ -92,13 +73,19 @@ export function TaxWizard() {
       return
     }
 
-    if (!isPremium && limitReached) {
+    const currentUsage = await checkW8BENUsage(user?.id)
+    if (!currentUsage.allowed) {
+      setUsage(currentUsage)
       return
     }
 
     setGenerating(true)
     try {
+      console.log('[TaxWizard] Loading template...')
       const templateBytes = await loadW8BENTemplate()
+      console.log('[TaxWizard] Template loaded, size:', templateBytes.byteLength)
+
+      console.log('[TaxWizard] Generating PDF...')
       const pdfBytes = await generateW8BENPDF({
         fullName: formData.fullName,
         country: formData.country,
@@ -114,6 +101,8 @@ export function TaxWizard() {
         signature: formData.signature,
       }, templateBytes)
 
+      console.log('[TaxWizard] PDF generated, size:', pdfBytes.length)
+
       const blob = new Blob([new Uint8Array(pdfBytes)], { type: 'application/pdf' })
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
@@ -124,26 +113,15 @@ export function TaxWizard() {
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
 
-      // Record usage for non-premium users
-      if (!isPremium) {
-        const newCount = usageCount + 1
-        setUsageCount(newCount)
-        localStorage.setItem('w8ben_guest_used', String(newCount))
-        if (newCount >= W8BEN_FREE_LIMIT) {
-          setLimitReached(true)
-        }
-      }
-
-      // Record usage
-      const newCount = usageCount + 1
-      setUsageCount(newCount)
-      localStorage.setItem('w8ben_guest_used', String(newCount))
-      if (newCount >= W8BEN_FREE_LIMIT) {
-        setLimitReached(true)
-      }
+      console.log('[TaxWizard] Recording usage...')
+      await recordW8BENUsage(user?.id)
+      const newUsage = await checkW8BENUsage(user?.id)
+      setUsage(newUsage)
+      console.log('[TaxWizard] Done!')
     } catch (error) {
-      console.error('Failed to generate PDF:', error)
-      alert(t('common.error'))
+      console.error('[TaxWizard] Failed to generate PDF:', error)
+      const errMsg = error instanceof Error ? error.message : String(error)
+      alert(`Error: ${errMsg}`)
     } finally {
       setGenerating(false)
     }
@@ -404,23 +382,35 @@ export function TaxWizard() {
           <ChevronLeft size={16} /> {t('tax.back')}
         </button>
         {step === steps.length - 1 ? (
-          <button
-            onClick={handleGeneratePDF}
-            disabled={generating || (!isPremium && limitReached)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50"
-          >
-            {generating ? (
-              <>
-                <Loader2 size={16} className="animate-spin" />
-                {t('tax.generating')}
-              </>
-            ) : (
-              <>
-                <Download size={16} />
-                {t('tax.generatePdf')}
-              </>
+          <div className="flex flex-col items-end gap-1">
+            <button
+              onClick={handleGeneratePDF}
+              disabled={generating || (usage ? !usage.allowed : false)}
+              className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {generating ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" />
+                  {t('tax.generating')}
+                </>
+              ) : usage && !usage.allowed ? (
+                <>
+                  <Lock size={16} />
+                  {t('tax.generatePdf')}
+                </>
+              ) : (
+                <>
+                  <Download size={16} />
+                  {t('tax.generatePdf')}
+                </>
+              )}
+            </button>
+            {usage && !usage.hasSubscription && (
+              <span className="text-xs text-slate-400">
+                {usage.used}/{usage.limit} {t('tax.freeUsed')}
+              </span>
             )}
-          </button>
+          </div>
         ) : (
           <button
             onClick={handleNext}
@@ -430,16 +420,6 @@ export function TaxWizard() {
           </button>
         )}
       </div>
-
-      {limitReached && (
-        <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-3">
-          <Lock size={20} className="text-amber-600 flex-shrink-0" />
-          <div>
-            <p className="text-sm font-medium text-amber-800">Free limit reached</p>
-            <p className="text-xs text-amber-600">You've used all {W8BEN_FREE_LIMIT} free W-8BEN generations. Please log in or upgrade to continue.</p>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

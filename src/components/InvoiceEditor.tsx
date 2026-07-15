@@ -18,7 +18,6 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState('')
   const [clients, setClients] = useState<SyncClient[]>([])
-  const [loadingClients, setLoadingClients] = useState(true)
   const [clientId, setClientId] = useState<string>(invoice?.clientId || '')
   const [invoiceNumber, setInvoiceNumber] = useState(invoice?.invoiceNumber || '')
   const [issueDate, setIssueDate] = useState(
@@ -53,9 +52,10 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
       loadClients()
       if (!invoice) generateInvoiceNumber()
     } else {
-      // Guest mode: skip client loading, show form directly
-      setLoadingClients(false)
-      if (!invoice) generateInvoiceNumber()
+      if (!invoice) {
+        const timestamp = Date.now().toString(36).toUpperCase()
+        setInvoiceNumber(`INV-${timestamp.slice(-4)}`)
+      }
     }
   }, [user])
 
@@ -66,8 +66,6 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
       setClients(data)
     } catch (err) {
       console.error('Failed to load clients:', err)
-    } finally {
-      setLoadingClients(false)
     }
   }
 
@@ -136,7 +134,7 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
 
     try {
       const invoiceData = {
-        id: invoice?.id || `guest_${Date.now()}`,
+        id: invoice?.id || crypto.randomUUID(),
         invoiceNumber,
         clientId: clientId || null,
         issueDate,
@@ -159,10 +157,14 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
         items: items as SyncInvoiceItem[],
         ocrProcessed: invoice?.ocrProcessed || false,
         ocrConfidence: invoice?.ocrConfidence || null,
+        createdAt: invoice?.createdAt || new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       }
 
       if (user) {
+        // Authenticated user: save to Supabase
         await upsertInvoice(user.id, invoiceData)
+
         if (!invoice?.id) {
           try {
             const settings = await getSettings(user.id)
@@ -172,14 +174,16 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
           }
         }
       } else {
-        // Guest: save to localStorage
+        // Guest mode: save to localStorage
         const guestInvoices = JSON.parse(localStorage.getItem('guest_invoices') || '[]')
-        const existingIndex = guestInvoices.findIndex((inv: SyncInvoice) => inv.id === invoiceData.id)
+        const existingIndex = guestInvoices.findIndex((inv: any) => inv.id === invoiceData.id)
+
         if (existingIndex >= 0) {
           guestInvoices[existingIndex] = invoiceData
         } else {
           guestInvoices.push(invoiceData)
         }
+
         localStorage.setItem('guest_invoices', JSON.stringify(guestInvoices))
       }
 
@@ -224,48 +228,17 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
         </div>
       )}
 
-      {loadingClients && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-pulse transition-opacity duration-300 opacity-0" style={{ animation: 'fadeIn 0.3s ease-in forwards' }}>
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <div className="h-5 bg-slate-200 rounded w-32 mb-4"></div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div><div className="h-4 bg-slate-200 rounded w-24 mb-2"></div><div className="h-10 bg-slate-100 rounded-lg"></div></div>
-                <div><div className="h-4 bg-slate-200 rounded w-16 mb-2"></div><div className="h-10 bg-slate-100 rounded-lg"></div></div>
-                <div><div className="h-4 bg-slate-200 rounded w-20 mb-2"></div><div className="h-10 bg-slate-100 rounded-lg"></div></div>
-                <div><div className="h-4 bg-slate-200 rounded w-18 mb-2"></div><div className="h-10 bg-slate-100 rounded-lg"></div></div>
-              </div>
-            </div>
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <div className="h-5 bg-slate-200 rounded w-28 mb-4"></div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="h-20 bg-slate-100 rounded-xl"></div>
-                <div className="h-20 bg-slate-100 rounded-xl"></div>
-                <div className="h-20 bg-slate-100 rounded-xl"></div>
-              </div>
-            </div>
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <div className="h-5 bg-slate-200 rounded w-24 mb-4"></div>
-              <div className="space-y-3">
-                <div className="h-10 bg-slate-100 rounded-lg"></div>
-                <div className="h-10 bg-slate-100 rounded-lg"></div>
-              </div>
-            </div>
-          </div>
-          <div className="space-y-6">
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <div className="h-5 bg-slate-200 rounded w-20 mb-4"></div>
-              <div className="space-y-3">
-                <div className="flex justify-between"><div className="h-4 bg-slate-200 rounded w-16"></div><div className="h-4 bg-slate-200 rounded w-20"></div></div>
-                <div className="flex justify-between"><div className="h-4 bg-slate-200 rounded w-12"></div><div className="h-4 bg-slate-200 rounded w-24"></div></div>
-                <div className="border-t border-slate-200 pt-3 flex justify-between"><div className="h-5 bg-slate-200 rounded w-12"></div><div className="h-5 bg-slate-200 rounded w-28"></div></div>
-              </div>
-            </div>
+      {!user && (
+        <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+          <div className="flex items-center gap-2 text-amber-800">
+            <Info size={16} />
+            <p className="text-sm">
+              <strong>Guest Mode:</strong> Your invoice is saved locally in this browser.{' '}
+              <a href="/login" className="underline hover:text-amber-900">Sign up</a> to sync across devices.
+            </p>
           </div>
         </div>
       )}
-
-      {!loadingClients && (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           {/* Invoice Details */}
@@ -397,7 +370,7 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
                   </div>
                   <div className="col-span-2">
                     <p className="px-3 py-2 text-sm font-medium bg-slate-50 rounded-lg">
-                      ${item.amount.toFixed(2)}
+                      {formatCurrency(item.amount, currency)}
                     </p>
                   </div>
                   <div className="col-span-1">
@@ -661,7 +634,6 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
           )}
         </div>
       </div>
-      )}
     </div>
   )
 }

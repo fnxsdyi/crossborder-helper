@@ -1,7 +1,9 @@
 import { validateOcrResult, type OcrResult } from './ocrSchema'
 
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024 // 10MB
-const MAX_DIMENSION = 2048
+const MAX_DIMENSION = 1600
+const OCR_TIMEOUT = 120000 // 120 seconds
+const MAX_RETRIES = 2
 
 const PROMPT = `Extract invoice fields from this image.
 Return ONLY valid JSON, no markdown, no explanation.
@@ -37,7 +39,7 @@ async function compressImage(dataUrl: string): Promise<string> {
           return
         }
         ctx.drawImage(img, 0, 0, width, height)
-        resolve(canvas.toDataURL('image/jpeg', 0.85))
+        resolve(canvas.toDataURL('image/jpeg', 0.75))
       } catch (err) {
         reject(err)
       }
@@ -63,74 +65,91 @@ export async function recognizeInvoice(
 
   const compressed = await compressImage(imageBase64)
 
-  console.log('[TaxFlow] OCR request starting, image size:', Math.round(imageBase64.length / 1024), 'KB')
+  console.log('[TaxFlow] OCR request starting, compressed size:', Math.round(compressed.length / 1024), 'KB')
 
-  const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 60000)
+  let lastError: Error | null = null
 
-  try {
-    const response = await fetch('/api/ocr', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        messages: [
-          {
-            role: 'user',
-            content: [
-              { type: 'text', text: PROMPT },
-              { type: 'image_url', image_url: { url: compressed } },
-            ],
-          },
-        ],
-      }),
-      signal: controller.signal,
-    })
-
-    clearTimeout(timeoutId)
-
-    if (!response.ok) {
-      const errText = await response.text().catch(() => 'unknown')
-      console.error(`[TaxFlow] API2D error ${response.status}:`, errText)
-      throw new Error('API_ERROR')
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    if (attempt > 0) {
+      console.log(`[TaxFlow] OCR retry attempt ${attempt}/${MAX_RETRIES}`)
+      await new Promise(r => setTimeout(r, 1000 * attempt))
     }
 
-    const data = await response.json()
-    const content = data.choices?.[0]?.message?.content
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), OCR_TIMEOUT)
 
-    if (!content) {
-      console.error('[TaxFlow] API2D empty response:', JSON.stringify(data).slice(0, 500))
-      throw new Error('EMPTY_RESPONSE')
-    }
-
-    // Parse JSON from response (handle markdown code blocks)
-    const jsonStr = content.replace(/```json\n?|\n?```/g, '').trim()
-    let parsed: unknown
     try {
-      parsed = JSON.parse(jsonStr)
-    } catch (parseErr) {
-      console.error('[TaxFlow] JSON parse failed. Raw content:', content.slice(0, 500))
-      throw new Error('RECOGNITION_FAILED')
-    }
-    const result = validateOcrResult(parsed)
+      const response = await fetch('/api/ocr', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: [
+            {
+              role: 'user',
+              content: [
+                { type: 'text', text: PROMPT },
+                { type: 'image_url', image_url: { url: compressed } },
+              ],
+            },
+          ],
+        }),
+        signal: controller.signal,
+      })
 
-    if (!result) {
-      console.error('[TaxFlow] Schema validation failed. Parsed:', JSON.stringify(parsed).slice(0, 500))
-      throw new Error('INVALID_RESPONSE')
-    }
+      clearTimeout(timeoutId)
 
-    return result
-  } catch (err) {
-    clearTimeout(timeoutId)
-    if (err instanceof Error) {
-      if (err.name === 'AbortError') throw new Error('TIMEOUT')
-      if (err.message === 'IMAGE_TOO_LARGE') throw err
-      if (err.message === 'API_ERROR') throw err
-      if (err.message === 'EMPTY_RESPONSE') throw err
-      if (err.message === 'INVALID_RESPONSE') throw err
-      if (err.message === 'RECOGNITION_FAILED') throw err
+      if (!response.ok) {
+        const errText = await response.text().catch(() => 'unknown')
+        console.error(`[TaxFlow] API2D error ${response.status}:`, errText)
+        throw new Error('API_ERROR')
+      }
+
+      const data = await response.json()
+      const content = data.choices?.[0]?.message?.content
+
+      if (!content) {
+        console.error('[TaxFlow] API2D empty response:', JSON.stringify(data).slice(0, 500))
+        throw new Error('EMPTY_RESPONSE')
+      }
+
+      const jsonStr = content.replace(/```json\n?|\n?```/g, '').trim()
+      let parsed: unknown
+      try {
+        parsed = JSON.parse(jsonStr)
+      } catch (parseErr) {
+        console.error('[TaxFlow] JSON parse failed. Raw content:', content.slice(0, 500))
+        throw new Error('RECOGNITION_FAILED')
+      }
+      const result = validateOcrResult(parsed)
+
+      if (!result) {
+        console.error('[TaxFlow] Schema validation failed. Parsed:', JSON.stringify(parsed).slice(0, 500))
+        throw new Error('INVALID_RESPONSE')
+      }
+
+      return result
+    } catch (err) {
+      clearTimeout(timeoutId)
+      lastError = err instanceof Error ? err : new Error('UNKNOWN')
+
+      if (err instanceof Error && err.name === 'AbortError') {
+        lastError = new Error('TIMEOUT')
+      }
+
+      if (err instanceof Error && err.message === 'IMAGE_TOO_LARGE') {
+        throw err
+      }
+
+      if (attempt === MAX_RETRIES) {
+        break
+      }
     }
-    throw new Error('RECOGNITION_FAILED')
   }
+
+  if (lastError?.message === 'TIMEOUT') {
+    throw new Error('TIMEOUT')
+  }
+  throw new Error('RECOGNITION_FAILED')
 }

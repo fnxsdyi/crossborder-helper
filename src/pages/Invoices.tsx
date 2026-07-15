@@ -3,10 +3,12 @@
 import { useEffect, useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { getInvoices, deleteInvoice, type SyncInvoice } from '@/lib/sync'
-import { Plus, FileText, Edit, Trash2, Download } from 'lucide-react'
+import { Plus, FileText, Edit, Trash2, Download, Archive, Loader2, Lock } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { InvoiceEditor } from '@/components/InvoiceEditor'
 import { generateInvoicePDF } from '@/lib/generateInvoicePDF'
+import { batchExportInvoicesPDF } from '@/lib/batchExportPDF'
+import { checkBatchExportUsage, recordBatchExportUsage } from '@/lib/batchExportUsage'
 import { useI18n } from '@/hooks/useI18n'
 
 export function Invoices() {
@@ -16,19 +18,21 @@ export function Invoices() {
   const [showEditor, setShowEditor] = useState(false)
   const [editingInvoice, setEditingInvoice] = useState<SyncInvoice | null>(null)
   const [loading, setLoading] = useState(true)
+  const [batchExporting, setBatchExporting] = useState(false)
+  const [batchProgress, setBatchProgress] = useState({ current: 0, total: 0 })
+  const [batchUsage, setBatchUsage] = useState<{ allowed: boolean; used: number; limit: number; hasSubscription: boolean } | null>(null)
 
   useEffect(() => {
     if (user) {
-      loadInvoices()
+      loadInvoicesFromSupabase()
     } else {
-      // Guest: load from localStorage
-      const guestInvoices = JSON.parse(localStorage.getItem('guest_invoices') || '[]')
-      setInvoices(guestInvoices)
-      setLoading(false)
+      // Guest mode: load from localStorage
+      loadGuestInvoices()
     }
+    checkBatchExportUsage(user?.id).then(setBatchUsage)
   }, [user])
 
-  async function loadInvoices() {
+  async function loadInvoicesFromSupabase() {
     if (!user) return
     try {
       setLoading(true)
@@ -36,6 +40,18 @@ export function Invoices() {
       setInvoices(data)
     } catch (err) {
       console.error('Failed to load invoices:', err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  function loadGuestInvoices() {
+    try {
+      setLoading(true)
+      const guestInvoices = JSON.parse(localStorage.getItem('guest_invoices') || '[]')
+      setInvoices(guestInvoices)
+    } catch (err) {
+      console.error('Failed to load guest invoices:', err)
     } finally {
       setLoading(false)
     }
@@ -52,16 +68,20 @@ export function Invoices() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm(t('common.confirm'))) return
-    if (user) {
-      await deleteInvoice(user.id, id)
-      loadInvoices()
-    } else {
-      // Guest: delete from localStorage
-      const guestInvoices = JSON.parse(localStorage.getItem('guest_invoices') || '[]')
-      const filtered = guestInvoices.filter((inv: SyncInvoice) => inv.id !== id)
-      localStorage.setItem('guest_invoices', JSON.stringify(filtered))
-      setInvoices(filtered)
+    if (confirm(t('common.confirm'))) {
+      if (user) {
+        await deleteInvoice(user.id, id)
+      } else {
+        // Guest mode: remove from localStorage
+        const guestInvoices = JSON.parse(localStorage.getItem('guest_invoices') || '[]')
+        const filtered = guestInvoices.filter((inv: any) => inv.id !== id)
+        localStorage.setItem('guest_invoices', JSON.stringify(filtered))
+      }
+      if (user) {
+        loadInvoicesFromSupabase()
+      } else {
+        loadGuestInvoices()
+      }
     }
   }
 
@@ -69,11 +89,38 @@ export function Invoices() {
     setShowEditor(false)
     setEditingInvoice(null)
     if (user) {
-      loadInvoices()
+      loadInvoicesFromSupabase()
     } else {
-      // Guest: reload from localStorage
-      const guestInvoices = JSON.parse(localStorage.getItem('guest_invoices') || '[]')
-      setInvoices(guestInvoices)
+      loadGuestInvoices()
+    }
+  }
+
+  async function handleBatchExport() {
+    if (invoices.length === 0) return
+
+    const usage = await checkBatchExportUsage(user?.id)
+    if (!usage.allowed) {
+      setBatchUsage(usage)
+      return
+    }
+
+    setBatchExporting(true)
+    setBatchProgress({ current: 0, total: invoices.length })
+
+    try {
+      await batchExportInvoicesPDF(
+        invoices,
+        user?.id,
+        (current, total) => setBatchProgress({ current, total })
+      )
+      await recordBatchExportUsage(user?.id)
+      const newUsage = await checkBatchExportUsage(user?.id)
+      setBatchUsage(newUsage)
+    } catch (err) {
+      console.error('Batch export failed:', err)
+    } finally {
+      setBatchExporting(false)
+      setBatchProgress({ current: 0, total: 0 })
     }
   }
 
@@ -97,13 +144,46 @@ export function Invoices() {
           <h1 className="text-2xl font-bold text-slate-900">{t('invoices.title')}</h1>
           <p className="text-slate-500 mt-1">{t('invoices.subtitle')}</p>
         </div>
-        <button
-          onClick={handleCreate}
-          className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
-        >
-          <Plus size={18} />
-          {t('invoices.newInvoice')}
-        </button>
+        <div className="flex items-center gap-2">
+          {invoices.length > 0 && (
+            <div className="flex flex-col items-end">
+              <button
+                onClick={handleBatchExport}
+                disabled={batchExporting || (batchUsage ? !batchUsage.allowed : false)}
+                className="flex items-center gap-2 px-4 py-2.5 border border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {batchExporting ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" />
+                    {batchProgress.current}/{batchProgress.total}
+                  </>
+                ) : batchUsage && !batchUsage.allowed ? (
+                  <>
+                    <Lock size={18} />
+                    {t('invoices.exportAll')}
+                  </>
+                ) : (
+                  <>
+                    <Archive size={18} />
+                    {t('invoices.exportAll')}
+                  </>
+                )}
+              </button>
+              {batchUsage && !batchUsage.hasSubscription && (
+                <span className="text-xs text-slate-400 mt-1">
+                  {batchUsage.used}/{batchUsage.limit} {t('invoices.freeUsed')}
+                </span>
+              )}
+            </div>
+          )}
+          <button
+            onClick={handleCreate}
+            className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+          >
+            <Plus size={18} />
+            {t('invoices.newInvoice')}
+          </button>
+        </div>
       </div>
 
       {loading ? (

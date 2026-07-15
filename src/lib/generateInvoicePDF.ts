@@ -1,6 +1,17 @@
-import { jsPDF, GState } from 'jspdf'
 import type { SyncInvoice } from './sync'
 import { getSettings, getClients } from './sync'
+
+let jsPDFClass: any = null
+let GStateClass: any = null
+
+async function loadPdfLibs() {
+  if (!jsPDFClass) {
+    const { jsPDF, GState } = await import('jspdf')
+    jsPDFClass = jsPDF
+    GStateClass = GState
+  }
+  return { jsPDF: jsPDFClass, GState: GStateClass }
+}
 
 type TemplateConfig = {
   title: string
@@ -47,6 +58,8 @@ const TEMPLATES: Record<string, TemplateConfig> = {
 }
 
 export async function generateInvoicePDF(invoice: SyncInvoice, userId?: string): Promise<void> {
+  const { jsPDF, GState } = await loadPdfLibs()
+
   let settings = null
   let client = null
 
