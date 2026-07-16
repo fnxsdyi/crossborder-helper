@@ -95,7 +95,7 @@ export function TermsPage() {
             <h2 className="text-xl font-semibold text-slate-900 mb-3">7. Data and Privacy</h2>
             <p>
               Your use of the Service is also governed by our{' '}
-              <a href="/privacy" className="text-blue-600 hover:underline">Privacy Policy</a>, which
+              <a href="/privacy" className="text-blue-600 hover:underline" target="_blank">Privacy Policy</a>, which
               describes how we collect, use, and protect your data. By using the Service, you consent to
               the data practices described therein.
             </p>
