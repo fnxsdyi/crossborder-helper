@@ -81,11 +81,8 @@ export function TaxWizard() {
 
     setGenerating(true)
     try {
-      console.log('[TaxWizard] Loading template...')
       const templateBytes = await loadW8BENTemplate()
-      console.log('[TaxWizard] Template loaded, size:', templateBytes.byteLength)
 
-      console.log('[TaxWizard] Generating PDF...')
       const pdfBytes = await generateW8BENPDF({
         fullName: formData.fullName,
         country: formData.country,
@@ -101,8 +98,6 @@ export function TaxWizard() {
         signature: formData.signature,
       }, templateBytes)
 
-      console.log('[TaxWizard] PDF generated, size:', pdfBytes.length)
-
       const blob = new Blob([new Uint8Array(pdfBytes)], { type: 'application/pdf' })
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
@@ -113,11 +108,9 @@ export function TaxWizard() {
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
 
-      console.log('[TaxWizard] Recording usage...')
       await recordW8BENUsage(user?.id)
       const newUsage = await checkW8BENUsage(user?.id)
       setUsage(newUsage)
-      console.log('[TaxWizard] Done!')
     } catch (error) {
       console.error('[TaxWizard] Failed to generate PDF:', error)
       const errMsg = error instanceof Error ? error.message : String(error)

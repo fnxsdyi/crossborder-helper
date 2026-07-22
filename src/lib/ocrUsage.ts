@@ -17,14 +17,10 @@ export async function checkOcrUsage(userId: string): Promise<{
     }
 
     // Check free usage
-    const { count, error } = await supabase
+    const { count } = await supabase
       .from('ocr_usage')
       .select('*', { count: 'exact', head: true })
       .eq('user_id', userId)
-
-    if (error) {
-      console.warn('[TaxFlow] ocr_usage query failed:', error.message)
-    }
 
     const used = count || 0
     return {
@@ -33,8 +29,7 @@ export async function checkOcrUsage(userId: string): Promise<{
       limit: OCR_FREE_LIMIT,
       hasSubscription: false,
     }
-  } catch (err) {
-    console.error('[TaxFlow] checkOcrUsage failed:', err)
+  } catch {
     return { allowed: true, used: 0, limit: OCR_FREE_LIMIT, hasSubscription: false }
   }
 }
@@ -45,8 +40,8 @@ export async function recordOcrUsage(userId: string, imageHash: string): Promise
       user_id: userId,
       image_hash: imageHash,
     })
-  } catch (err) {
-    console.warn('[TaxFlow] Failed to record OCR usage:', err)
+  } catch {
+    // Usage recording is best-effort
   }
 }
 

@@ -144,8 +144,7 @@ export function AuthPage({ onAuth, showWelcome: initialShowWelcome }: AuthPagePr
             <p className="text-sm text-center text-slate-500 mb-3">{t('auth.becomeMember')}</p>
             <PayPalSubscriptionButton
               planId={PRO_MONTHLY_PLAN_ID}
-              onSuccess={(id) => {
-                console.log('Subscription:', id)
+              onSuccess={() => {
                 onAuth()
               }}
               onError={(err) => console.error('Payment error:', err)}

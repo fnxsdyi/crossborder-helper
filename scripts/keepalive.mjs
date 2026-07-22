@@ -2,8 +2,8 @@
 /**
  * Supabase Keep-Alive Script
  * 
- * Queries the Supabase database to prevent auto-pause on free tier.
- * Run every 5 days via cron/scheduler.
+ * INSERTs a heartbeat row to prevent auto-pause on free tier.
+ * Run every 2-3 days via cron/scheduler.
  * 
  * Usage: node scripts/keepalive.mjs
  * 
@@ -18,7 +18,6 @@ import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-// Load env from .env.supabase if exists
 function loadEnv() {
   try {
     const envPath = resolve(__dirname, '..', '.env.supabase')
@@ -50,43 +49,103 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
   process.exit(1)
 }
 
-async function keepAlive() {
+async function ensureTable() {
+  // Create keepalive_logs table if not exists
+  const sql = `
+    CREATE TABLE IF NOT EXISTS keepalive_logs (
+      id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+      created_at timestamptz DEFAULT now()
+    );
+  `
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/exec_sql`, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ query: sql }),
+  })
+
+  // If rpc not available, table might already exist - continue anyway
+  if (!res.ok) {
+    console.log('  ℹ exec_sql not available, assuming table exists')
+  }
+}
+
+async function insertHeartbeat() {
   const timestamp = new Date().toISOString()
-  console.log(`[${timestamp}] Supabase keep-alive ping...`)
+  console.log(`[${timestamp}] Supabase keep-alive: inserting heartbeat...`)
 
-  // Query subscriptions table (lightweight count)
-  const tables = ['subscriptions', 'sf_clients', 'sf_invoices']
-  let success = false
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/keepalive_logs`, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=minimal',
+    },
+    body: JSON.stringify({}),
+  })
 
-  for (const table of tables) {
-    try {
-      const url = `${SUPABASE_URL}/rest/v1/${table}?select=id&limit=1`
-      const res = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-          'Range': '0-0',
-        },
-      })
-
-      if (res.ok) {
-        console.log(`  ✓ ${table} query succeeded (${res.status})`)
-        success = true
-        break
-      } else {
-        console.warn(`  ✗ ${table} returned ${res.status}: ${res.statusText}`)
-      }
-    } catch (err) {
-      console.warn(`  ✗ ${table} failed: ${err.message}`)
-    }
+  if (res.ok || res.status === 201) {
+    console.log(`  ✓ Heartbeat inserted (${res.status})`)
+    return true
   }
 
-  if (success) {
-    console.log(`[${timestamp}] Keep-alive successful. DB is active.`)
-  } else {
-    console.error(`[${timestamp}] Keep-alive FAILED. All table queries failed.`)
+  // If table doesn't exist, try to create it
+  if (res.status === 404) {
+    console.log('  ℹ Table not found, attempting to create...')
+    await ensureTable()
+    // Retry insert
+    const retry = await fetch(`${SUPABASE_URL}/rest/v1/keepalive_logs`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify({}),
+    })
+    if (retry.ok || retry.status === 201) {
+      console.log(`  ✓ Heartbeat inserted after table creation (${retry.status})`)
+      return true
+    }
+    console.error(`  ✗ Retry failed: ${retry.status}`)
+    return false
+  }
+
+  console.error(`  ✗ Insert failed: ${res.status}`)
+  return false
+}
+
+async function cleanupOldLogs() {
+  // Delete records older than 30 days
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/keepalive_logs?created_at=lt.${thirtyDaysAgo}`, {
+    method: 'DELETE',
+    headers: {
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+    },
+  })
+  if (res.ok) {
+    console.log('  ✓ Old logs cleaned up')
+  }
+}
+
+async function keepAlive() {
+  try {
+    const success = await insertHeartbeat()
+    if (success) {
+      await cleanupOldLogs()
+      console.log(`[${new Date().toISOString()}] Keep-alive successful.`)
+    } else {
+      process.exit(1)
+    }
+  } catch (err) {
+    console.error(`[${new Date().toISOString()}] Keep-alive FAILED: ${err.message}`)
     process.exit(1)
   }
 }

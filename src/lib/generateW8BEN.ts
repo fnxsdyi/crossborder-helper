@@ -63,17 +63,11 @@ function safeSetTextField(form: any, fieldName: string, value: string) {
   try {
     const fields = form.getFields()
     const field = fields.find((f: any) => f.getName() === fieldName)
-    if (!field) {
-      console.warn(`[W8BEN] Field not found: ${fieldName}`)
-      return
-    }
-    if (field.constructor.name !== 'PDFTextField') {
-      console.warn(`[W8BEN] Field ${fieldName} is not a text field, skipping`)
-      return
-    }
+    if (!field) return
+    if (field.constructor.name !== 'PDFTextField') return
     field.setText(value)
-  } catch (err) {
-    console.warn(`[W8BEN] Failed to set field ${fieldName}:`, err)
+  } catch {
+    // Field may not exist in this template version
   }
 }
 
@@ -81,22 +75,15 @@ function safeCheckField(form: any, fieldName: string) {
   try {
     const fields = form.getFields()
     const field = fields.find((f: any) => f.getName() === fieldName)
-    if (!field) {
-      console.warn(`[W8BEN] Checkbox not found: ${fieldName}`)
-      return
-    }
-    if (field.constructor.name !== 'PDFCheckBox') {
-      console.warn(`[W8BEN] Field ${fieldName} is not a checkbox, skipping`)
-      return
-    }
+    if (!field) return
+    if (field.constructor.name !== 'PDFCheckBox') return
     field.check()
-  } catch (err) {
-    console.warn(`[W8BEN] Failed to check field ${fieldName}:`, err)
+  } catch {
+    // Field may not exist in this template version
   }
 }
 
 export async function generateW8BENPDF(data: W8BENData, pdfBytes: ArrayBuffer): Promise<Uint8Array> {
-  console.log('[W8BEN] Starting PDF generation...')
   const PDFDocument = await loadPdfLib()
   const pdfDoc = await PDFDocument.load(pdfBytes)
   const form = pdfDoc.getForm()
@@ -159,9 +146,8 @@ export async function generateW8BENPDF(data: W8BENData, pdfBytes: ArrayBuffer): 
   // Try to flatten form, but don't fail if it doesn't work
   try {
     form.flatten()
-    console.log('[W8BEN] Form flattened')
-  } catch (flattenErr) {
-    console.warn('[W8BEN] Could not flatten form, continuing without flattening:', flattenErr)
+  } catch {
+    // Flattening may not work on all template versions
   }
 
   return pdfDoc.save()

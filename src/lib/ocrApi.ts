@@ -1,3 +1,4 @@
+import { supabase } from './supabase'
 import { validateOcrResult, type OcrResult } from './ocrSchema'
 
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024 // 10MB
@@ -65,13 +66,10 @@ export async function recognizeInvoice(
 
   const compressed = await compressImage(imageBase64)
 
-  console.log('[TaxFlow] OCR request starting, compressed size:', Math.round(compressed.length / 1024), 'KB')
-
   let lastError: Error | null = null
 
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
     if (attempt > 0) {
-      console.log(`[TaxFlow] OCR retry attempt ${attempt}/${MAX_RETRIES}`)
       await new Promise(r => setTimeout(r, 1000 * attempt))
     }
 
@@ -79,11 +77,15 @@ export async function recognizeInvoice(
     const timeoutId = setTimeout(() => controller.abort(), OCR_TIMEOUT)
 
     try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+      if (session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.access_token}`
+      }
+
       const response = await fetch('/api/ocr', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         body: JSON.stringify({
           messages: [
             {
