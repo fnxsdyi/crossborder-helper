@@ -1,4 +1,9 @@
 {
+  "functions": {
+    "api/ocr.js": {
+      "maxDuration": 30
+    }
+  },
   "rewrites": [
     { "source": "/terms", "destination": "/terms.html" },
     { "source": "/privacy", "destination": "/privacy.html" },
