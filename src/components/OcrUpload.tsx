@@ -20,10 +20,13 @@ export function OcrUpload({ onResult }: OcrUploadProps) {
   const [uploading, setUploading] = useState(false)
   const [checkedUsage, setCheckedUsage] = useState(false)
 
+  // Always render stable outer structure — React 19 needs consistent DOM tree
   if (authLoading) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+      <div className="max-w-md mx-auto">
+        <div className="flex items-center justify-center py-20">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+        </div>
       </div>
     )
   }
@@ -151,8 +154,12 @@ export function OcrUpload({ onResult }: OcrUploadProps) {
     e.target.value = ''
   }
 
-  if (checkedUsage && !hasSubscription && usageCount >= 3) {
-    return <OcrUsageLimit used={usageCount} limit={OCR_FREE_LIMIT} />
+  if (checkedUsage && !hasSubscription && usageCount >= OCR_FREE_LIMIT) {
+    return (
+      <div className="max-w-md mx-auto">
+        <OcrUsageLimit used={usageCount} limit={OCR_FREE_LIMIT} />
+      </div>
+    )
   }
 
   return (

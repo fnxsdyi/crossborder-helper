@@ -79,7 +79,7 @@ export function Layout({ onSignOut, isGuest }: LayoutProps) {
           {isGuest && <GuestBanner />}
           <ErrorBoundary fallback={<div className="p-4 text-red-500">Something went wrong. Please refresh.</div>}>
             <Suspense fallback={<PageLoader />}>
-              {renderPage()}
+              <div key={currentView}>{renderPage()}</div>
             </Suspense>
           </ErrorBoundary>
           <Disclaimer />
