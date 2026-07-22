@@ -38,7 +38,7 @@ export default async function handler(req, res) {
         let data = ''
         req.on('data', (chunk) => {
           data += chunk
-          if (data.length > 5 * 1024 * 1024) {
+          if (data.length > 20 * 1024 * 1024) {
             req.destroy()
             reject(new Error('Payload too large'))
           }

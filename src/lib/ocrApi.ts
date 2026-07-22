@@ -1,7 +1,6 @@
 import { validateOcrResult, type OcrResult } from './ocrSchema'
 
-const MAX_IMAGE_SIZE = 5 * 1024 * 1024 // 5MB
-const MAX_DIMENSION = 800
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024 // 10MB
 const OCR_TIMEOUT = 30000 // 30 seconds
 const MAX_RETRIES = 2
 
@@ -17,38 +16,6 @@ Rules:
 - tax_id: 15-18 digit number on Chinese invoices
 - confidence: your certainty 0-1 (1 = very clear, 0 = unreadable)`
 
-async function compressImage(dataUrl: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    img.onload = () => {
-      try {
-        const canvas = document.createElement('canvas')
-        let { width, height } = img
-
-        if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
-          const ratio = Math.min(MAX_DIMENSION / width, MAX_DIMENSION / height)
-          width = Math.round(width * ratio)
-          height = Math.round(height * ratio)
-        }
-
-        canvas.width = width
-        canvas.height = height
-        const ctx = canvas.getContext('2d')
-        if (!ctx) {
-          reject(new Error('Failed to get canvas context'))
-          return
-        }
-        ctx.drawImage(img, 0, 0, width, height)
-        resolve(canvas.toDataURL('image/jpeg', 0.5))
-      } catch (err) {
-        reject(err)
-      }
-    }
-    img.onerror = () => reject(new Error('Failed to load image'))
-    img.src = dataUrl
-  })
-}
-
 function isWithinSizeLimit(dataUrl: string): boolean {
   const base64 = dataUrl.split(',')[1] || ''
   const sizeInBytes = Math.round((base64.length * 3) / 4)
@@ -62,8 +29,6 @@ export async function recognizeInvoice(
   if (!isWithinSizeLimit(imageBase64)) {
     throw new Error('IMAGE_TOO_LARGE')
   }
-
-  const compressed = await compressImage(imageBase64)
 
   let lastError: Error | null = null
 
@@ -85,7 +50,7 @@ export async function recognizeInvoice(
               role: 'user',
               content: [
                 { type: 'text', text: PROMPT },
-                { type: 'image_url', image_url: { url: compressed } },
+                { type: 'image_url', image_url: { url: imageBase64 } },
               ],
             },
           ],
