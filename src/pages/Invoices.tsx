@@ -69,18 +69,23 @@ export function Invoices() {
 
   async function handleDelete(id: string) {
     if (confirm(t('common.confirm'))) {
-      if (user) {
-        await deleteInvoice(user.id, id)
-      } else {
-        // Guest mode: remove from localStorage
-        const guestInvoices = JSON.parse(localStorage.getItem('guest_invoices') || '[]')
-        const filtered = guestInvoices.filter((inv: any) => inv.id !== id)
-        localStorage.setItem('guest_invoices', JSON.stringify(filtered))
-      }
-      if (user) {
-        loadInvoicesFromSupabase()
-      } else {
-        loadGuestInvoices()
+      try {
+        if (user) {
+          await deleteInvoice(user.id, id)
+        } else {
+          // Guest mode: remove from localStorage
+          const guestInvoices = JSON.parse(localStorage.getItem('guest_invoices') || '[]')
+          const filtered = guestInvoices.filter((inv: any) => inv.id !== id)
+          localStorage.setItem('guest_invoices', JSON.stringify(filtered))
+        }
+        if (user) {
+          loadInvoicesFromSupabase()
+        } else {
+          loadGuestInvoices()
+        }
+      } catch (err) {
+        console.error('Failed to delete invoice:', err)
+        alert(t('common.error'))
       }
     }
   }

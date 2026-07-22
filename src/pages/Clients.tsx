@@ -65,23 +65,33 @@ export function Clients() {
 
   async function handleSave() {
     if (!user) return
-    await upsertClient(user.id, {
-      id: editingClient?.id,
-      name,
-      email,
-      company: company || null,
-      address: address || null,
-      country,
-      vatNumber: vatNumber || null,
-    })
-    setShowForm(false)
-    loadClients()
+    try {
+      await upsertClient(user.id, {
+        id: editingClient?.id,
+        name,
+        email,
+        company: company || null,
+        address: address || null,
+        country,
+        vatNumber: vatNumber || null,
+      })
+      setShowForm(false)
+      loadClients()
+    } catch (err) {
+      console.error('Failed to save client:', err)
+      alert(t('common.error'))
+    }
   }
 
   async function handleDelete(id: string) {
     if (confirm(t('common.confirm')) && user) {
-      await deleteClient(user.id, id)
-      loadClients()
+      try {
+        await deleteClient(user.id, id)
+        loadClients()
+      } catch (err) {
+        console.error('Failed to delete client:', err)
+        alert(t('common.error'))
+      }
     }
   }
 
