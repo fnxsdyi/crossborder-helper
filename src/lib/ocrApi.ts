@@ -1,9 +1,8 @@
-import { supabase } from './supabase'
 import { validateOcrResult, type OcrResult } from './ocrSchema'
 
-const MAX_IMAGE_SIZE = 5 * 1024 * 1024 // 5MB
-const MAX_DIMENSION = 800
-const OCR_TIMEOUT = 30000 // 30 seconds
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024 // 10MB
+const MAX_DIMENSION = 1200
+const OCR_TIMEOUT = 60000 // 60 seconds
 const MAX_RETRIES = 2
 
 const PROMPT = `Extract invoice fields from this image.
@@ -40,7 +39,7 @@ async function compressImage(dataUrl: string): Promise<string> {
           return
         }
         ctx.drawImage(img, 0, 0, width, height)
-        resolve(canvas.toDataURL('image/jpeg', 0.5))
+        resolve(canvas.toDataURL('image/jpeg', 0.7))
       } catch (err) {
         reject(err)
       }
@@ -77,15 +76,9 @@ export async function recognizeInvoice(
     const timeoutId = setTimeout(() => controller.abort(), OCR_TIMEOUT)
 
     try {
-      const { data: { session } } = await supabase.auth.getSession()
-      const headers: Record<string, string> = { 'Content-Type': 'application/json' }
-      if (session?.access_token) {
-        headers['Authorization'] = `Bearer ${session.access_token}`
-      }
-
       const response = await fetch('/api/ocr', {
         method: 'POST',
-        headers,
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           messages: [
             {
