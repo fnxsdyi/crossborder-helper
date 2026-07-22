@@ -148,7 +148,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         messages: body.messages,
-        max_tokens: 500,
+        max_tokens: 300,
         temperature: 0,
       }),
     })
