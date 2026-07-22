@@ -1,8 +1,8 @@
 import { validateOcrResult, type OcrResult } from './ocrSchema'
 
-const MAX_IMAGE_SIZE = 10 * 1024 * 1024 // 10MB
-const MAX_DIMENSION = 1200
-const OCR_TIMEOUT = 60000 // 60 seconds
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024 // 5MB
+const MAX_DIMENSION = 800
+const OCR_TIMEOUT = 30000 // 30 seconds
 const MAX_RETRIES = 2
 
 const PROMPT = `Extract invoice fields from this image.
@@ -39,7 +39,7 @@ async function compressImage(dataUrl: string): Promise<string> {
           return
         }
         ctx.drawImage(img, 0, 0, width, height)
-        resolve(canvas.toDataURL('image/jpeg', 0.7))
+        resolve(canvas.toDataURL('image/jpeg', 0.5))
       } catch (err) {
         reject(err)
       }

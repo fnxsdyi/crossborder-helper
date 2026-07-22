@@ -38,7 +38,7 @@ export default async function handler(req, res) {
         let data = ''
         req.on('data', (chunk) => {
           data += chunk
-          if (data.length > 10 * 1024 * 1024) {
+          if (data.length > 5 * 1024 * 1024) {
             req.destroy()
             reject(new Error('Payload too large'))
           }
@@ -74,7 +74,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         messages: body.messages,
-        max_tokens: 500,
+        max_tokens: 300,
         temperature: 0,
       }),
     })
