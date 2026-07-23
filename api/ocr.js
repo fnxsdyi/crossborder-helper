@@ -1,8 +1,6 @@
 const API2D_KEY = process.env.API2D_KEY
 const CORS_ORIGIN = 'https://tax.flowingpulse.com'
 
-export const config = { api: { bodyParser: false } }
-
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', CORS_ORIGIN)
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
@@ -13,16 +11,9 @@ export default async function handler(req, res) {
   if (!API2D_KEY) return res.status(500).json({ error: 'Service temporarily unavailable' })
 
   try {
-    const raw = await new Promise((resolve, reject) => {
-      const chunks = []
-      req.on('data', (c) => chunks.push(c))
-      req.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')))
-      req.on('error', reject)
-    })
+    const body = req.body || {}
 
-    const body = JSON.parse(raw.trim())
-
-    if (!body || !body.messages || !Array.isArray(body.messages) || body.messages.length === 0) {
+    if (!body.messages || !Array.isArray(body.messages) || body.messages.length === 0) {
       return res.status(400).json({ error: 'messages array required' })
     }
 
@@ -35,7 +26,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         messages: body.messages,
-        max_tokens: 300,
+        max_tokens: 500,
         temperature: 0,
       }),
     })

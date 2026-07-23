@@ -3,8 +3,18 @@
     { "source": "/terms", "destination": "/terms.html" },
     { "source": "/privacy", "destination": "/privacy.html" },
     { "source": "/disclaimer", "destination": "/disclaimer.html" },
-    { "source": "/((?!api|assets).*)", "destination": "/index.html" }
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/assets/(.*)", "destination": "/assets/$1" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ],
+  "functions": {
+    "api/ocr.js": {
+      "maxDuration": 30
+    },
+    "api/paypal/webhook.ts": {
+      "maxDuration": 10
+    }
+  },
   "headers": [
     {
       "source": "/(.*)",
