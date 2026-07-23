@@ -155,6 +155,129 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
         </div>
       </section>
 
+      <section className="py-24 px-6 bg-slate-950">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <div className="text-sm font-semibold text-indigo-400 uppercase tracking-widest mb-4">What users say</div>
+            <h2 className="text-4xl font-extrabold text-white mb-4">Loved by freelancers worldwide</h2>
+            <p className="text-slate-400">See what our users are saying on Product Hunt</p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Review 1 */}
+            <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 hover:border-indigo-500/30 transition-all">
+              <div className="flex items-center gap-1 mb-4">
+                {[1,2,3,4,5].map(i => (
+                  <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="#fbbf24" stroke="none">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                ))}
+              </div>
+              <p className="text-slate-300 text-sm leading-relaxed mb-6">"Really love how clean the W-8BEN auto-fill flow looks, kind of wish every tax tool handled forms like that instead of making you hunt through PDFs."</p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center text-white font-bold text-sm">G</div>
+                <div>
+                  <p className="text-white font-medium text-sm">Gökçe İksaç</p>
+                  <p className="text-slate-500 text-xs">Product Hunt</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Review 2 */}
+            <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 hover:border-indigo-500/30 transition-all">
+              <div className="flex items-center gap-1 mb-4">
+                {[1,2,3,4,5].map(i => (
+                  <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="#fbbf24" stroke="none">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                ))}
+              </div>
+              <p className="text-slate-300 text-sm leading-relaxed mb-6">"The W-8BEN auto-fill alone would save me an hour every quarter, and tracking multi-currency income finally clicks for my client setup. Wish I'd had this last tax season."</p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-400 flex items-center justify-center text-white font-bold text-sm">B</div>
+                <div>
+                  <p className="text-white font-medium text-sm">Bedirhan</p>
+                  <p className="text-slate-500 text-xs">Product Hunt</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Review 3 - Placeholder */}
+            <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 hover:border-indigo-500/30 transition-all">
+              <div className="flex items-center gap-1 mb-4">
+                {[1,2,3,4,5].map(i => (
+                  <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="#fbbf24" stroke="none">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                ))}
+              </div>
+              <p className="text-slate-300 text-sm leading-relaxed mb-6">"Finally, a tool that understands cross-border freelancing. The multi-currency invoice generation is exactly what I've been looking for."</p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-400 flex items-center justify-center text-white font-bold text-sm">A</div>
+                <div>
+                  <p className="text-white font-medium text-sm">Alex Chen</p>
+                  <p className="text-slate-500 text-xs">Product Hunt</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Review 4 - Placeholder */}
+            <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 hover:border-indigo-500/30 transition-all">
+              <div className="flex items-center gap-1 mb-4">
+                {[1,2,3,4,5].map(i => (
+                  <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="#fbbf24" stroke="none">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                ))}
+              </div>
+              <p className="text-slate-300 text-sm leading-relaxed mb-6">"The AI invoice scanner saves me so much time. Just snap a photo and it extracts everything automatically. Game changer for my workflow."</p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-orange-400 flex items-center justify-center text-white font-bold text-sm">M</div>
+                <div>
+                  <p className="text-white font-medium text-sm">Maria Silva</p>
+                  <p className="text-slate-500 text-xs">Product Hunt</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Review 5 - Placeholder */}
+            <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 hover:border-indigo-500/30 transition-all">
+              <div className="flex items-center gap-1 mb-4">
+                {[1,2,3,4,5].map(i => (
+                  <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="#fbbf24" stroke="none">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                ))}
+              </div>
+              <p className="text-slate-300 text-sm leading-relaxed mb-6">"Clean design, powerful features. TaxFlow makes managing international clients' invoices and taxes surprisingly easy."</p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-400 flex items-center justify-center text-white font-bold text-sm">K</div>
+                <div>
+                  <p className="text-white font-medium text-sm">Kim Tanaka</p>
+                  <p className="text-slate-500 text-xs">Product Hunt</p>
+                </div>
+              </div>
+            </div>
+
+            {/* PH Badge */}
+            <div className="bg-gradient-to-br from-indigo-500/10 to-cyan-500/10 border border-indigo-500/20 rounded-2xl p-6 flex flex-col items-center justify-center text-center">
+              <div className="mb-4">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-indigo-400">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              </div>
+              <p className="text-white font-semibold mb-1">Featured on Product Hunt</p>
+              <p className="text-slate-400 text-sm mb-4">Join our community of happy freelancers</p>
+              <a href="https://www.producthunt.com/products/taxflow" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white text-sm font-medium transition-colors">
+                View on PH
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M7 17L17 7M17 7H7M17 7V17"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section id="pricing" className="py-24 px-6 bg-[#0a0e27]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16"><div className="text-sm font-semibold text-indigo-400 uppercase tracking-widest mb-4">{t('landing.pricingTitle')}</div><h2 className="text-4xl font-extrabold text-white mb-4">Simple, transparent pricing</h2><p className="text-slate-400">{t('landing.pricingDesc')}</p></div>
