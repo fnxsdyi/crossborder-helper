@@ -1,6 +1,7 @@
 import { useState, useEffect, Suspense, lazy } from 'react'
 import { useAuthStore } from './stores/authStore'
 import { CookieConsent } from './components/CookieConsent'
+import { Analytics } from '@vercel/analytics/react'
 
 const Layout = lazy(() => import('./components/Layout').then(m => ({ default: m.Layout })))
 const LandingPage = lazy(() => import('./pages/LandingPage').then(m => ({ default: m.LandingPage })))
@@ -165,6 +166,7 @@ function App() {
     <Suspense fallback={<Loading />}>
       <Layout onSignOut={handleSignOut} isGuest={isGuest} />
       <CookieConsent />
+      <Analytics />
     </Suspense>
   )
 }
