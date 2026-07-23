@@ -38,56 +38,101 @@ export function OcrResult({ onRescan, onSaved }: OcrResultProps) {
   }
 
   async function handleSave() {
-    if (!editing || !user) return
+    if (!editing) return
     setSaving(true)
 
     try {
-      // Find or create client by vendor_name
-      let clientId: string | null = null
-      const clients = await getClients(user.id)
-      const existingClient = clients.find(c => c.name === editing.vendor_name)
-      if (existingClient) {
-        clientId = existingClient.id
-      } else {
-        const newClient = await upsertClient(user.id, {
-          name: editing.vendor_name || 'Unknown Vendor',
-          email: '',
-          company: editing.vendor_name || '',
-          country: '',
+      if (user) {
+        // Logged-in user: save to Supabase
+        // Find or create client by vendor_name
+        let clientId: string | null = null
+        const clients = await getClients(user.id)
+        const existingClient = clients.find(c => c.name === editing.vendor_name)
+        if (existingClient) {
+          clientId = existingClient.id
+        } else {
+          const newClient = await upsertClient(user.id, {
+            name: editing.vendor_name || 'Unknown Vendor',
+            email: '',
+            company: editing.vendor_name || '',
+            country: '',
+          })
+          clientId = newClient.id
+        }
+
+        // Create invoice
+        const settings = await getSettings(user.id)
+        const prefix = settings.invoicePrefix || 'INV'
+        const nextNum = settings.nextInvoiceNumber || 1
+
+        await upsertInvoice(user.id, {
+          invoiceNumber: editing.invoice_number || `${prefix}-${String(nextNum).padStart(4, '0')}`,
+          clientId,
+          issueDate: editing.date || new Date().toISOString().split('T')[0],
+          dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          status: 'draft',
+          currency: editing.currency || 'USD',
+          vatType: 'none',
+          template: 'us',
+          subtotal: editing.amount || 0,
+          taxRate: 0,
+          taxAmount: 0,
+          total: editing.amount || 0,
+          items: [{
+            description: editing.vendor_name || 'Invoice item',
+            quantity: 1,
+            unitPrice: editing.amount || 0,
+            amount: editing.amount || 0,
+          }],
+          ocrProcessed: true,
+          ocrConfidence: result?.confidence || null,
         })
-        clientId = newClient.id
+
+        // Update next invoice number
+        await upsertSettings(user.id, { nextInvoiceNumber: nextNum + 1 })
+      } else {
+        // Guest mode: save to localStorage
+        const guestInvoices = JSON.parse(localStorage.getItem('guest_invoices') || '[]')
+        const timestamp = Date.now().toString(36).toUpperCase()
+        const invoiceNumber = editing.invoice_number || `INV-${timestamp.slice(-4)}`
+
+        const newInvoice = {
+          id: `guest-${Date.now()}`,
+          userId: 'guest',
+          invoiceNumber,
+          clientId: null,
+          issueDate: editing.date || new Date().toISOString().split('T')[0],
+          dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          status: 'draft',
+          currency: editing.currency || 'USD',
+          localCurrency: null,
+          exchangeRate: null,
+          paymentDate: null,
+          paymentRate: null,
+          vatType: 'none',
+          vatNumber: null,
+          buyerVatNumber: null,
+          template: 'us',
+          subtotal: editing.amount || 0,
+          taxRate: 0,
+          taxAmount: 0,
+          total: editing.amount || 0,
+          notes: null,
+          items: [{
+            description: editing.vendor_name || 'Invoice item',
+            quantity: 1,
+            unitPrice: editing.amount || 0,
+            amount: editing.amount || 0,
+          }],
+          ocrProcessed: true,
+          ocrConfidence: result?.confidence || null,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        }
+
+        guestInvoices.push(newInvoice)
+        localStorage.setItem('guest_invoices', JSON.stringify(guestInvoices))
       }
-
-      // Create invoice
-      const settings = await getSettings(user.id)
-      const prefix = settings.invoicePrefix || 'INV'
-      const nextNum = settings.nextInvoiceNumber || 1
-
-      await upsertInvoice(user.id, {
-        invoiceNumber: editing.invoice_number || `${prefix}-${String(nextNum).padStart(4, '0')}`,
-        clientId,
-        issueDate: editing.date || new Date().toISOString().split('T')[0],
-        dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-        status: 'draft',
-        currency: editing.currency || 'USD',
-        vatType: 'none',
-        template: 'us',
-        subtotal: editing.amount || 0,
-        taxRate: 0,
-        taxAmount: 0,
-        total: editing.amount || 0,
-        items: [{
-          description: editing.vendor_name || 'Invoice item',
-          quantity: 1,
-          unitPrice: editing.amount || 0,
-          amount: editing.amount || 0,
-        }],
-        ocrProcessed: true,
-        ocrConfidence: result?.confidence || null,
-      })
-
-      // Update next invoice number
-      await upsertSettings(user.id, { nextInvoiceNumber: nextNum + 1 })
 
       onSaved()
     } catch (err) {
