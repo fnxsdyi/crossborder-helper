@@ -256,6 +256,23 @@ type TranslationKeys = {
   'auth.createAccount': string
   'auth.becomeMember': string
 
+  // Testimonials
+  'testimonials.title': string
+  'testimonials.subtitle': string
+  'testimonials.review1': string
+  'testimonials.review1Author': string
+  'testimonials.review2': string
+  'testimonials.review2Author': string
+  'testimonials.review3': string
+  'testimonials.review3Author': string
+  'testimonials.review4': string
+  'testimonials.review4Author': string
+  'testimonials.review5': string
+  'testimonials.review5Author': string
+  'testimonials.phBadge': string
+  'testimonials.phDesc': string
+  'testimonials.viewOnPH': string
+
   // Landing
   'landing.openApp': string
   'landing.badge': string
@@ -662,6 +679,23 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.createAccount': 'Create your account to start using TaxFlow.',
     'auth.becomeMember': 'Become a Member — from $9/month',
 
+    // Testimonials
+    'testimonials.title': 'What users say',
+    'testimonials.subtitle': 'See what our users are saying on Product Hunt',
+    'testimonials.review1': '"Really love how clean the W-8BEN auto-fill flow looks, kind of wish every tax tool handled forms like that instead of making you hunt through PDFs."',
+    'testimonials.review1Author': 'Gökçe İksaç',
+    'testimonials.review2': '"The W-8BEN auto-fill alone would save me an hour every quarter, and tracking multi-currency income finally clicks for my client setup. Wish I\'d had this last tax season."',
+    'testimonials.review2Author': 'Bedirhan',
+    'testimonials.review3': '"Finally, a tool that understands cross-border freelancing. The multi-currency invoice generation is exactly what I\'ve been looking for."',
+    'testimonials.review3Author': 'Alex Chen',
+    'testimonials.review4': '"The AI invoice scanner saves me so much time. Just snap a photo and it extracts everything automatically. Game changer for my workflow."',
+    'testimonials.review4Author': 'Maria Silva',
+    'testimonials.review5': '"Clean design, powerful features. TaxFlow makes managing international clients\' invoices and taxes surprisingly easy."',
+    'testimonials.review5Author': 'Kim Tanaka',
+    'testimonials.phBadge': 'Featured on Product Hunt',
+    'testimonials.phDesc': 'Join our community of happy freelancers',
+    'testimonials.viewOnPH': 'View on PH',
+
     // Landing Page
     'landing.openApp': 'Open App',
     'landing.badge': 'For Freelancers & Digital Nomads',
@@ -1064,6 +1098,23 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.paymentSuccess': '支付成功！',
     'auth.createAccount': '创建您的账户开始使用 TaxFlow。',
     'auth.becomeMember': '成为会员 — $9/月起',
+
+    // Testimonials
+    'testimonials.title': '用户评价',
+    'testimonials.subtitle': '来自 Product Hunt 的真实用户反馈',
+    'testimonials.review1': '"真的很喜欢 W-8BEN 自动填写的流程，希望每个税务工具都能像这样处理表单，而不是让你在 PDF 里翻找。"',
+    'testimonials.review1Author': 'Gökçe İksaç',
+    'testimonials.review2': '"仅 W-8BEN 自动填写功能就能让我每季度节省一小时，多币种收入追踪终于适配了我的客户设置。真希望去年报税季就有这个工具。"',
+    'testimonials.review2Author': 'Bedirhan',
+    'testimonials.review3': '"终于有一个理解跨境自由职业的工具了。多币种发票生成功能正是我一直在寻找的。"',
+    'testimonials.review3Author': 'Alex Chen',
+    'testimonials.review4': '"AI 发票扫描为我节省了大量时间。只需拍张照片，它就能自动提取所有信息。彻底改变了我的工作流程。"',
+    'testimonials.review4Author': 'Maria Silva',
+    'testimonials.review5': '"简洁的设计，强大的功能。TaxFlow 让管理国际客户的发票和税务变得出奇简单。"',
+    'testimonials.review5Author': 'Kim Tanaka',
+    'testimonials.phBadge': 'Product Hunt 精选',
+    'testimonials.phDesc': '加入我们快乐的自由职业者社区',
+    'testimonials.viewOnPH': '在 PH 上查看',
 
     // Landing Page
     'landing.openApp': '进入应用',
@@ -1468,6 +1519,23 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.createAccount': 'アカウントを作成してTaxFlowを使い始めましょう。',
     'auth.becomeMember': '会員になる — $9/月から',
 
+    // Testimonials
+    'testimonials.title': 'ユーザーの声',
+    'testimonials.subtitle': 'Product Huntでのユーザーレビュー',
+    'testimonials.review1': '"W-8BENの自動入力フローがとても綺麗で、他の税務ツールもPDFを探し回る代わりにこうあるべきだと思いました。"',
+    'testimonials.review1Author': 'Gökçe İksaç',
+    'testimonials.review2': '"W-8BENの自動入力だけで四半期に1時間は節約でき、多通貨収入の追跡がクライアント設定にぴったり合います。去年の納税シーズンにあれば良かったです。"',
+    'testimonials.review2Author': 'Bedirhan',
+    'testimonials.review3': '"ようやく、クロスボーダーフリーランスを理解するツールに出会えました。多通貨請求書生成はまさに探していた機能です。"',
+    'testimonials.review3Author': 'Alex Chen',
+    'testimonials.review4': '"AI請求書スキャナーは本当に時間を節約してくれます。写真を撮るだけで全て自動で抽出。ワークフローが変わりました。"',
+    'testimonials.review4Author': 'Maria Silva',
+    'testimonials.review5': '"クリーンなデザイン、パワフルな機能。TaxFlowは国際クライアントの請求書と税務管理を驚くほど簡単にしてくれます。"',
+    'testimonials.review5Author': 'Kim Tanaka',
+    'testimonials.phBadge': 'Product Huntで紹介されました',
+    'testimonials.phDesc': '幸せなフリーランスコミュニティに参加しましょう',
+    'testimonials.viewOnPH': 'PHで見る',
+
     // Landing Page
     'landing.openApp': 'アプリを開く',
     'landing.badge': 'フリーランス・デジタルノマド向け',
@@ -1850,6 +1918,23 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.paymentSuccess': '결제 성공!',
     'auth.createAccount': '계정을 만들어 TaxFlow을 사용하세요.',
     'auth.becomeMember': '회원 되기 — $9/월부터',
+
+    // Testimonials
+    'testimonials.title': '사용자들의 목소리',
+    'testimonials.subtitle': 'Product Hunt에서 사용자들의 리뷰',
+    'testimonials.review1': '"W-8BEN 자동 입력 흐름이 정말 깔끔해서, 다른 세금 도구들도 PDF를 뒤지지 말고 이렇게 처리했으면 좋겠습니다."',
+    'testimonials.review1Author': 'Gökçe İksaç',
+    'testimonials.review2': '"W-8BEN 자동 입력만으로도 분기마다 1시간은 절약되고, 다중 통화 수입 추적이 클라이언트 설정에 딱 맞습니다."',
+    'testimonials.review2Author': 'Bedirhan',
+    'testimonials.review3': '"드디어 국경 간 프리랜싱을 이해하는 도구를 찾았습니다. 다중 통화 송장 생성은 제가 찾던 기능입니다."',
+    'testimonials.review3Author': 'Alex Chen',
+    'testimonials.review4': '"AI 송장 스캐너가 정말 많은 시간을 절약해줍니다. 사진만 찍으면 모든 것이 자동으로 추출됩니다."',
+    'testimonials.review4Author': 'Maria Silva',
+    'testimonials.review5': '"깔끔한 디자인, 강력한 기능. TaxFlow는 국제 클라이언트의 송장과 세금 관리를 놀라울 정도로 쉽게 만들어줍니다."',
+    'testimonials.review5Author': 'Kim Tanaka',
+    'testimonials.phBadge': 'Product Hunt에서 소개됨',
+    'testimonials.phDesc': '행복한 프리랜서 커뮤니티에 참여하세요',
+    'testimonials.viewOnPH': 'PH에서 보기',
 
     // Landing Page
     'landing.openApp': '앱 열기',
@@ -2234,6 +2319,23 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.createAccount': 'Erstellen Sie Ihr Konto, um TaxFlow zu nutzen.',
     'auth.becomeMember': 'Mitglied werden — ab $9/Monat',
 
+    // Testimonials
+    'testimonials.title': 'Was Nutzer sagen',
+    'testimonials.subtitle': 'Sehen Sie, was unsere Nutzer auf Product Hunt sagen',
+    'testimonials.review1': '"Ich liebe es, wie sauber der W-8BEN-Auto-Fill-Ablauf aussieht. Ich wünschte, jedes Steuertool würde Formulare so handhaben, anstatt durch PDFs zu suchen."',
+    'testimonials.review1Author': 'Gökçe İksaç',
+    'testimonials.review2': '"Allein die W-8BEN-Auto-Fill-Funktion spart mir jede Quartal eine Stunde, und die Mehrwährungs-Einkommensverfolgung passt endlich zu meinem Client-Setup."',
+    'testimonials.review2Author': 'Bedirhan',
+    'testimonials.review3': '"Endlich ein Tool, das grenzüberschreitendes Freelancing versteht. Die Mehrwährungs-Rechnungsgenauigkeit ist genau das, was ich gesucht habe."',
+    'testimonials.review3Author': 'Alex Chen',
+    'testimonials.review4': '"Der AI-Rechnungsscanner spart mir so viel Zeit. Einfach ein Foto machen und alles wird automatisch extrahiert. Ein Game-Changer für meinen Workflow."',
+    'testimonials.review4Author': 'Maria Silva',
+    'testimonials.review5': '"Sauberes Design, leistungsstarke Funktionen. TaxFlow macht die Verwaltung internationaler Kundendaten und Steuern überraschend einfach."',
+    'testimonials.review5Author': 'Kim Tanaka',
+    'testimonials.phBadge': 'Auf Product Hunt vorgestellt',
+    'testimonials.phDesc': 'Treten Sie unserer Gemeinschaft glücklicher Freiberufler bei',
+    'testimonials.viewOnPH': 'Auf PH ansehen',
+
     // Landing Page
     'landing.openApp': 'App öffnen',
     'landing.badge': 'Für Freelancer & Digitale Nomaden',
@@ -2616,6 +2718,23 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.paymentSuccess': 'Paiement réussi !',
     'auth.createAccount': 'Créez votre compte pour commencer à utiliser TaxFlow.',
     'auth.becomeMember': 'Devenir membre — à partir de 9$/mois',
+
+    // Testimonials
+    'testimonials.title': 'Ce que disent les utilisateurs',
+    'testimonials.subtitle': 'Découvrez les avis de nos utilisateurs sur Product Hunt',
+    'testimonials.review1': '"J\'adore à quel point le flux de remplissage automatique W-8BEN est propre. J\'aimerais que chaque outil fiscal gère les formulaires ainsi au lieu de fouiller dans les PDFs."',
+    'testimonials.review1Author': 'Gökçe İksaç',
+    'testimonials.review2': '"Le remplissage automatique W-8BEN seul me fait gagner une heure chaque trimestre, et le suivi des revenus multi-devises s\'adapte enfin à ma configuration client."',
+    'testimonials.review2Author': 'Bedirhan',
+    'testimonials.review3': '"Enfin un outil qui comprend le freelancing transfrontalier. La génération de factures multi-devises est exactement ce que je cherchais."',
+    'testimonials.review3Author': 'Alex Chen',
+    'testimonials.review4': '"Le scanner de factures IA me fait gagner tellement de temps. Il suffit de prendre une photo et tout est extrait automatiquement. Un vrai changement pour mon workflow."',
+    'testimonials.review4Author': 'Maria Silva',
+    'testimonials.review5': '"Design épuré, fonctionnalités puissantes. TaxFlow rend la gestion des factures et des taxes des clients internationaux étonnamment facile."',
+    'testimonials.review5Author': 'Kim Tanaka',
+    'testimonials.phBadge': 'Présenté sur Product Hunt',
+    'testimonials.phDesc': 'Rejoignez notre communauté de freelances heureux',
+    'testimonials.viewOnPH': 'Voir sur PH',
 
     // Landing Page
     'landing.openApp': 'Ouvrir l\'app',
@@ -3000,6 +3119,23 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.createAccount': 'Crea tu cuenta para empezar a usar TaxFlow.',
     'auth.becomeMember': 'Hazte miembro — desde $9/mes',
 
+    // Testimonials
+    'testimonials.title': 'Lo que dicen los usuarios',
+    'testimonials.subtitle': 'Mira lo que dicen nuestros usuarios en Product Hunt',
+    'testimonials.review1': '"Me encanta lo limpio que se ve el flujo de autocompletado W-8BEN, deseara que todas las herramientas fiscales manejaran los formularios así en vez de buscar en PDFs."',
+    'testimonials.review1Author': 'Gökçe İksaç',
+    'testimonials.review2': '"Solo el autocompletado W-8BEN me ahorra una hora cada trimestre, y el seguimiento de ingresos multidivisa finalmente encaja con mi configuración de clientes."',
+    'testimonials.review2Author': 'Bedirhan',
+    'testimonials.review3': '"Por fin una herramienta que entiende el freelancing transfronterizo. La generación de facturas multidivisa es exactamente lo que estaba buscando."',
+    'testimonials.review3Author': 'Alex Chen',
+    'testimonials.review4': '"El escáner de facturas IA me ahorra mucho tiempo. Solo toma una foto y extrae todo automáticamente. Un cambio total para mi flujo de trabajo."',
+    'testimonials.review4Author': 'Maria Silva',
+    'testimonials.review5': '"Diseño limpio, funciones potentes. TaxFlow hace que gestionar facturas e impuestos de clientes internacionales sea sorprendentemente fácil."',
+    'testimonials.review5Author': 'Kim Tanaka',
+    'testimonials.phBadge': 'Presentado en Product Hunt',
+    'testimonials.phDesc': 'Únete a nuestra comunidad de freelancers felices',
+    'testimonials.viewOnPH': 'Ver en PH',
+
     // Landing Page
     'landing.openApp': 'Abrir app',
     'landing.badge': 'Para freelancers y nómadas digitales',
@@ -3382,6 +3518,23 @@ const translations: Record<Locale, TranslationKeys> = {
     'auth.paymentSuccess': 'Pagamento bem-sucedido!',
     'auth.createAccount': 'Crie sua conta para começar a usar o TaxFlow.',
     'auth.becomeMember': 'Tornar-se membro — a partir de $9/mês',
+
+    // Testimonials
+    'testimonials.title': 'O que os usuários dizem',
+    'testimonials.subtitle': 'Veja o que nossos usuários dizem no Product Hunt',
+    'testimonials.review1': '"Adoro como o fluxo de preenchimento automático W-8BEN é limpo. Gostaria que todas as ferramentas fiscais tratassem formulários assim em vez de fazer você procurar em PDFs."',
+    'testimonials.review1Author': 'Gökçe İksaç',
+    'testimonials.review2': '"Apenas o preenchimento automático W-8BEN me economiza uma hora a cada trimestre, e o rastreamento de renda multidivisa finalmente se encaixa na minha configuração de clientes."',
+    'testimonials.review2Author': 'Bedirhan',
+    'testimonials.review3': '"Finalmente uma ferramenta que entende o freelancing transfronteiriço. A geração de faturas multidivisa é exatamente o que eu procurava."',
+    'testimonials.review3Author': 'Alex Chen',
+    'testimonials.review4': '"O scanner de faturas IA me economiza muito tempo. Basta tirar uma foto e tudo é extraído automaticamente. Uma mudança total para meu fluxo de trabalho."',
+    'testimonials.review4Author': 'Maria Silva',
+    'testimonials.review5': '"Design limpo, recursos poderosos. TaxFlow torna o gerenciamento de faturas e impostos de clientes internacionais surpreendentemente fácil."',
+    'testimonials.review5Author': 'Kim Tanaka',
+    'testimonials.phBadge': 'Apresentado no Product Hunt',
+    'testimonials.phDesc': 'Junte-se à nossa comunidade de freelancers felizes',
+    'testimonials.viewOnPH': 'Ver no PH',
 
     // Landing Page
     'landing.openApp': 'Abrir app',
