@@ -29,10 +29,8 @@ export function Modal({ open, onClose, title, children, maxWidth = 'md' }: Modal
     return () => document.removeEventListener('keydown', handleKey)
   }, [open, onClose])
 
-  if (!open) return null
-
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose} style={{ display: open ? undefined : 'none' }}>
       <style>{`
         @keyframes modal-in {
           from { opacity: 0; transform: scale(0.95); }
