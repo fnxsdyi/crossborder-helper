@@ -1,74 +1,37 @@
 const API2D_KEY = process.env.API2D_KEY
 const CORS_ORIGIN = 'https://tax.flowingpulse.com'
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '20mb',
+    },
+  },
+}
+
 export default async function handler(req, res) {
-  // CORS headers
   res.setHeader('Access-Control-Allow-Origin', CORS_ORIGIN)
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 
   if (req.method === 'OPTIONS') {
-    res.statusCode = 204
-    res.end()
-    return
+    return res.status(204).end()
   }
 
   if (req.method !== 'POST') {
-    res.statusCode = 405
-    res.setHeader('Content-Type', 'application/json')
-    res.end(JSON.stringify({ error: 'Method not allowed' }))
-    return
+    return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  // Check API key
   if (!API2D_KEY) {
-    res.statusCode = 500
-    res.setHeader('Content-Type', 'application/json')
-    res.end(JSON.stringify({ error: 'Service temporarily unavailable' }))
-    return
+    return res.status(500).json({ error: 'Service temporarily unavailable' })
   }
 
-  // Parse body
-  let body = {}
-  try {
-    console.log('[OCR] req.body type:', typeof req.body, 'value:', JSON.stringify(req.body).slice(0, 100))
-    if (req.body !== undefined && req.body !== null) {
-      body = req.body
-    } else {
-      console.log('[OCR] Reading raw body...')
-      const raw = await new Promise((resolve, reject) => {
-        let data = ''
-        req.on('data', (chunk) => {
-          data += chunk
-          if (data.length > 20 * 1024 * 1024) {
-            req.destroy()
-            reject(new Error('Payload too large'))
-          }
-        })
-        req.on('end', () => resolve(data))
-        req.on('error', reject)
-      })
-      console.log('[OCR] Raw body length:', raw.length, 'preview:', raw.slice(0, 100))
-      body = raw ? JSON.parse(raw) : {}
-    }
-  } catch (e) {
-    console.error('[OCR] Body parse error:', e.message)
-    res.statusCode = 400
-    res.setHeader('Content-Type', 'application/json')
-    res.end(JSON.stringify({ error: 'Invalid request body', detail: e.message }))
-    return
+  const { messages } = req.body || {}
+
+  if (!messages || !Array.isArray(messages) || messages.length === 0) {
+    return res.status(400).json({ error: 'Invalid request body: messages array required' })
   }
 
-  // Validate input
-  if (!body || !Array.isArray(body.messages) || body.messages.length === 0) {
-    console.error('[OCR] Validation failed:', JSON.stringify(body).slice(0, 200))
-    res.statusCode = 400
-    res.setHeader('Content-Type', 'application/json')
-    res.end(JSON.stringify({ error: 'Invalid request body', detail: 'messages array required' }))
-    return
-  }
-
-  // Forward to upstream API
   try {
     const response = await fetch('https://oa.api2d.net/v1/chat/completions', {
       method: 'POST',
@@ -78,7 +41,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: 'gpt-4o-mini',
-        messages: body.messages,
+        messages,
         max_tokens: 300,
         temperature: 0,
       }),
@@ -87,29 +50,16 @@ export default async function handler(req, res) {
     const data = await response.json()
 
     if (!response.ok) {
-      console.error('[OCR] Upstream error:', response.status)
-      res.statusCode = 502
-      res.setHeader('Content-Type', 'application/json')
-      res.end(JSON.stringify({ error: 'OCR service temporarily unavailable' }))
-      return
+      return res.status(502).json({ error: 'OCR service temporarily unavailable' })
     }
 
-    // Sanitize: only return the content
     const content = data.choices?.[0]?.message?.content
     if (!content) {
-      res.statusCode = 502
-      res.setHeader('Content-Type', 'application/json')
-      res.end(JSON.stringify({ error: 'OCR service returned empty response' }))
-      return
+      return res.status(502).json({ error: 'OCR service returned empty response' })
     }
 
-    res.statusCode = 200
-    res.setHeader('Content-Type', 'application/json')
-    res.end(JSON.stringify({ choices: [{ message: { content } }] }))
+    return res.status(200).json({ choices: [{ message: { content } }] })
   } catch (err) {
-    console.error('[OCR] Upstream request failed:', err.message)
-    res.statusCode = 502
-    res.setHeader('Content-Type', 'application/json')
-    res.end(JSON.stringify({ error: 'OCR service temporarily unavailable' }))
+    return res.status(502).json({ error: 'OCR service temporarily unavailable' })
   }
 }
