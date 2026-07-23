@@ -10,7 +10,7 @@ import { generateInvoicePDF } from '@/lib/generateInvoicePDF'
 import { batchExportInvoicesPDF } from '@/lib/batchExportPDF'
 import { checkBatchExportUsage, recordBatchExportUsage } from '@/lib/batchExportUsage'
 import { useI18n } from '@/hooks/useI18n'
-import { usePremium } from '@/components/PremiumGate'
+import { usePremium } from '@/hooks/usePremium'
 
 export function Invoices() {
   const { t } = useI18n()

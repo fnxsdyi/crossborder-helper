@@ -101,7 +101,7 @@ export default async function handler(req, res) {
     if (!content) return res.status(502).json({ error: 'OCR service returned empty response' })
 
     return res.status(200).json({ choices: [{ message: { content } }] })
-  } catch (err) {
+  } catch {
     return res.status(500).json({ error: 'OCR processing failed' })
   }
 }

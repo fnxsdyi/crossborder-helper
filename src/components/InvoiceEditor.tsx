@@ -5,7 +5,7 @@ import { Save, Plus, Trash2, Download, RefreshCw, Info } from 'lucide-react'
 import { generateInvoicePDF } from '@/lib/generateInvoicePDF'
 import { getExchangeRate, CURRENCIES, calculateFXGainLoss } from '@/lib/exchangeRate'
 import { useI18n } from '@/hooks/useI18n'
-import { usePremium } from './PremiumGate'
+import { usePremium } from '@/hooks/usePremium'
 
 interface InvoiceEditorProps {
   invoice: SyncInvoice | null

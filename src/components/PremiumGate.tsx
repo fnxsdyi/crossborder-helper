@@ -191,31 +191,3 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
     </>
   )
 }
-
-export function usePremium() {
-  const { user } = useAuthStore()
-  const [isPremium, setIsPremium] = useState(false)
-
-  const checkPremium = useCallback(async () => {
-    if (!user) {
-      setIsPremium(false)
-      return
-    }
-
-    if (isAdmin(user.email)) {
-      setIsPremium(true)
-      return
-    }
-
-    const result = await checkSubscriptionWithFallback(user.id)
-    setIsPremium(result.isPremium)
-  }, [user])
-
-  useEffect(() => {
-    if (user) {
-      checkPremium()
-    }
-  }, [user, checkPremium])
-
-  return isPremium
-}

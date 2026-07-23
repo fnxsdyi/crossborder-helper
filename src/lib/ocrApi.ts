@@ -78,7 +78,7 @@ export async function recognizeInvoice(
       let parsed: unknown
       try {
         parsed = JSON.parse(jsonStr)
-      } catch (parseErr) {
+      } catch {
         console.error('[TaxFlow] JSON parse failed. Raw content:', content.slice(0, 500))
         throw new Error('RECOGNITION_FAILED')
       }

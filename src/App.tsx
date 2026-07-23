@@ -46,7 +46,7 @@ function App() {
             setShowLanding(false)
             setShowRegister(true)
           }
-        } catch (e) {}
+        } catch {}
         window.history.replaceState({}, '', window.location.pathname)
       } else {
         const path = window.location.pathname
