@@ -16,11 +16,14 @@ export default async function handler(req, res) {
     const raw = await new Promise((resolve, reject) => {
       const chunks = []
       req.on('data', (c) => chunks.push(c))
-      req.on('end', () => resolve(Buffer.concat(chunks).toString()))
+      req.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')))
       req.on('error', reject)
     })
 
-    const body = JSON.parse(raw)
+    console.log('[OCR] Raw body length:', raw.length, 'first bytes:', raw.charCodeAt(0), raw.charCodeAt(1), raw.charCodeAt(2))
+
+    const trimmed = raw.trim()
+    const body = JSON.parse(trimmed)
 
     if (!body || !body.messages || !Array.isArray(body.messages) || body.messages.length === 0) {
       return res.status(400).json({ error: 'messages array required' })
