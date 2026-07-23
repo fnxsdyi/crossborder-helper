@@ -31,9 +31,11 @@ export default async function handler(req, res) {
   // Parse body
   let body = {}
   try {
+    console.log('[OCR] req.body type:', typeof req.body, 'value:', JSON.stringify(req.body).slice(0, 100))
     if (req.body !== undefined && req.body !== null) {
       body = req.body
     } else {
+      console.log('[OCR] Reading raw body...')
       const raw = await new Promise((resolve, reject) => {
         let data = ''
         req.on('data', (chunk) => {
@@ -46,6 +48,7 @@ export default async function handler(req, res) {
         req.on('end', () => resolve(data))
         req.on('error', reject)
       })
+      console.log('[OCR] Raw body length:', raw.length, 'preview:', raw.slice(0, 100))
       body = raw ? JSON.parse(raw) : {}
     }
   } catch (e) {
