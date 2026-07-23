@@ -20,10 +20,7 @@ export default async function handler(req, res) {
       req.on('error', reject)
     })
 
-    console.log('[OCR] Raw body length:', raw.length, 'first bytes:', raw.charCodeAt(0), raw.charCodeAt(1), raw.charCodeAt(2))
-
-    const trimmed = raw.trim()
-    const body = JSON.parse(trimmed)
+    const body = JSON.parse(raw.trim())
 
     if (!body || !body.messages || !Array.isArray(body.messages) || body.messages.length === 0) {
       return res.status(400).json({ error: 'messages array required' })
@@ -54,6 +51,6 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ choices: [{ message: { content } }] })
   } catch (err) {
-    return res.status(500).json({ error: 'OCR processing failed', detail: err.message })
+    return res.status(500).json({ error: 'OCR processing failed' })
   }
 }
