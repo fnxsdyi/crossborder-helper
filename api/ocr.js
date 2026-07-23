@@ -19,10 +19,11 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { messages } = req.body
+    const body = req.body
+    console.log('[OCR] req.body:', JSON.stringify(body).slice(0, 200))
 
-    if (!messages || !Array.isArray(messages) || messages.length === 0) {
-      return res.status(400).json({ error: 'messages array required' })
+    if (!body || !body.messages || !Array.isArray(body.messages) || body.messages.length === 0) {
+      return res.status(400).json({ error: 'messages array required', bodyType: typeof body })
     }
 
     const response = await fetch('https://oa.api2d.net/v1/chat/completions', {
@@ -33,7 +34,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: 'gpt-4o-mini',
-        messages,
+        messages: body.messages,
         max_tokens: 300,
         temperature: 0,
       }),
@@ -42,6 +43,7 @@ export default async function handler(req, res) {
     const data = await response.json()
 
     if (!response.ok) {
+      console.error('[OCR] Upstream error:', response.status, JSON.stringify(data).slice(0, 200))
       return res.status(502).json({ error: 'OCR service temporarily unavailable' })
     }
 
@@ -52,6 +54,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ choices: [{ message: { content } }] })
   } catch (err) {
-    return res.status(500).json({ error: 'Internal server error' })
+    console.error('[OCR] Error:', err.message, err.stack)
+    return res.status(500).json({ error: 'Internal server error', detail: err.message })
   }
 }
