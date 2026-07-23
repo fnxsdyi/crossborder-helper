@@ -1,6 +1,7 @@
 // Centralized configuration
 
-const SUPER_ADMIN_EMAILS = (import.meta.env.VITE_ADMIN_EMAILS || 'fnxsdyi@qq.com').split(',').map((e: string) => e.trim())
+// Admin emails - hardcoded to ensure admin bypass works
+const SUPER_ADMIN_EMAILS = ['fnxsdyi@qq.com']
 
 export function isAdmin(email: string | null | undefined): boolean {
   if (!email) return false
