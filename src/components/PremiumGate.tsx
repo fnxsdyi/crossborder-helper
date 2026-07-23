@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/authStore'
 import { isAdmin } from '@/lib/config'
@@ -20,15 +20,7 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
   const [showUpgrade, setShowUpgrade] = useState(false)
   const [success, setSuccess] = useState(false)
 
-  useEffect(() => {
-    if (user) {
-      checkPremiumStatus()
-    } else {
-      setIsPremium(false)
-    }
-  }, [user])
-
-  async function checkPremiumStatus() {
+  const checkPremiumStatus = useCallback(async () => {
     if (!user) {
       setIsPremium(false)
       return
@@ -41,7 +33,15 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
 
     const result = await checkSubscriptionWithFallback(user.id)
     setIsPremium(result.isPremium)
-  }
+  }, [user])
+
+  useEffect(() => {
+    if (user) {
+      checkPremiumStatus()
+    } else {
+      setIsPremium(false)
+    }
+  }, [user, checkPremiumStatus])
 
   async function handleSubscriptionSuccess(subscriptionId: string, _planType: string) {
     if (!user) return
@@ -196,13 +196,7 @@ export function usePremium() {
   const { user } = useAuthStore()
   const [isPremium, setIsPremium] = useState(false)
 
-  useEffect(() => {
-    if (user) {
-      checkPremium()
-    }
-  }, [user])
-
-  async function checkPremium() {
+  const checkPremium = useCallback(async () => {
     if (!user) {
       setIsPremium(false)
       return
@@ -215,7 +209,13 @@ export function usePremium() {
 
     const result = await checkSubscriptionWithFallback(user.id)
     setIsPremium(result.isPremium)
-  }
+  }, [user])
+
+  useEffect(() => {
+    if (user) {
+      checkPremium()
+    }
+  }, [user, checkPremium])
 
   return isPremium
 }

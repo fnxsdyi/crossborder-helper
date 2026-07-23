@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { getSettings, upsertSettings, type SyncSettings } from '@/lib/sync'
 import { Settings as SettingsIcon, LogOut, User, X } from 'lucide-react'
@@ -31,11 +31,7 @@ export function SettingsPage({ isGuest }: SettingsPageProps) {
   const [taxRate, setTaxRate] = useState(0)
   const [invoicePrefix, setInvoicePrefix] = useState('INV')
 
-  useEffect(() => {
-    if (user) loadSettings()
-  }, [user])
-
-  async function loadSettings() {
+  const loadSettings = useCallback(async () => {
     if (!user) return
     try {
       const data = await getSettings(user.id)
@@ -53,7 +49,11 @@ export function SettingsPage({ isGuest }: SettingsPageProps) {
     } catch (err) {
       console.error('Failed to load settings:', err)
     }
-  }
+  }, [user])
+
+  useEffect(() => {
+    if (user) loadSettings()
+  }, [user, loadSettings])
 
   async function handleSave() {
     if (!user) return

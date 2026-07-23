@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { getInvoices, getSettings, type SyncInvoice } from '@/lib/sync'
 import {
@@ -71,14 +71,7 @@ export function CurrencyDashboard() {
   const [totalPendingBase, setTotalPendingBase] = useState(0)
   const [rateHistory, setRateHistory] = useState<RateHistory[]>([])
 
-  useEffect(() => {
-    if (user) {
-      loadData()
-      loadRateHistory()
-    }
-  }, [user])
-
-  async function loadData() {
+  const loadData = useCallback(async () => {
     if (!user) return
     try {
       const invoiceData = await getInvoices(user.id)
@@ -96,7 +89,19 @@ export function CurrencyDashboard() {
     } catch (err) {
       console.error('Failed to load currency data:', err)
     }
-  }
+  }, [user])
+
+  const loadRateHistory = useCallback(async () => {
+    const history = await getRateHistory(20)
+    setRateHistory(history)
+  }, [])
+
+  useEffect(() => {
+    if (user) {
+      loadData()
+      loadRateHistory()
+    }
+  }, [user, loadData, loadRateHistory])
 
   function processCurrencyRevenue(invoices: SyncInvoice[]) {
     const map = new Map<string, CurrencyRevenue>()
@@ -228,11 +233,6 @@ export function CurrencyDashboard() {
 
     setTotalRevenueBase(totalRevenue)
     setTotalPendingBase(totalPending)
-  }
-
-  async function loadRateHistory() {
-    const history = await getRateHistory(20)
-    setRateHistory(history)
   }
 
   async function handleConvert() {

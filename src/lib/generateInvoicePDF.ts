@@ -57,7 +57,7 @@ const TEMPLATES: Record<string, TemplateConfig> = {
   },
 }
 
-export async function generateInvoicePDF(invoice: SyncInvoice, userId?: string): Promise<void> {
+export async function generateInvoicePDF(invoice: SyncInvoice, userId?: string, isPremium = false): Promise<void> {
   const { jsPDF, GState } = await loadPdfLibs()
 
   let settings = null
@@ -271,8 +271,8 @@ export async function generateInvoicePDF(invoice: SyncInvoice, userId?: string):
     )
   }
 
-  // Watermark for free users (always show for now - premium check via Supabase subscription)
-  if (true) {
+  // Watermark for free users
+  if (!isPremium) {
     doc.setFontSize(60)
     doc.setTextColor(200, 200, 200)
     doc.setGState(new GState({ opacity: 0.15 }))

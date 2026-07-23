@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { getClients, upsertClient, deleteClient, type SyncClient } from '@/lib/sync'
 import { Plus, Users, Edit, Trash2, Mail, Globe } from 'lucide-react'
@@ -20,15 +20,7 @@ export function Clients() {
   const [vatNumber, setVatNumber] = useState('')
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    if (user) {
-      loadClients()
-    } else {
-      setLoading(false)
-    }
-  }, [user])
-
-  async function loadClients() {
+  const loadClients = useCallback(async () => {
     if (!user) return
     try {
       setLoading(true)
@@ -39,7 +31,15 @@ export function Clients() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [user])
+
+  useEffect(() => {
+    if (user) {
+      loadClients()
+    } else {
+      setLoading(false)
+    }
+  }, [user, loadClients])
 
   function handleCreate() {
     setEditingClient(null)

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { getInvoices, getClients, type SyncInvoice } from '@/lib/sync'
 import { FileText, Users, DollarSign, Clock, Plus } from 'lucide-react'
@@ -29,15 +29,7 @@ export function Dashboard() {
   const [currencyStats, setCurrencyStats] = useState<CurrencyStats[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    if (user) {
-      loadStats()
-    } else {
-      setLoading(false)
-    }
-  }, [user])
-
-  async function loadStats() {
+  const loadStats = useCallback(async () => {
     if (!user) return
     try {
       setLoading(true)
@@ -86,7 +78,15 @@ export function Dashboard() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [user])
+
+  useEffect(() => {
+    if (user) {
+      loadStats()
+    } else {
+      setLoading(false)
+    }
+  }, [user, loadStats])
 
   const statCards = [
     { label: t('dashboard.totalInvoices'), value: stats.totalInvoices, icon: FileText, color: 'bg-blue-500' },

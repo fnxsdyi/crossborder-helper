@@ -77,7 +77,7 @@ function App() {
       }
     }
     init()
-  }, [])
+  }, [initialize])
 
   function handleEnterApp() {
     const currentUser = useAuthStore.getState().user

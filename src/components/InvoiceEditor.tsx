@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { getClients, upsertInvoice, getSettings, upsertSettings, type SyncClient, type SyncInvoice, type SyncInvoiceItem } from '@/lib/sync'
 import { Save, Plus, Trash2, Download, RefreshCw, Info } from 'lucide-react'
 import { generateInvoicePDF } from '@/lib/generateInvoicePDF'
 import { getExchangeRate, CURRENCIES, calculateFXGainLoss } from '@/lib/exchangeRate'
 import { useI18n } from '@/hooks/useI18n'
+import { usePremium } from './PremiumGate'
 
 interface InvoiceEditorProps {
   invoice: SyncInvoice | null
@@ -15,6 +16,7 @@ interface InvoiceEditorProps {
 export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps) {
   const { t } = useI18n()
   const { user } = useAuthStore()
+  const isPremium = usePremium()
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState('')
   const [clients, setClients] = useState<SyncClient[]>([])
@@ -47,6 +49,28 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
     invoice?.items || [{ description: '', quantity: 1, unitPrice: 0, amount: 0 }]
   )
 
+  const loadClients = useCallback(async () => {
+    if (!user) return
+    try {
+      const data = await getClients(user.id)
+      setClients(data)
+    } catch (err) {
+      console.error('Failed to load clients:', err)
+    }
+  }, [user])
+
+  const generateInvoiceNumber = useCallback(async () => {
+    if (!user) return
+    try {
+      const settings = await getSettings(user.id)
+      const prefix = settings.invoicePrefix || 'INV'
+      const nextNum = settings.nextInvoiceNumber || 1
+      setInvoiceNumber(`${prefix}-${String(nextNum).padStart(4, '0')}`)
+    } catch (err) {
+      console.error('Failed to get settings:', err)
+    }
+  }, [user])
+
   useEffect(() => {
     if (user) {
       loadClients()
@@ -57,29 +81,7 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
         setInvoiceNumber(`INV-${timestamp.slice(-4)}`)
       }
     }
-  }, [user])
-
-  async function loadClients() {
-    if (!user) return
-    try {
-      const data = await getClients(user.id)
-      setClients(data)
-    } catch (err) {
-      console.error('Failed to load clients:', err)
-    }
-  }
-
-  async function generateInvoiceNumber() {
-    if (!user) return
-    try {
-      const settings = await getSettings(user.id)
-      const prefix = settings.invoicePrefix || 'INV'
-      const nextNum = settings.nextInvoiceNumber || 1
-      setInvoiceNumber(`${prefix}-${String(nextNum).padStart(4, '0')}`)
-    } catch (err) {
-      console.error('Failed to get settings:', err)
-    }
-  }
+  }, [user, loadClients, generateInvoiceNumber, invoice])
 
   function handleItemChange(index: number, field: keyof SyncInvoiceItem, value: string | number) {
     const newItems = [...items]
@@ -208,7 +210,7 @@ export function InvoiceEditor({ invoice, onSave, onCancel }: InvoiceEditorProps)
           </button>
           {invoice && (
             <button
-              onClick={() => generateInvoicePDF(invoice)}
+              onClick={() => generateInvoicePDF(invoice, user?.id, isPremium)}
               className="flex items-center gap-2 px-4 py-2 border border-slate-200 rounded-lg hover:bg-slate-50"
             >
               <Download size={16} />

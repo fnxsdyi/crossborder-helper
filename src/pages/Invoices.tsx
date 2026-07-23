@@ -1,19 +1,21 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { getInvoices, deleteInvoice, type SyncInvoice } from '@/lib/sync'
-import { Plus, FileText, Edit, Trash2, Download, Archive, Loader2, Lock } from 'lucide-react'
+import { Plus, FileText, Edit, Trash2, Download, Loader2, Lock } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { InvoiceEditor } from '@/components/InvoiceEditor'
 import { generateInvoicePDF } from '@/lib/generateInvoicePDF'
 import { batchExportInvoicesPDF } from '@/lib/batchExportPDF'
 import { checkBatchExportUsage, recordBatchExportUsage } from '@/lib/batchExportUsage'
 import { useI18n } from '@/hooks/useI18n'
+import { usePremium } from '@/components/PremiumGate'
 
 export function Invoices() {
   const { t } = useI18n()
   const { user } = useAuthStore()
+  const isPremium = usePremium()
   const [invoices, setInvoices] = useState<SyncInvoice[]>([])
   const [showEditor, setShowEditor] = useState(false)
   const [editingInvoice, setEditingInvoice] = useState<SyncInvoice | null>(null)
@@ -22,17 +24,7 @@ export function Invoices() {
   const [batchProgress, setBatchProgress] = useState({ current: 0, total: 0 })
   const [batchUsage, setBatchUsage] = useState<{ allowed: boolean; used: number; limit: number; hasSubscription: boolean } | null>(null)
 
-  useEffect(() => {
-    if (user) {
-      loadInvoicesFromSupabase()
-    } else {
-      // Guest mode: load from localStorage
-      loadGuestInvoices()
-    }
-    checkBatchExportUsage(user?.id).then(setBatchUsage)
-  }, [user])
-
-  async function loadInvoicesFromSupabase() {
+  const loadInvoicesFromSupabase = useCallback(async () => {
     if (!user) return
     try {
       setLoading(true)
@@ -43,9 +35,9 @@ export function Invoices() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [user])
 
-  function loadGuestInvoices() {
+  const loadGuestInvoices = useCallback(() => {
     try {
       setLoading(true)
       const guestInvoices = JSON.parse(localStorage.getItem('guest_invoices') || '[]')
@@ -55,7 +47,17 @@ export function Invoices() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    if (user) {
+      loadInvoicesFromSupabase()
+    } else {
+      // Guest mode: load from localStorage
+      loadGuestInvoices()
+    }
+    checkBatchExportUsage(user?.id).then(setBatchUsage)
+  }, [user, loadInvoicesFromSupabase, loadGuestInvoices])
 
   function handleCreate() {
     setEditingInvoice(null)
@@ -169,7 +171,7 @@ export function Invoices() {
                   </>
                 ) : (
                   <>
-                    <Archive size={18} />
+                    <Download size={18} />
                     {t('invoices.exportAll')}
                   </>
                 )}
@@ -245,7 +247,7 @@ export function Invoices() {
                   <td className="px-5 py-4 text-right">
                     <div className="flex items-center justify-end gap-1">
                       <button
-                        onClick={() => generateInvoicePDF(invoice as any)}
+                        onClick={() => generateInvoicePDF(invoice as any, user?.id, isPremium)}
                         className="p-1.5 rounded-lg hover:bg-blue-50 text-slate-500 hover:text-blue-600"
                         title={t('common.download')}
                       >
