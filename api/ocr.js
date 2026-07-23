@@ -31,7 +31,7 @@ export default async function handler(req, res) {
   // Parse body
   let body = {}
   try {
-    if (req.body !== undefined) {
+    if (req.body !== undefined && req.body !== null) {
       body = req.body
     } else {
       const raw = await new Promise((resolve, reject) => {
@@ -49,17 +49,19 @@ export default async function handler(req, res) {
       body = raw ? JSON.parse(raw) : {}
     }
   } catch (e) {
+    console.error('[OCR] Body parse error:', e.message)
     res.statusCode = 400
     res.setHeader('Content-Type', 'application/json')
-    res.end(JSON.stringify({ error: 'Invalid request body' }))
+    res.end(JSON.stringify({ error: 'Invalid request body', detail: e.message }))
     return
   }
 
   // Validate input
   if (!body || !Array.isArray(body.messages) || body.messages.length === 0) {
+    console.error('[OCR] Validation failed:', JSON.stringify(body).slice(0, 200))
     res.statusCode = 400
     res.setHeader('Content-Type', 'application/json')
-    res.end(JSON.stringify({ error: 'Invalid request body' }))
+    res.end(JSON.stringify({ error: 'Invalid request body', detail: 'messages array required' }))
     return
   }
 
