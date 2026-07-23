@@ -1,5 +1,7 @@
 import { supabase } from './supabase'
 import { checkSubscription } from './subscription'
+import { isAdmin } from './config'
+import { useAuthStore } from '@/stores/authStore'
 
 const OCR_FREE_LIMIT = 3
 
@@ -10,6 +12,12 @@ export async function checkOcrUsage(userId: string): Promise<{
   hasSubscription: boolean
 }> {
   try {
+    // Check admin status first
+    const currentUser = useAuthStore.getState().user
+    if (isAdmin(currentUser?.email)) {
+      return { allowed: true, used: 0, limit: Infinity, hasSubscription: true }
+    }
+
     // Check subscription
     const subResult = await checkSubscription(userId)
     if (subResult.isPremium) {
