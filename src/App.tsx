@@ -162,10 +162,12 @@ function App() {
   }
 
   return (
-    <Suspense fallback={<Loading />}>
-      <Layout onSignOut={handleSignOut} isGuest={isGuest} />
+    <>
+      <Suspense fallback={<Loading />}>
+        <Layout onSignOut={handleSignOut} isGuest={isGuest} />
+      </Suspense>
       <CookieConsent />
-    </Suspense>
+    </>
   )
 }
 
