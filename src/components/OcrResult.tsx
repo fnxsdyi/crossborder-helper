@@ -18,10 +18,8 @@ export function OcrResult({ onRescan, onSaved }: OcrResultProps) {
   const [editing, setEditing] = useState<OcrResultType | null>(result)
   const [saving, setSaving] = useState(false)
 
-  if (!result || !editing) return null
-
-  const confidencePercent = Math.round(result.confidence * 100)
-  const isLowConfidence = result.confidence < 0.5
+  const confidencePercent = result ? Math.round(result.confidence * 100) : 0
+  const isLowConfidence = result ? result.confidence < 0.5 : false
 
   function getConfidenceColor(conf: number) {
     if (conf >= 0.8) return 'text-green-600 dark:text-green-400'
@@ -97,6 +95,10 @@ export function OcrResult({ onRescan, onSaved }: OcrResultProps) {
     } finally {
       setSaving(false)
     }
+  }
+
+  if (!result || !editing) {
+    return <div className="max-w-md mx-auto" />
   }
 
   return (

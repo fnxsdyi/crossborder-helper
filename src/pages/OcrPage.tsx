@@ -23,13 +23,16 @@ export function OcrPage() {
     setCurrentView('invoices')
   }
 
+  const isUpload = view === 'upload'
+
   return (
     <div>
-      {view === 'upload' ? (
+      <div style={{ display: isUpload ? undefined : 'none' }}>
         <OcrUpload onResult={handleResult} />
-      ) : (
+      </div>
+      <div style={{ display: isUpload ? 'none' : undefined }}>
         <OcrResult onRescan={handleRescan} onSaved={handleSaved} />
-      )}
+      </div>
     </div>
   )
 }
