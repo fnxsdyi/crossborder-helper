@@ -44,7 +44,7 @@ export function TaxWizard() {
   })
 
   useEffect(() => {
-    checkW8BENUsage(user?.id).then(setUsage)
+    checkW8BENUsage(user?.id, user?.email).then(setUsage)
   }, [user])
 
   const steps = [
@@ -73,7 +73,7 @@ export function TaxWizard() {
       return
     }
 
-    const currentUsage = await checkW8BENUsage(user?.id)
+    const currentUsage = await checkW8BENUsage(user?.id, user?.email)
     if (!currentUsage.allowed) {
       setUsage(currentUsage)
       return
@@ -109,7 +109,7 @@ export function TaxWizard() {
       URL.revokeObjectURL(url)
 
       await recordW8BENUsage(user?.id)
-      const newUsage = await checkW8BENUsage(user?.id)
+      const newUsage = await checkW8BENUsage(user?.id, user?.email)
       setUsage(newUsage)
     } catch (error) {
       console.error('[TaxWizard] Failed to generate PDF:', error)

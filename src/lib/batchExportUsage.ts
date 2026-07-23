@@ -1,7 +1,6 @@
 import { supabase } from './supabase'
 import { checkSubscription } from './subscription'
 import { isAdmin } from './config'
-import { useAuthStore } from '@/stores/authStore'
 
 const BATCH_EXPORT_FREE_LIMIT = 5
 const STORAGE_KEY = 'batch_export_usage'
@@ -36,7 +35,7 @@ function setGuestUsage(usage: MonthlyUsage): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(usage))
 }
 
-export async function checkBatchExportUsage(userId?: string): Promise<{
+export async function checkBatchExportUsage(userId?: string, userEmail?: string): Promise<{
   allowed: boolean
   used: number
   limit: number
@@ -44,8 +43,7 @@ export async function checkBatchExportUsage(userId?: string): Promise<{
 }> {
   try {
     // Check admin status first
-    const currentUser = useAuthStore.getState().user
-    if (isAdmin(currentUser?.email)) {
+    if (isAdmin(userEmail)) {
       return { allowed: true, used: 0, limit: Infinity, hasSubscription: true }
     }
 

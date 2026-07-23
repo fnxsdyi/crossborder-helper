@@ -29,7 +29,7 @@ export function OcrUpload({ onResult }: OcrUploadProps) {
       return { allowed: guestUsed < OCR_FREE_LIMIT, used: guestUsed, limit: OCR_FREE_LIMIT, hasSubscription: false }
     }
     try {
-      const usage = await checkOcrUsage(user.id)
+      const usage = await checkOcrUsage(user.id, user.email)
       setUsageCount(usage.used)
       setHasSubscription(usage.hasSubscription)
       setCheckedUsage(true)

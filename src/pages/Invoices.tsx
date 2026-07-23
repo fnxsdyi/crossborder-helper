@@ -56,7 +56,7 @@ export function Invoices() {
       // Guest mode: load from localStorage
       loadGuestInvoices()
     }
-    checkBatchExportUsage(user?.id).then(setBatchUsage)
+    checkBatchExportUsage(user?.id, user?.email).then(setBatchUsage)
   }, [user, loadInvoicesFromSupabase, loadGuestInvoices])
 
   function handleCreate() {
@@ -105,7 +105,7 @@ export function Invoices() {
   async function handleBatchExport() {
     if (invoices.length === 0) return
 
-    const usage = await checkBatchExportUsage(user?.id)
+    const usage = await checkBatchExportUsage(user?.id, user?.email)
     if (!usage.allowed) {
       setBatchUsage(usage)
       return
@@ -121,7 +121,7 @@ export function Invoices() {
         (current, total) => setBatchProgress({ current, total })
       )
       await recordBatchExportUsage(user?.id)
-      const newUsage = await checkBatchExportUsage(user?.id)
+      const newUsage = await checkBatchExportUsage(user?.id, user?.email)
       setBatchUsage(newUsage)
     } catch (err) {
       console.error('Batch export failed:', err)

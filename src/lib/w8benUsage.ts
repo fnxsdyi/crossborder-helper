@@ -1,7 +1,6 @@
 import { supabase } from './supabase'
 import { checkSubscription } from './subscription'
 import { isAdmin } from './config'
-import { useAuthStore } from '@/stores/authStore'
 
 const W8BEN_FREE_LIMIT = 5
 const STORAGE_KEY = 'w8ben_usage'
@@ -41,7 +40,7 @@ function getMonthStart(): string {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`
 }
 
-export async function checkW8BENUsage(userId?: string): Promise<{
+export async function checkW8BENUsage(userId?: string, userEmail?: string): Promise<{
   allowed: boolean
   used: number
   limit: number
@@ -49,8 +48,7 @@ export async function checkW8BENUsage(userId?: string): Promise<{
 }> {
   try {
     // Check admin status first
-    const currentUser = useAuthStore.getState().user
-    if (isAdmin(currentUser?.email)) {
+    if (isAdmin(userEmail)) {
       return { allowed: true, used: 0, limit: Infinity, hasSubscription: true }
     }
 
