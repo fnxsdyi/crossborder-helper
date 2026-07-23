@@ -77,9 +77,9 @@ export function Layout({ onSignOut, isGuest }: LayoutProps) {
       <main className="lg:ml-64">
         <div className="p-6 lg:p-8">
           {isGuest && <GuestBanner />}
-          <ErrorBoundary fallback={<div className="p-4 text-red-500">Something went wrong. Please refresh.</div>}>
+          <ErrorBoundary key={currentView} fallback={<div className="p-4 text-red-500">Something went wrong. Please refresh.</div>}>
             <Suspense fallback={<PageLoader />}>
-              <div key={currentView}>{renderPage()}</div>
+              {renderPage()}
             </Suspense>
           </ErrorBoundary>
           <Disclaimer />
