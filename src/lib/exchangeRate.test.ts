@@ -1,10 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 // vi.hoisted ensures these are available when vi.mock runs
-const { mockFetch, mockRatesAdd, mockRatesFirst } = vi.hoisted(() => ({
+const { mockFetch, mockRatesAdd, mockRatesFirst, mockAndCallback } = vi.hoisted(() => ({
   mockFetch: vi.fn(),
   mockRatesAdd: vi.fn().mockResolvedValue(1),
   mockRatesFirst: vi.fn().mockResolvedValue(null),
+  mockAndCallback: { current: null as ((r: Record<string, unknown>) => boolean) | null },
 }))
 
 vi.stubGlobal('fetch', mockFetch)
@@ -19,7 +20,10 @@ vi.mock('dexie', () => {
           add: mockRatesAdd,
           where: vi.fn().mockReturnThis(),
           equals: vi.fn().mockReturnThis(),
-          and: vi.fn().mockReturnThis(),
+          and: vi.fn().mockImplementation(function(cb: (r: Record<string, unknown>) => boolean) {
+            mockAndCallback.current = cb
+            return this
+          }),
           first: mockRatesFirst,
         },
       }
@@ -190,6 +194,20 @@ describe('getExchangeRate', () => {
     const rate = await getExchangeRate('USD', 'EUR')
     expect(rate).toBe(0.92) // Fallback rate
   })
+
+  it('invokes .and() callback with today date for cache lookup', async () => {
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ rates: { EUR: 0.92 } }),
+    })
+
+    await getExchangeRate('USD', 'EUR')
+
+    expect(mockAndCallback.current).not.toBeNull()
+    const today = new Date().toISOString().split('T')[0]
+    expect(mockAndCallback.current!({ date: today })).toBe(true)
+    expect(mockAndCallback.current!({ date: '2020-01-01' })).toBe(false)
+  })
 })
 
 describe('getHistoricalRate', () => {
@@ -236,5 +254,18 @@ describe('getHistoricalRate', () => {
 
     const rate = await getHistoricalRate('USD', 'EUR', '2024-01-01')
     expect(rate).toBeNull()
+  })
+
+  it('invokes .and() callback with specified date for cache lookup', async () => {
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ rates: { EUR: 0.92 } }),
+    })
+
+    await getHistoricalRate('USD', 'EUR', '2024-06-15')
+
+    expect(mockAndCallback.current).not.toBeNull()
+    expect(mockAndCallback.current!({ date: '2024-06-15' })).toBe(true)
+    expect(mockAndCallback.current!({ date: '2024-06-16' })).toBe(false)
   })
 })

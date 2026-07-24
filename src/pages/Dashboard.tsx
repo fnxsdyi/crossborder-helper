@@ -7,13 +7,11 @@ import { FileText, Users, DollarSign, Clock, Plus } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { useI18n } from '@/hooks/useI18n'
 import { useAppStore } from '@/stores/appStore'
-
-interface CurrencyStats {
-  currency: string
-  revenue: number
-  pending: number
-  count: number
-}
+import {
+  aggregateDashboardCurrencyStats,
+  computeDashboardSummary,
+  type DashboardCurrencyStats,
+} from '@/lib/analytics'
 
 export function Dashboard() {
   const { t } = useI18n()
@@ -26,7 +24,7 @@ export function Dashboard() {
     pendingAmount: 0,
   })
   const [recentInvoices, setRecentInvoices] = useState<SyncInvoice[]>([])
-  const [currencyStats, setCurrencyStats] = useState<CurrencyStats[]>([])
+  const [currencyStats, setCurrencyStats] = useState<DashboardCurrencyStats[]>([])
   const [loading, setLoading] = useState(true)
 
   const loadStats = useCallback(async () => {
@@ -36,43 +34,16 @@ export function Dashboard() {
       const invoices = await getInvoices(user.id)
       const clients = await getClients(user.id)
 
-      const totalRevenue = invoices
-        .filter((i) => i.status === 'paid')
-        .reduce((sum: number, i) => sum + i.total, 0)
+      const summary = computeDashboardSummary(invoices, clients.length)
+      setStats(summary)
 
-      const pendingAmount = invoices
-        .filter((i) => i.status === 'sent' || i.status === 'overdue')
-        .reduce((sum: number, i) => sum + i.total, 0)
-
-      // Currency breakdown
-      const currencyMap = new Map<string, CurrencyStats>()
-      invoices.forEach((inv) => {
-        const existing = currencyMap.get(inv.currency) || {
-          currency: inv.currency,
-          revenue: 0,
-          pending: 0,
-          count: 0,
-        }
-        existing.count++
-        if (inv.status === 'paid') existing.revenue += inv.total
-        if (inv.status === 'sent' || inv.status === 'overdue') existing.pending += inv.total
-        currencyMap.set(inv.currency, existing)
-      })
-
-      setStats({
-        totalInvoices: invoices.length,
-        totalClients: clients.length,
-        totalRevenue,
-        pendingAmount,
-      })
+      setCurrencyStats(aggregateDashboardCurrencyStats(invoices))
 
       setRecentInvoices(
         invoices
           .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
           .slice(0, 5)
       )
-
-      setCurrencyStats(Array.from(currencyMap.values()))
     } catch (err) {
       console.error('Failed to load dashboard stats:', err)
     } finally {

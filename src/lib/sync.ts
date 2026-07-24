@@ -338,28 +338,3 @@ function mapSettings(row: Record<string, unknown>): SyncSettings {
   }
 }
 
-// ==========================================
-// Dashboard Stats
-// ==========================================
-
-export async function getDashboardStats(userId: string) {
-  const invoices = await getInvoices(userId)
-
-  const totalRevenue = invoices
-    .filter(inv => inv.status === 'paid')
-    .reduce((sum, inv) => sum + inv.total, 0)
-
-  const totalInvoices = invoices.length
-  const paidCount = invoices.filter(inv => inv.status === 'paid').length
-  const pendingCount = invoices.filter(inv => inv.status === 'sent' || inv.status === 'draft').length
-  const overdueCount = invoices.filter(inv => inv.status === 'overdue').length
-
-  return {
-    totalRevenue,
-    totalInvoices,
-    paidCount,
-    pendingCount,
-    overdueCount,
-    invoices,
-  }
-}

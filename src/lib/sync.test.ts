@@ -33,7 +33,6 @@ import {
   deleteInvoice,
   getSettings,
   upsertSettings,
-  getDashboardStats,
 } from './sync'
 
 const mockClient = {
@@ -366,41 +365,5 @@ describe('upsertSettings', () => {
     mockChain = createMockChain({ data: null, error: { message: 'Upsert failed' } })
 
     await expect(upsertSettings('user1', { businessName: 'Test' })).rejects.toThrow()
-  })
-})
-
-describe('getDashboardStats', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
-
-  it('calculates dashboard stats with multiple statuses', async () => {
-    mockChain = createMockChain({
-      data: [
-        { ...mockInvoice, id: '1', status: 'paid', total: 100 },
-        { ...mockInvoice, id: '2', status: 'sent', total: 200 },
-        { ...mockInvoice, id: '3', status: 'overdue', total: 300 },
-        { ...mockInvoice, id: '4', status: 'draft', total: 400 },
-      ],
-      error: null,
-    })
-
-    const result = await getDashboardStats('user1')
-    expect(result.totalRevenue).toBe(100)
-    expect(result.totalInvoices).toBe(4)
-    expect(result.paidCount).toBe(1)
-    expect(result.pendingCount).toBe(2)
-    expect(result.overdueCount).toBe(1)
-  })
-
-  it('handles empty invoice list', async () => {
-    mockChain = createMockChain({ data: [], error: null })
-
-    const result = await getDashboardStats('user1')
-    expect(result.totalRevenue).toBe(0)
-    expect(result.totalInvoices).toBe(0)
-    expect(result.paidCount).toBe(0)
-    expect(result.pendingCount).toBe(0)
-    expect(result.overdueCount).toBe(0)
   })
 })

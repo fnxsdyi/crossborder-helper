@@ -15,43 +15,22 @@ import {
   BarChart3,
 } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
-import { getExchangeRate, CURRENCIES, calculateFXGainLoss } from '@/lib/exchangeRate'
+import { getExchangeRate, CURRENCIES } from '@/lib/exchangeRate'
 import { PremiumGate } from '@/components/PremiumGate'
 import { useI18n } from '@/hooks/useI18n'
 import { saveRateQuery, getRateHistory, clearRateHistory, type RateHistory } from '@/lib/rateHistory'
 import { History, Trash2 } from 'lucide-react'
-
-interface CurrencyRevenue {
-  currency: string
-  totalRevenue: number
-  paidAmount: number
-  pendingAmount: number
-  invoiceCount: number
-}
-
-interface FXEntry {
-  invoiceId: string
-  invoiceNumber: string
-  currency: string
-  localCurrency: string
-  amount: number
-  gainLoss: number
-  percentage: number
-  issueDate: string
-  paymentDate: string
-}
-
-interface MonthlyRevenue {
-  month: string
-  total: number
-  currencies: Record<string, number>
-}
-
-interface StatusCount {
-  status: string
-  count: number
-  total: number
-}
+import {
+  aggregateRevenueByCurrency,
+  processFXGainLossEntries,
+  aggregateMonthlyRevenue,
+  aggregateStatusBreakdown,
+  totalFXGainLoss,
+  type CurrencyRevenue,
+  type FXEntry,
+  type MonthlyRevenue,
+  type StatusCount,
+} from '@/lib/analytics'
 
 export function CurrencyDashboard() {
   const { t } = useI18n()
@@ -60,7 +39,7 @@ export function CurrencyDashboard() {
   const [fxEntries, setFxEntries] = useState<FXEntry[]>([])
   const [monthlyRevenue, setMonthlyRevenue] = useState<MonthlyRevenue[]>([])
   const [statusBreakdown, setStatusBreakdown] = useState<StatusCount[]>([])
-  const [totalFXGainLoss, setTotalFXGainLoss] = useState(0)
+  const [totalFXGainLossAmount, setTotalFXGainLossAmount] = useState(0)
   const [converterFrom, setConverterFrom] = useState('USD')
   const [converterTo, setConverterTo] = useState('EUR')
   const [converterAmount, setConverterAmount] = useState('1')
@@ -81,10 +60,15 @@ export function CurrencyDashboard() {
         setBaseCurrency(settings.defaultCurrency)
       }
 
-      processCurrencyRevenue(invoiceData)
-      processFXEntries(invoiceData)
-      processMonthlyRevenue(invoiceData)
-      processStatusBreakdown(invoiceData)
+      setCurrencyRevenue(aggregateRevenueByCurrency(invoiceData))
+
+      const fxEntriesResult = processFXGainLossEntries(invoiceData)
+      setFxEntries(fxEntriesResult)
+      setTotalFXGainLossAmount(totalFXGainLoss(fxEntriesResult))
+
+      setMonthlyRevenue(aggregateMonthlyRevenue(invoiceData))
+      setStatusBreakdown(aggregateStatusBreakdown(invoiceData))
+
       await convertTotalToBase(invoiceData, settings.defaultCurrency || 'USD')
     } catch (err) {
       console.error('Failed to load currency data:', err)
@@ -102,111 +86,6 @@ export function CurrencyDashboard() {
       loadRateHistory()
     }
   }, [user, loadData, loadRateHistory])
-
-  function processCurrencyRevenue(invoices: SyncInvoice[]) {
-    const map = new Map<string, CurrencyRevenue>()
-
-    invoices.forEach((inv) => {
-      const existing = map.get(inv.currency) || {
-        currency: inv.currency,
-        totalRevenue: 0,
-        paidAmount: 0,
-        pendingAmount: 0,
-        invoiceCount: 0,
-      }
-
-      existing.invoiceCount++
-      existing.totalRevenue += inv.total
-
-      if (inv.status === 'paid') {
-        existing.paidAmount += inv.total
-      } else if (inv.status === 'sent' || inv.status === 'overdue') {
-        existing.pendingAmount += inv.total
-      }
-
-      map.set(inv.currency, existing)
-    })
-
-    setCurrencyRevenue(Array.from(map.values()).sort((a, b) => b.totalRevenue - a.totalRevenue))
-  }
-
-  function processFXEntries(invoices: SyncInvoice[]) {
-    const entries: FXEntry[] = []
-
-    invoices
-      .filter((inv) => inv.status === 'paid' && inv.localCurrency && inv.exchangeRate && inv.paymentRate)
-      .forEach((inv) => {
-        const result = calculateFXGainLoss(
-          inv.total,
-          inv.currency,
-          inv.localCurrency!,
-          inv.exchangeRate!,
-          inv.paymentRate!
-        )
-
-        if (result) {
-          entries.push({
-            invoiceId: String(inv.id),
-            invoiceNumber: inv.invoiceNumber,
-            currency: inv.currency,
-            localCurrency: inv.localCurrency!,
-            amount: inv.total,
-            gainLoss: result.gainLoss,
-            percentage: result.percentage,
-            issueDate: new Date(inv.issueDate).toISOString(),
-            paymentDate: inv.paymentDate ? new Date(inv.paymentDate).toISOString() : '',
-          })
-        }
-      })
-
-    entries.sort((a, b) => new Date(b.paymentDate).getTime() - new Date(a.paymentDate).getTime())
-    setFxEntries(entries)
-
-    const total = entries.reduce((sum, e) => sum + e.gainLoss, 0)
-    setTotalFXGainLoss(total)
-  }
-
-  function processMonthlyRevenue(invoices: SyncInvoice[]) {
-    const monthlyMap = new Map<string, MonthlyRevenue>()
-
-    invoices
-      .filter((inv) => inv.status === 'paid')
-      .forEach((inv) => {
-        const date = new Date(inv.issueDate)
-        const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
-        const monthLabel = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' })
-
-        const existing = monthlyMap.get(key) || {
-          month: monthLabel,
-          total: 0,
-          currencies: {},
-        }
-
-        existing.total += inv.total
-        existing.currencies[inv.currency] = (existing.currencies[inv.currency] || 0) + inv.total
-        monthlyMap.set(key, existing)
-      })
-
-    const sorted = Array.from(monthlyMap.entries())
-      .sort(([a], [b]) => a.localeCompare(b))
-      .slice(-12)
-      .map(([, v]) => v)
-
-    setMonthlyRevenue(sorted)
-  }
-
-  function processStatusBreakdown(invoices: SyncInvoice[]) {
-    const map = new Map<string, StatusCount>()
-
-    invoices.forEach((inv) => {
-      const existing = map.get(inv.status) || { status: inv.status, count: 0, total: 0 }
-      existing.count++
-      existing.total += inv.total
-      map.set(inv.status, existing)
-    })
-
-    setStatusBreakdown(Array.from(map.values()))
-  }
 
   async function convertTotalToBase(invoices: SyncInvoice[], targetCurrency: string) {
     let totalRevenue = 0
@@ -300,13 +179,13 @@ export function CurrencyDashboard() {
         </div>
         <div className="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
           <div className="flex items-center gap-3">
-            <div className={`${totalFXGainLoss >= 0 ? 'bg-green-500' : 'bg-red-500'} p-2.5 rounded-lg text-white`}>
-              {totalFXGainLoss >= 0 ? <TrendingUp size={20} /> : <TrendingDown size={20} />}
+            <div className={`${totalFXGainLossAmount >= 0 ? 'bg-green-500' : 'bg-red-500'} p-2.5 rounded-lg text-white`}>
+              {totalFXGainLossAmount >= 0 ? <TrendingUp size={20} /> : <TrendingDown size={20} />}
             </div>
             <div>
               <p className="text-sm text-slate-500">{t('currency.fxGainLoss')}</p>
-              <p className={`text-xl font-semibold ${totalFXGainLoss >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {totalFXGainLoss >= 0 ? '+' : ''}{totalFXGainLoss.toFixed(2)}
+              <p className={`text-xl font-semibold ${totalFXGainLossAmount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                {totalFXGainLossAmount >= 0 ? '+' : ''}{totalFXGainLossAmount.toFixed(2)}
               </p>
             </div>
           </div>
