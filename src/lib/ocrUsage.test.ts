@@ -57,6 +57,57 @@ describe('checkOcrUsage', () => {
     expect(result.limit).toBe(3)
     expect(result.hasSubscription).toBe(false)
   })
+
+  it('returns count when available', async () => {
+    mockCheckSubscription.mockResolvedValue({ isPremium: false } as any)
+    const mockSelect = vi.fn().mockReturnThis()
+    const mockEq = vi.fn().mockResolvedValue({ count: 2 })
+    mockFrom.mockReturnValue({
+      select: mockSelect,
+      eq: mockEq,
+    })
+
+    const result = await checkOcrUsage('user1')
+    expect(result.used).toBe(2)
+    expect(result.allowed).toBe(true)
+  })
+
+  it('returns not allowed when at free limit', async () => {
+    mockCheckSubscription.mockResolvedValue({ isPremium: false } as any)
+    const mockSelect = vi.fn().mockReturnThis()
+    const mockEq = vi.fn().mockResolvedValue({ count: 3 })
+    mockFrom.mockReturnValue({
+      select: mockSelect,
+      eq: mockEq,
+    })
+
+    const result = await checkOcrUsage('user1')
+    expect(result.used).toBe(3)
+    expect(result.allowed).toBe(false)
+  })
+
+  it('handles null count from supabase', async () => {
+    mockCheckSubscription.mockResolvedValue({ isPremium: false } as any)
+    const mockSelect = vi.fn().mockReturnThis()
+    const mockEq = vi.fn().mockResolvedValue({ count: null })
+    mockFrom.mockReturnValue({
+      select: mockSelect,
+      eq: mockEq,
+    })
+
+    const result = await checkOcrUsage('user1')
+    expect(result.used).toBe(0)
+    expect(result.allowed).toBe(true)
+  })
+
+  it('catches and handles errors', async () => {
+    mockCheckSubscription.mockRejectedValue(new Error('Unexpected error'))
+
+    const result = await checkOcrUsage('user1')
+    expect(result.allowed).toBe(true)
+    expect(result.used).toBe(0)
+    expect(result.limit).toBe(3)
+  })
 })
 
 describe('recordOcrUsage', () => {
@@ -75,6 +126,13 @@ describe('recordOcrUsage', () => {
       user_id: 'user1',
       image_hash: 'hash123',
     })
+  })
+
+  it('catches and handles errors silently', async () => {
+    mockFrom.mockRejectedValue(new Error('DB error'))
+
+    // Should not throw
+    await expect(recordOcrUsage('user1', 'hash123')).resolves.toBeUndefined()
   })
 })
 

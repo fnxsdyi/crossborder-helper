@@ -215,6 +215,9 @@ type TranslationKeys = {
   'settings.vatGstSettings': string
   'settings.defaultVatType': string
   'settings.saveSettings': string
+  'settings.selectPlan': string
+  'settings.proMonthly': string
+  'settings.proAnnual': string
 
   // Common
   'common.delete': string
@@ -638,6 +641,9 @@ const translations: Record<Locale, TranslationKeys> = {
     'settings.vatGstSettings': 'VAT / GST Settings',
     'settings.defaultVatType': 'Default VAT Type',
     'settings.saveSettings': 'Save Settings',
+    'settings.selectPlan': 'Choose your subscription plan:',
+    'settings.proMonthly': 'Pro Monthly — $9/mo',
+    'settings.proAnnual': 'Pro Annual — $90/yr (save $18)',
 
     // Common
     'common.delete': 'Delete',
@@ -1058,6 +1064,9 @@ const translations: Record<Locale, TranslationKeys> = {
     'settings.vatGstSettings': '增值税 / 消费税设置',
     'settings.defaultVatType': '默认增值税类型',
     'settings.saveSettings': '保存设置',
+    'settings.selectPlan': '选择你的订阅方案：',
+    'settings.proMonthly': 'Pro 月付 — $9/月',
+    'settings.proAnnual': 'Pro 年付 — $90/年（省 $18）',
 
     // Common
     'common.delete': '删除',
@@ -1478,6 +1487,9 @@ const translations: Record<Locale, TranslationKeys> = {
     'settings.vatGstSettings': 'VAT / GST 設定',
     'settings.defaultVatType': 'デフォルト VAT タイプ',
     'settings.saveSettings': '設定を保存',
+    'settings.selectPlan': 'サブスクリプションプランを選択：',
+    'settings.proMonthly': 'プロ月額 — $9/月',
+    'settings.proAnnual': 'プロ年額 — $90/年（$18お得）',
 
     // Common
     'common.delete': '削除',
@@ -1884,6 +1896,9 @@ const translations: Record<Locale, TranslationKeys> = {
     'settings.vatGstSettings': 'VAT / GST 설정',
     'settings.defaultVatType': '기본 VAT 유형',
     'settings.saveSettings': '설정 저장',
+    'settings.selectPlan': '구독 플랜을 선택하세요:',
+    'settings.proMonthly': '프로 월간 — $9/월',
+    'settings.proAnnual': '프로 연간 — $90/년 ($18 절약)',
     'common.delete': '삭제',
     'common.edit': '편집',
     'common.download': '다운로드',
@@ -2284,6 +2299,9 @@ const translations: Record<Locale, TranslationKeys> = {
     'settings.vatGstSettings': 'MwSt / GST Einstellungen',
     'settings.defaultVatType': 'Standard-MwSt-Typ',
     'settings.saveSettings': 'Einstellungen speichern',
+    'settings.selectPlan': 'Wählen Sie Ihren Aboplan:',
+    'settings.proMonthly': 'Pro Monatlich — $9/Monat',
+    'settings.proAnnual': 'Pro Jährlich — $90/Jahr (spare $18)',
     'common.delete': 'Löschen',
     'common.edit': 'Bearbeiten',
     'common.download': 'Herunterladen',
@@ -2684,6 +2702,9 @@ const translations: Record<Locale, TranslationKeys> = {
     'settings.vatGstSettings': 'Paramètres TVA / GST',
     'settings.defaultVatType': 'Type de TVA par défaut',
     'settings.saveSettings': 'Enregistrer',
+    'settings.selectPlan': 'Choisissez votre forfait :',
+    'settings.proMonthly': 'Pro Mensuel — $9/mois',
+    'settings.proAnnual': 'Pro Annuel — $90/an (économie de $18)',
     'common.delete': 'Supprimer',
     'common.edit': 'Modifier',
     'common.download': 'Télécharger',
@@ -3084,6 +3105,9 @@ const translations: Record<Locale, TranslationKeys> = {
     'settings.vatGstSettings': 'Configuración IVA / GST',
     'settings.defaultVatType': 'Tipo de IVA predeterminado',
     'settings.saveSettings': 'Guardar configuración',
+    'settings.selectPlan': 'Elige tu plan de suscripción:',
+    'settings.proMonthly': 'Pro Mensual — $9/mes',
+    'settings.proAnnual': 'Pro Anual — $90/año (ahorra $18)',
     'common.delete': 'Eliminar',
     'common.edit': 'Editar',
     'common.download': 'Descargar',
@@ -3484,6 +3508,9 @@ const translations: Record<Locale, TranslationKeys> = {
     'settings.vatGstSettings': 'Configurações IVA / GST',
     'settings.defaultVatType': 'Tipo de IVA padrão',
     'settings.saveSettings': 'Salvar configurações',
+    'settings.selectPlan': 'Escolha seu plano de assinatura:',
+    'settings.proMonthly': 'Pro Mensal — $9/mês',
+    'settings.proAnnual': 'Pro Anual — $90/ano (economize $18)',
     'common.delete': 'Excluir',
     'common.edit': 'Editar',
     'common.download': 'Baixar',

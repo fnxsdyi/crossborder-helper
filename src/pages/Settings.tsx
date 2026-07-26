@@ -270,10 +270,10 @@ export function SettingsPage({ isGuest }: SettingsPageProps) {
               </button>
             </div>
             <div className="p-6">
-              <p className="text-slate-600 mb-4">选择你的订阅方案：</p>
+              <p className="text-slate-600 mb-4">{t('settings.selectPlan')}</p>
               <div className="space-y-4">
                 <div>
-                  <p className="text-sm font-medium mb-2">Pro 月付 — $9/月</p>
+                  <p className="text-sm font-medium mb-2">{t('settings.proMonthly')}</p>
                   <PayPalSubscriptionButton
                     planId={PRO_MONTHLY_PLAN_ID}
                     onSuccess={async (id) => {
@@ -294,7 +294,7 @@ export function SettingsPage({ isGuest }: SettingsPageProps) {
                   />
                 </div>
                 <div>
-                  <p className="text-sm font-medium mb-2">Pro 年付 — $90/年（省 $18）</p>
+                  <p className="text-sm font-medium mb-2">{t('settings.proAnnual')}</p>
                   <PayPalSubscriptionButton
                     planId={PRO_ANNUAL_PLAN_ID}
                     onSuccess={async (id) => {

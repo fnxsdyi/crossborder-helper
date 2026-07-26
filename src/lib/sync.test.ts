@@ -105,6 +105,32 @@ describe('getClients', () => {
     expect(result).toHaveLength(1)
     expect(result[0].name).toBe('Test Client')
   })
+
+  it('throws error when query fails', async () => {
+    mockChain = createMockChain({ data: null, error: { message: 'Query failed' } })
+
+    await expect(getClients('user1')).rejects.toThrow()
+  })
+
+  it('returns empty array when no data', async () => {
+    mockChain = createMockChain({ data: null, error: null })
+
+    const result = await getClients('user1')
+    expect(result).toEqual([])
+  })
+
+  it('maps client with null optional fields', async () => {
+    const clientWithNulls = {
+      ...mockClient,
+      email: null,
+      country: null,
+    }
+    mockChain = createMockChain({ data: [clientWithNulls], error: null })
+
+    const result = await getClients('user1')
+    expect(result[0].email).toBe('')
+    expect(result[0].country).toBe('')
+  })
 })
 
 describe('upsertClient', () => {
@@ -125,6 +151,32 @@ describe('upsertClient', () => {
     const result = await upsertClient('user1', { id: '1', name: 'Updated' })
     expect(result.name).toBe('Updated')
   })
+
+  it('throws error when update fails', async () => {
+    mockChain = createMockChain({ data: null, error: { message: 'Update failed' } })
+
+    await expect(upsertClient('user1', { id: '1', name: 'Test' })).rejects.toThrow()
+  })
+
+  it('throws error when insert fails', async () => {
+    mockChain = createMockChain({ data: null, error: { message: 'Insert failed' } })
+
+    await expect(upsertClient('user1', { name: 'Test' })).rejects.toThrow()
+  })
+
+  it('creates client with optional fields', async () => {
+    mockChain = createMockChain({ data: mockClient, error: null })
+
+    const result = await upsertClient('user1', {
+      name: 'Full Client',
+      email: 'test@example.com',
+      company: 'Test Co',
+      address: '123 Main St',
+      country: 'US',
+      vatNumber: '123456',
+    })
+    expect(result).toBeDefined()
+  })
 })
 
 describe('deleteClient', () => {
@@ -135,6 +187,21 @@ describe('deleteClient', () => {
 
   it('deletes client', async () => {
     await expect(deleteClient('user1', 'client1')).resolves.not.toThrow()
+  })
+
+  it('throws error when delete fails', async () => {
+    mockChain = createMockChain({ data: null, error: null })
+    // delete() returns chain, first eq() returns chain, second eq() returns error
+    let eqCallCount = 0
+    mockChain.eq = vi.fn().mockImplementation(() => {
+      eqCallCount++
+      if (eqCallCount === 2) {
+        return Promise.resolve({ data: null, error: { message: 'Delete failed' } })
+      }
+      return mockChain
+    })
+
+    await expect(deleteClient('user1', 'client1')).rejects.toThrow()
   })
 })
 
@@ -149,6 +216,48 @@ describe('getInvoices', () => {
     const result = await getInvoices('user1')
     expect(result).toHaveLength(1)
     expect(result[0].invoiceNumber).toBe('INV-001')
+  })
+
+  it('maps invoice with null optional fields to defaults', async () => {
+    const invoiceWithNulls = {
+      ...mockInvoice,
+      subtotal: null,
+      tax_rate: null,
+      tax_amount: null,
+      total: null,
+      notes: null,
+      items: null,
+      status: null,
+      currency: null,
+      vat_type: null,
+      template: null,
+    }
+    mockChain = createMockChain({ data: [invoiceWithNulls], error: null })
+
+    const result = await getInvoices('user1')
+    expect(result[0].subtotal).toBe(0)
+    expect(result[0].taxRate).toBe(0)
+    expect(result[0].taxAmount).toBe(0)
+    expect(result[0].total).toBe(0)
+    expect(result[0].notes).toBeNull()
+    expect(result[0].items).toEqual([])
+    expect(result[0].status).toBe('draft')
+    expect(result[0].currency).toBe('USD')
+    expect(result[0].vatType).toBe('none')
+    expect(result[0].template).toBe('us')
+  })
+
+  it('throws error when query fails', async () => {
+    mockChain = createMockChain({ data: null, error: { message: 'Query failed' } })
+
+    await expect(getInvoices('user1')).rejects.toThrow()
+  })
+
+  it('returns empty array when no data', async () => {
+    mockChain = createMockChain({ data: null, error: null })
+
+    const result = await getInvoices('user1')
+    expect(result).toEqual([])
   })
 })
 
@@ -320,6 +429,22 @@ describe('getSettings', () => {
     expect(result.taxRate).toBe(0)
     expect(result.invoicePrefix).toBe('INV')
     expect(result.nextInvoiceNumber).toBe(1)
+  })
+
+  it('throws error when settings creation fails', async () => {
+    // First call returns error (no settings found)
+    // Second call (insert) also returns error
+    let callCount = 0
+    mockChain = createMockChain({ data: null, error: { message: 'Not found' } })
+    mockChain.single = vi.fn().mockImplementation(() => {
+      callCount++
+      if (callCount === 1) {
+        return Promise.resolve({ data: null, error: { message: 'Not found' } })
+      }
+      return Promise.resolve({ data: null, error: { message: 'Insert failed' } })
+    })
+
+    await expect(getSettings('user1')).rejects.toThrow()
   })
 })
 

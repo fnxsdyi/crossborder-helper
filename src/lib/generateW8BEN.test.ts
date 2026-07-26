@@ -64,6 +64,36 @@ describe('generateW8BEN', () => {
     expect(result).toBeDefined()
   })
 
+  it('handles permanent address with 3 lines', async () => {
+    const { generateW8BENPDF } = await import('./generateW8BEN')
+    const result = await generateW8BENPDF(
+      {
+        fullName: 'Three Line Address',
+        country: 'China',
+        permanentAddress: '123 Main St\nBeijing\nChaoyang District',
+        claimTreaty: false,
+        signature: 'Three Line Address',
+      },
+      new ArrayBuffer(100)
+    )
+    expect(result).toBeDefined()
+  })
+
+  it('handles empty optional fields', async () => {
+    const { generateW8BENPDF } = await import('./generateW8BEN')
+    const result = await generateW8BENPDF(
+      {
+        fullName: '',
+        country: '',
+        permanentAddress: '123 Main St',
+        claimTreaty: false,
+        signature: '',
+      },
+      new ArrayBuffer(100)
+    )
+    expect(result).toBeDefined()
+  })
+
   it('handles mailing address', async () => {
     const { generateW8BENPDF } = await import('./generateW8BEN')
     const result = await generateW8BENPDF(
@@ -78,6 +108,31 @@ describe('generateW8BEN', () => {
       new ArrayBuffer(100)
     )
     expect(result).toBeDefined()
+  })
+
+  it('handles mailing address with 3 lines', async () => {
+    const { generateW8BENPDF } = await import('./generateW8BEN')
+    const mockSetText = vi.fn()
+    mockGetFields.mockReturnValue([
+      { getName: () => 'topmostSubform[0].Page1[0].f_6[0]', constructor: { name: 'PDFTextField' }, setText: mockSetText },
+      { getName: () => 'topmostSubform[0].Page1[0].f_7[0]', constructor: { name: 'PDFTextField' }, setText: mockSetText },
+      { getName: () => 'topmostSubform[0].Page1[0].f_8[0]', constructor: { name: 'PDFTextField' }, setText: mockSetText },
+    ])
+    const result = await generateW8BENPDF(
+      {
+        fullName: 'Three Line User',
+        country: 'Germany',
+        permanentAddress: '456 Oak Ave',
+        mailingAddress: '789 Pine Blvd\nSuite 100\nBuilding A',
+        claimTreaty: false,
+        signature: 'Three Line User',
+      },
+      new ArrayBuffer(100)
+    )
+    expect(result).toBeDefined()
+    expect(mockSetText).toHaveBeenCalledWith('789 Pine Blvd')
+    expect(mockSetText).toHaveBeenCalledWith('Suite 100')
+    expect(mockSetText).toHaveBeenCalledWith('Building A')
   })
 
   it('handles US TIN', async () => {
@@ -262,5 +317,79 @@ describe('generateW8BEN', () => {
       new ArrayBuffer(100)
     )
     expect(result).toBeDefined()
+  })
+
+  it('safeSetTextField calls setText for PDFTextField', async () => {
+    const { generateW8BENPDF } = await import('./generateW8BEN')
+    const mockSetText = vi.fn()
+    mockGetFields.mockReturnValue([
+      { getName: () => 'topmostSubform[0].Page1[0].f_1[0]', constructor: { name: 'PDFTextField' }, setText: mockSetText },
+    ])
+    await generateW8BENPDF(
+      {
+        fullName: 'TextField Test',
+        country: 'China',
+        permanentAddress: '123 Main St',
+        claimTreaty: false,
+        signature: 'TextField Test',
+      },
+      new ArrayBuffer(100)
+    )
+    expect(mockSetText).toHaveBeenCalledWith('TextField Test')
+  })
+
+  it('safeCheckField calls check for PDFCheckBox', async () => {
+    const { generateW8BENPDF } = await import('./generateW8BEN')
+    const mockCheck = vi.fn()
+    mockGetFields.mockReturnValue([
+      { getName: () => 'topmostSubform[0].Page1[0].c1_01[0]', constructor: { name: 'PDFCheckBox' }, check: mockCheck },
+    ])
+    await generateW8BENPDF(
+      {
+        fullName: 'CheckBox Test',
+        country: 'China',
+        permanentAddress: '123 Main St',
+        claimTreaty: true,
+        signature: 'CheckBox Test',
+      },
+      new ArrayBuffer(100)
+    )
+    expect(mockCheck).toHaveBeenCalled()
+  })
+
+  it('safeCheckField catches and ignores errors', async () => {
+    const { generateW8BENPDF } = await import('./generateW8BEN')
+    mockGetFields.mockImplementation(() => { throw new Error('Check field error') })
+    const result = await generateW8BENPDF(
+      {
+        fullName: 'Check Error Test',
+        country: 'China',
+        permanentAddress: '123 Main St',
+        claimTreaty: true,
+        usTin: '123-45-6789',
+        signature: 'Check Error Test',
+      },
+      new ArrayBuffer(100)
+    )
+    expect(result).toBeDefined()
+  })
+})
+
+describe('loadW8BENTemplate', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('fetches and returns PDF template', async () => {
+    const mockArrayBuffer = vi.fn().mockResolvedValue(new ArrayBuffer(100))
+    global.fetch = vi.fn().mockResolvedValue({
+      arrayBuffer: mockArrayBuffer,
+    })
+
+    const { loadW8BENTemplate } = await import('./generateW8BEN')
+    const result = await loadW8BENTemplate()
+
+    expect(global.fetch).toHaveBeenCalledWith('/fw8ben.pdf')
+    expect(result).toBeInstanceOf(ArrayBuffer)
   })
 })

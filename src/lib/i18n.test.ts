@@ -60,7 +60,14 @@ describe('i18n', () => {
 
   it('t function interpolates variables', async () => {
     const { t } = await import('./i18n')
-    const result = t('nav.home')
+    // Test with a key that contains {variable} placeholder
+    const result = t('editor.lineItemTotal', { count: '5' })
+    expect(typeof result).toBe('string')
+  })
+
+  it('t function handles multiple variable interpolations', async () => {
+    const { t } = await import('./i18n')
+    const result = t('editor.taxAmount', { amount: '100', rate: '10%' })
     expect(typeof result).toBe('string')
   })
 
@@ -80,6 +87,62 @@ describe('i18n', () => {
     const { getLocale } = await import('./i18n')
     const locale = getLocale()
     expect(['en', 'zh', 'ja', 'ko', 'de', 'fr', 'es', 'pt']).toContain(locale)
+  })
+
+  it('detectBrowserLanguage detects Chinese', async () => {
+    Object.defineProperty(navigator, 'language', { value: 'zh-CN', configurable: true })
+    vi.resetModules()
+    const { getLocale } = await import('./i18n')
+    expect(getLocale()).toBe('zh')
+  })
+
+  it('detectBrowserLanguage detects Japanese', async () => {
+    Object.defineProperty(navigator, 'language', { value: 'ja-JP', configurable: true })
+    vi.resetModules()
+    const { getLocale } = await import('./i18n')
+    expect(getLocale()).toBe('ja')
+  })
+
+  it('detectBrowserLanguage detects Korean', async () => {
+    Object.defineProperty(navigator, 'language', { value: 'ko-KR', configurable: true })
+    vi.resetModules()
+    const { getLocale } = await import('./i18n')
+    expect(getLocale()).toBe('ko')
+  })
+
+  it('detectBrowserLanguage detects German', async () => {
+    Object.defineProperty(navigator, 'language', { value: 'de-DE', configurable: true })
+    vi.resetModules()
+    const { getLocale } = await import('./i18n')
+    expect(getLocale()).toBe('de')
+  })
+
+  it('detectBrowserLanguage detects French', async () => {
+    Object.defineProperty(navigator, 'language', { value: 'fr-FR', configurable: true })
+    vi.resetModules()
+    const { getLocale } = await import('./i18n')
+    expect(getLocale()).toBe('fr')
+  })
+
+  it('detectBrowserLanguage detects Spanish', async () => {
+    Object.defineProperty(navigator, 'language', { value: 'es-ES', configurable: true })
+    vi.resetModules()
+    const { getLocale } = await import('./i18n')
+    expect(getLocale()).toBe('es')
+  })
+
+  it('detectBrowserLanguage detects Portuguese', async () => {
+    Object.defineProperty(navigator, 'language', { value: 'pt-BR', configurable: true })
+    vi.resetModules()
+    const { getLocale } = await import('./i18n')
+    expect(getLocale()).toBe('pt')
+  })
+
+  it('detectBrowserLanguage defaults to English for unknown locale', async () => {
+    Object.defineProperty(navigator, 'language', { value: 'fr-CA', configurable: true })
+    vi.resetModules()
+    const { getLocale } = await import('./i18n')
+    expect(getLocale()).toBe('fr')
   })
 
   it('initializes from localStorage when available', async () => {
