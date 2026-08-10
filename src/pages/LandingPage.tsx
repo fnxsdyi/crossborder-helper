@@ -186,7 +186,7 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6"><h3 className="text-lg font-semibold text-white mb-1">{t('landing.freePlan')}</h3><p className="text-slate-400 text-sm mb-4">{t('landing.freePlanDesc')}</p><div className="text-3xl font-bold text-white mb-4"></div><ul className="space-y-2 mb-6 text-sm">{[1,2,3,4].map(i => (<li key={i} className="flex items-center gap-2 text-slate-400"><Check size={14} className="text-green-500 flex-shrink-0" />{t('landing.freeFeature' + i as never)}</li>))}</ul><button onClick={onEnterApp} className="w-full py-2.5 border border-white/10 text-slate-300 rounded-xl font-medium text-sm hover:bg-white/5 transition-all">{t('landing.freeTrial')}</button></div>
             <div className="bg-white/[0.04] border border-white/10 rounded-2xl p-6 relative"><h3 className="text-lg font-semibold text-white mb-1">{t('landing.proPlan')}</h3><p className="text-slate-400 text-sm mb-4">{t('landing.proPlanMonthlyDesc')}</p><div className="flex items-baseline gap-1 mb-1"><span className="text-3xl font-bold text-white">{t('landing.monthlyPrice')}</span><span className="text-sm text-slate-500">{t('landing.perMonth')}</span></div><ul className="space-y-2 mb-6 text-sm">{[1,2,3,4,5,6].map(i => (<li key={i} className="flex items-center gap-2 text-slate-400"><Check size={14} className="text-green-500 flex-shrink-0" />{t('landing.proFeature' + i as never)}</li>))}</ul><PayPalSubscriptionButton planId={PRO_MONTHLY_PLAN_ID} onSuccess={()=>{window.location.href='/register'}} onError={(err)=>console.error(err)} /></div>
-            <div className="bg-gradient-to-br from-indigo-500 to-cyan-500 rounded-2xl p-6 text-white relative overflow-hidden"><div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-8 -mt-8" /><span className="inline-block px-2 py-0.5 bg-green-500 text-white text-[10px] font-bold rounded mb-2 uppercase tracking-wide">{t('landing.bestValue')}</span><h3 className="text-lg font-semibold mb-1">{t('landing.proPlan')}</h3><p className="text-white/70 text-sm mb-4">{t('landing.proPlanAnnualDesc')}</p><div className="flex items-baseline gap-1 mb-1"><span className="text-3xl font-bold">{t('landing.annualPrice')}</span><span className="text-sm text-white/70">{t('landing.perYear')}</span></div><p className="text-xs text-white/60 mb-4">{t('landing.monthlySubtext')}</p><ul className="space-y-2 mb-6 text-sm">{[1,2,3,4,5,6].map(i => (<li key={i} className="flex items-center gap-2 text-white/90"><Check size={14} className="text-green-300 flex-shrink-0" />{t('landing.proFeature' + i as never)}</li>))}</ul><PayPalSubscriptionButton planId={PRO_ANNUAL_PLAN_ID} onSuccess={()=>{window.location.href='/register'}} onError={(err)=>console.error(err)} /><p className="text-xs text-white/60 text-center mt-3">{t('landing.cancelAnytime')}</p></div>
+            <div className="bg-gradient-to-br from-indigo-500 to-cyan-500 rounded-2xl p-6 text-white relative overflow-hidden"><div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-8 -mt-8" /><span className="inline-block px-2 py-0.5 bg-green-500 text-white text-[10px] font-bold rounded mb-2 uppercase tracking-wide">Founder</span><h3 className="text-lg font-semibold mb-1">Founder's Edition</h3><p className="text-white/70 text-sm mb-4">Founding-member rate — locked for life. Limited to first 100.</p><div className="flex items-baseline gap-1 mb-1"><span className="text-3xl font-bold">{t('landing.annualPrice')}</span><span className="text-sm text-white/70">{t('landing.perYear')}</span></div><p className="text-xs text-white/60 mb-4">Founding rate, locked for life. We don't sell lifetime plans — a subscription keeps the service funded and your data safe. Cancel anytime.</p><ul className="space-y-2 mb-6 text-sm">{[1,2,3,4,5,6].map(i => (<li key={i} className="flex items-center gap-2 text-white/90"><Check size={14} className="text-green-300 flex-shrink-0" />{t('landing.proFeature' + i as never)}</li>))}</ul><PayPalSubscriptionButton planId={PRO_ANNUAL_PLAN_ID} onSuccess={()=>{window.location.href='/register'}} onError={(err)=>console.error(err)} /><p className="text-xs text-white/60 text-center mt-3">Claim your founder rate</p></div>
           </div>
         </div>
       </section>
@@ -194,17 +194,19 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
       <section className="py-24 px-6 bg-slate-950">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl font-bold text-white text-center mb-12">{t('landing.faqTitle')}</h2>
-          <div className="space-y-3">{[1,2,3,4].map(i => {
+          <div className="space-y-3">{[1,2,3,4,5].map(i => {
             const isOpen = openFaq === i
+            const q = i === 5 ? 'Do you offer refunds?' : t('landing.faq' + i + 'Q' as never)
+            const a = i === 5 ? "Yes — if TaxFlow isn't right for you within 14 days of your first payment, email support for a full refund. No questions asked." : t('landing.faq' + i + 'A' as never)
             return (
               <div key={i} className="bg-white/[0.03] border border-white/5 rounded-xl overflow-hidden">
                 <button onClick={() => setOpenFaq(isOpen ? null : i)} className="w-full flex items-center justify-between p-5 text-left text-white font-medium text-sm hover:bg-white/[0.02] transition-colors">
-                  {t('landing.faq' + i + 'Q' as never)}
+                  {q}
                   <ChevronDown className={'w-4 h-4 text-slate-500 transition-transform duration-300 ' + (isOpen ? 'rotate-180' : '')} />
                 </button>
                 <div className={'grid transition-all duration-300 ease-in-out ' + (isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]')}>
                   <div className="overflow-hidden">
-                    <div className="px-5 pb-5 text-sm text-slate-400 leading-relaxed">{t('landing.faq' + i + 'A' as never)}</div>
+                    <div className="px-5 pb-5 text-sm text-slate-400 leading-relaxed">{a}</div>
                   </div>
                 </div>
               </div>
@@ -215,7 +217,7 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
 
       <section className="py-20 px-6 bg-[#0a0e27] border-t border-white/5 text-center">
         <h2 className="text-4xl font-extrabold text-white mb-4">Ready to simplify your freelance finances?</h2>
-        <p className="text-slate-400 mb-8 max-w-md mx-auto">Join freelancers in 50+ countries who use TaxFlow to invoice and manage taxes across borders.</p>
+        <p className="text-slate-400 mb-8 max-w-md mx-auto">Join freelancers worldwide who use TaxFlow to invoice and manage US taxes across borders.</p>
         <button onClick={onEnterApp} className="inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-indigo-500 to-cyan-400 text-white rounded-xl font-semibold text-sm hover:shadow-xl hover:shadow-indigo-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all">{t('landing.freeTrial')}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
       </section>
 
