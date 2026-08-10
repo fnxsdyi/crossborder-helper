@@ -157,109 +157,11 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
 
       <section className="py-24 px-6 bg-slate-950">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <div className="text-sm font-semibold text-indigo-400 uppercase tracking-widest mb-4">{t('testimonials.title')}</div>
-            <h2 className="text-4xl font-extrabold text-white mb-4">{t('testimonials.subtitle')}</h2>
-            <p className="text-slate-400">{t('testimonials.subtitle')}</p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Review 1 */}
-            <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 hover:border-indigo-500/30 transition-all">
-              <div className="flex items-center gap-1 mb-4">
-                {[1,2,3,4,5].map(i => (
-                  <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="#fbbf24" stroke="none">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                  </svg>
-                ))}
-              </div>
-              <p className="text-slate-300 text-sm leading-relaxed mb-6">{t('testimonials.review1')}</p>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center text-white font-bold text-sm">G</div>
-                <div>
-                  <p className="text-white font-medium text-sm">{t('testimonials.review1Author')}</p>
-                  <p className="text-slate-500 text-xs">Product Hunt</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Review 2 */}
-            <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 hover:border-indigo-500/30 transition-all">
-              <div className="flex items-center gap-1 mb-4">
-                {[1,2,3,4,5].map(i => (
-                  <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="#fbbf24" stroke="none">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                  </svg>
-                ))}
-              </div>
-              <p className="text-slate-300 text-sm leading-relaxed mb-6">{t('testimonials.review2')}</p>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-400 flex items-center justify-center text-white font-bold text-sm">B</div>
-                <div>
-                  <p className="text-white font-medium text-sm">{t('testimonials.review2Author')}</p>
-                  <p className="text-slate-500 text-xs">Product Hunt</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Review 3 */}
-            <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 hover:border-indigo-500/30 transition-all">
-              <div className="flex items-center gap-1 mb-4">
-                {[1,2,3,4,5].map(i => (
-                  <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="#fbbf24" stroke="none">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                  </svg>
-                ))}
-              </div>
-              <p className="text-slate-300 text-sm leading-relaxed mb-6">{t('testimonials.review3')}</p>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-400 flex items-center justify-center text-white font-bold text-sm">A</div>
-                <div>
-                  <p className="text-white font-medium text-sm">{t('testimonials.review3Author')}</p>
-                  <p className="text-slate-500 text-xs">Product Hunt</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Review 4 */}
-            <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 hover:border-indigo-500/30 transition-all">
-              <div className="flex items-center gap-1 mb-4">
-                {[1,2,3,4,5].map(i => (
-                  <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="#fbbf24" stroke="none">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                  </svg>
-                ))}
-              </div>
-              <p className="text-slate-300 text-sm leading-relaxed mb-6">{t('testimonials.review4')}</p>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-orange-400 flex items-center justify-center text-white font-bold text-sm">M</div>
-                <div>
-                  <p className="text-white font-medium text-sm">{t('testimonials.review4Author')}</p>
-                  <p className="text-slate-500 text-xs">Product Hunt</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Review 5 */}
-            <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6 hover:border-indigo-500/30 transition-all">
-              <div className="flex items-center gap-1 mb-4">
-                {[1,2,3,4,5].map(i => (
-                  <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="#fbbf24" stroke="none">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                  </svg>
-                ))}
-              </div>
-              <p className="text-slate-300 text-sm leading-relaxed mb-6">{t('testimonials.review5')}</p>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-400 flex items-center justify-center text-white font-bold text-sm">K</div>
-                <div>
-                  <p className="text-white font-medium text-sm">{t('testimonials.review5Author')}</p>
-                  <p className="text-slate-500 text-xs">Product Hunt</p>
-                </div>
-              </div>
-            </div>
-
-            {/* PH Badge */}
-            <div className="bg-gradient-to-br from-indigo-500/10 to-cyan-500/10 border border-indigo-500/20 rounded-2xl p-6 flex flex-col items-center justify-center text-center">
+          <div className="text-center max-w-3xl mx-auto">
+            <div className="text-sm font-semibold text-indigo-400 uppercase tracking-widest mb-4">As featured on</div>
+            <h2 className="text-4xl font-extrabold text-white mb-4">Product Hunt</h2>
+            <p className="text-slate-400 mb-10">TaxFlow launched on Product Hunt. See what the maker community had to say.</p>
+            <div className="bg-gradient-to-br from-indigo-500/10 to-cyan-500/10 border border-indigo-500/20 rounded-2xl p-8 flex flex-col items-center justify-center text-center">
               <div className="mb-4">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-indigo-400">
                   <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
