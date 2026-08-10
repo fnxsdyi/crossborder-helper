@@ -11,6 +11,7 @@ const TaxWizard = lazy(() => import('@/pages/TaxWizard').then(m => ({ default: m
 const CurrencyDashboard = lazy(() => import('@/pages/CurrencyDashboard').then(m => ({ default: m.CurrencyDashboard })))
 const SettingsPage = lazy(() => import('@/pages/Settings').then(m => ({ default: m.SettingsPage })))
 const OcrPage = lazy(() => import('@/pages/OcrPage').then(m => ({ default: m.OcrPage })))
+const W8BenTracker = lazy(() => import('@/pages/W8BenTracker').then(m => ({ default: m.W8BenTracker })))
 
 class ErrorBoundary extends Component<{ children: ReactNode; fallback: ReactNode }, { hasError: boolean }> {
   constructor(props: { children: ReactNode; fallback: ReactNode }) {
@@ -60,6 +61,8 @@ export function Layout({ onSignOut, isGuest }: LayoutProps) {
         return <CurrencyDashboard />
       case 'tax':
         return <TaxWizard />
+      case 'w8ben':
+        return <W8BenTracker />
       case 'settings':
         return <SettingsPage isGuest={isGuest} />
       case 'contract':

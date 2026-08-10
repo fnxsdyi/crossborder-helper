@@ -66,6 +66,21 @@ export interface TaxProfile {
   updatedAt: Date
 }
 
+/**
+ * A W-8BEN form submitted to one payer/platform.
+ * IRS rule: a W-8BEN stays valid until 31 Dec of the 3rd year after signing.
+ */
+export interface W8BenTracker {
+  id?: number
+  platform: string
+  country?: string
+  submittedAt: Date
+  expiresAt: Date
+  notes?: string
+  createdAt: Date
+  updatedAt: Date
+}
+
 export interface Settings {
   id?: number
   businessName: string
@@ -88,6 +103,7 @@ const db = new Dexie('TaxFlowHelper') as Dexie & {
   invoices: EntityTable<Invoice, 'id'>
   taxProfiles: EntityTable<TaxProfile, 'id'>
   settings: EntityTable<Settings, 'id'>
+  w8benTrackers: EntityTable<W8BenTracker, 'id'>
 }
 
 db.version(1).stores({
@@ -105,6 +121,14 @@ db.version(2).stores({
 }).upgrade(_tx => {
   // OCR fields are optional, no migration needed
   return Promise.resolve()
+})
+
+db.version(3).stores({
+  clients: '++id, name, email, country, createdAt',
+  invoices: '++id, invoiceNumber, clientId, status, currency, issueDate, createdAt',
+  taxProfiles: '++id, country, createdAt',
+  settings: '++id',
+  w8benTrackers: '++id, platform, expiresAt, createdAt',
 })
 
 export default db

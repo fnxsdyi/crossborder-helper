@@ -30,8 +30,20 @@ describe('checkOcrUsage', () => {
     mockFrom.mockReturnValue({
       select: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),
+      gte: vi.fn().mockReturnThis(),
     })
   })
+
+  /** Builds a supabase query-chain mock whose terminal `.gte()` resolves to `result`. */
+  function mockQueryChain(result: { count: number | null }) {
+    const gte = vi.fn().mockResolvedValue(result)
+    mockFrom.mockReturnValue({
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      gte,
+    })
+    return gte
+  }
 
   it('returns unlimited for admin users', async () => {
     mockIsAdmin.mockReturnValue(true)
@@ -60,26 +72,27 @@ describe('checkOcrUsage', () => {
 
   it('returns count when available', async () => {
     mockCheckSubscription.mockResolvedValue({ isPremium: false } as any)
-    const mockSelect = vi.fn().mockReturnThis()
-    const mockEq = vi.fn().mockResolvedValue({ count: 2 })
-    mockFrom.mockReturnValue({
-      select: mockSelect,
-      eq: mockEq,
-    })
+    mockQueryChain({ count: 2 })
 
     const result = await checkOcrUsage('user1')
     expect(result.used).toBe(2)
     expect(result.allowed).toBe(true)
   })
 
+  it('only counts scans from the current month', async () => {
+    mockCheckSubscription.mockResolvedValue({ isPremium: false } as any)
+    const gte = mockQueryChain({ count: 1 })
+
+    await checkOcrUsage('user1')
+
+    const now = new Date()
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
+    expect(gte).toHaveBeenCalledWith('used_at', monthStart)
+  })
+
   it('returns not allowed when at free limit', async () => {
     mockCheckSubscription.mockResolvedValue({ isPremium: false } as any)
-    const mockSelect = vi.fn().mockReturnThis()
-    const mockEq = vi.fn().mockResolvedValue({ count: 3 })
-    mockFrom.mockReturnValue({
-      select: mockSelect,
-      eq: mockEq,
-    })
+    mockQueryChain({ count: 3 })
 
     const result = await checkOcrUsage('user1')
     expect(result.used).toBe(3)
@@ -88,12 +101,7 @@ describe('checkOcrUsage', () => {
 
   it('handles null count from supabase', async () => {
     mockCheckSubscription.mockResolvedValue({ isPremium: false } as any)
-    const mockSelect = vi.fn().mockReturnThis()
-    const mockEq = vi.fn().mockResolvedValue({ count: null })
-    mockFrom.mockReturnValue({
-      select: mockSelect,
-      eq: mockEq,
-    })
+    mockQueryChain({ count: null })
 
     const result = await checkOcrUsage('user1')
     expect(result.used).toBe(0)

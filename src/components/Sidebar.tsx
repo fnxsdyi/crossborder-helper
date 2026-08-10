@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   Camera,
   UserPlus,
+  Clock,
 } from 'lucide-react'
 import { useAppStore } from '@/stores/appStore'
 import { ThemeToggle } from './ThemeToggle'
@@ -38,6 +39,7 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
     { id: 'clients' as const, labelKey: 'nav.clients' as const, icon: Users },
     { id: 'currency' as const, labelKey: 'nav.currency' as const, icon: ArrowRightLeft },
     { id: 'tax' as const, labelKey: 'nav.tax' as const, icon: Calculator },
+    { id: 'w8ben' as const, labelKey: 'nav.trackers' as const, icon: Clock },
     { id: 'contract' as const, labelKey: 'nav.contractScanner' as const, icon: ShieldCheck, external: true, href: 'https://shield.kaki.llc' },
     { id: 'settings' as const, labelKey: 'nav.settings' as const, icon: Settings },
   ]

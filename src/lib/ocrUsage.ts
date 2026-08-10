@@ -4,6 +4,12 @@ import { isAdmin } from './config'
 
 const OCR_FREE_LIMIT = 3
 
+/** Local midnight on the 1st of the current month, as ISO — free quota resets monthly. */
+function getMonthStart(): string {
+  const now = new Date()
+  return new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
+}
+
 export async function checkOcrUsage(userId: string, userEmail?: string): Promise<{
   allowed: boolean
   used: number
@@ -22,11 +28,12 @@ export async function checkOcrUsage(userId: string, userEmail?: string): Promise
       return { allowed: true, used: 0, limit: Infinity, hasSubscription: true }
     }
 
-    // Check free usage
+    // Check free usage for the current calendar month
     const { count } = await supabase
       .from('ocr_usage')
       .select('*', { count: 'exact', head: true })
       .eq('user_id', userId)
+      .gte('used_at', getMonthStart())
 
     const used = count || 0
     return {
