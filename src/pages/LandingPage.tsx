@@ -116,7 +116,7 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
               </div>
               <div className="mt-8">
                 <a href="https://www.producthunt.com/products/taxflow?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-taxflow" target="_blank" rel="noopener noreferrer">
-                  <img alt="TaxFlow - AI invoices, W-8BEN tax forms & multi-currency tracking | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1203042&theme=light&t=1784785938998" />
+                  <img alt="TaxFlow - invoices, W-8BEN tax forms & multi-currency tracking | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1203042&theme=light&t=1784785938998" />
                 </a>
               </div>
             </div>
