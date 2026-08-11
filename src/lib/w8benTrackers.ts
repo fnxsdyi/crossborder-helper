@@ -67,3 +67,52 @@ export async function updateTracker(id: number, input: TrackerInput): Promise<vo
 export async function deleteTracker(id: number): Promise<void> {
   await db.w8benTrackers.delete(id)
 }
+
+export interface ReminderSummary {
+  /** Total number of tracked forms. */
+  total: number
+  /** Signed year + 3 has passed — form no longer valid. */
+  expired: number
+  /** Expiring within the next 7 days (inclusive). */
+  within7: number
+  /** Expiring within the next 30 days (8–30). */
+  within30: number
+  /** Expiring within the next 60 days (31–60). */
+  within60: number
+  /** Expiring within the next 90 days (61–90). */
+  within90: number
+  /** expired + within7 + within30 + within60 + within90 — the actionable set. */
+  needAttention: number
+  /** Soonest-expiring form (null when none tracked). listTrackers already sorts ascending. */
+  soonest: W8BenTracker | null
+}
+
+/**
+ * Reminder snapshot for the W-8BEN expiry tracker. Windows:
+ * expired (<0d), ≤7d, ≤30d, ≤60d, ≤90d; beyond 90d is "ok".
+ * Pure Dexie read — safe to call on app open, no backend or email needed.
+ */
+export async function getReminders(): Promise<ReminderSummary> {
+  const trackers = await listTrackers()
+  const summary: ReminderSummary = {
+    total: trackers.length,
+    expired: 0,
+    within7: 0,
+    within30: 0,
+    within60: 0,
+    within90: 0,
+    needAttention: 0,
+    soonest: trackers[0] ?? null,
+  }
+  for (const tr of trackers) {
+    const d = daysUntil(tr.expiresAt)
+    if (d < 0) summary.expired++
+    else if (d <= 7) summary.within7++
+    else if (d <= 30) summary.within30++
+    else if (d <= 60) summary.within60++
+    else if (d <= 90) summary.within90++
+  }
+  summary.needAttention =
+    summary.expired + summary.within7 + summary.within30 + summary.within60 + summary.within90
+  return summary
+}

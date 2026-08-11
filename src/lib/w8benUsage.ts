@@ -1,8 +1,7 @@
 import { supabase } from './supabase'
 import { checkSubscription } from './subscription'
-import { isAdmin } from './config'
+import { isAdmin, W8BEN_FREE_LIMIT } from './config'
 
-const W8BEN_FREE_LIMIT = 5
 const STORAGE_KEY = 'w8ben_usage'
 
 interface MonthlyUsage {

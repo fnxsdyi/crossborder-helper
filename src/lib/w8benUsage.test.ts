@@ -22,6 +22,7 @@ vi.mock('./subscription', () => ({
 const mockIsAdmin = vi.fn().mockReturnValue(false)
 vi.mock('./config', () => ({
   isAdmin: (...args: unknown[]) => mockIsAdmin(...args),
+  W8BEN_FREE_LIMIT: 3,
 }))
 
 describe('checkW8BENUsage', () => {
@@ -51,7 +52,7 @@ describe('checkW8BENUsage', () => {
   it('tracks guest usage in localStorage', async () => {
     const result = await checkW8BENUsage()
     expect(result.used).toBe(0)
-    expect(result.limit).toBe(5)
+    expect(result.limit).toBe(3)
   })
 
   it('returns allowed when under free limit for users', async () => {
@@ -67,7 +68,7 @@ describe('checkW8BENUsage', () => {
 
     const result = await checkW8BENUsage('user1')
     expect(result.allowed).toBe(true)
-    expect(result.limit).toBe(5)
+    expect(result.limit).toBe(3)
   })
 
   it('logs warning when query fails', async () => {
@@ -113,7 +114,7 @@ describe('checkW8BENUsage', () => {
 
     const result = await checkW8BENUsage()
     expect(result.used).toBe(0)
-    expect(result.limit).toBe(5)
+    expect(result.limit).toBe(3)
   })
 })
 

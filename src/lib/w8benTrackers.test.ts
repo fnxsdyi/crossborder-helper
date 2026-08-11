@@ -24,6 +24,7 @@ import {
   addTracker,
   updateTracker,
   deleteTracker,
+  getReminders,
 } from './w8benTrackers'
 
 function daysFromNow(days: number): Date {
@@ -123,5 +124,54 @@ describe('CRUD', () => {
   it('deletes a tracker', async () => {
     await deleteTracker(7)
     expect(mockDelete).toHaveBeenCalledWith(7)
+  })
+})
+
+describe('getReminders', () => {
+  function tracker(id: number, daysToExpiry: number) {
+    return {
+      id,
+      platform: `P${id}`,
+      submittedAt: new Date(),
+      expiresAt: daysFromNow(daysToExpiry),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }
+  }
+
+  it('returns an empty summary when no trackers exist', async () => {
+    mockToArray.mockResolvedValue([])
+    const r = await getReminders()
+    expect(r.total).toBe(0)
+    expect(r.needAttention).toBe(0)
+    expect(r.soonest).toBeNull()
+  })
+
+  it('buckets trackers into expired / 7 / 30 / 60 / 90-day windows', async () => {
+    mockToArray.mockResolvedValue([
+      tracker(1, -5), // expired
+      tracker(2, 3), // within7
+      tracker(3, 20), // within30
+      tracker(4, 45), // within60
+      tracker(5, 80), // within90
+      tracker(6, 200), // ok
+    ])
+    const r = await getReminders()
+    expect(r.total).toBe(6)
+    expect(r.expired).toBe(1)
+    expect(r.within7).toBe(1)
+    expect(r.within30).toBe(1)
+    expect(r.within60).toBe(1)
+    expect(r.within90).toBe(1)
+    expect(r.needAttention).toBe(5)
+    // listTrackers sorts ascending by expiry, so the already-expired form (id 1) is soonest
+    expect(r.soonest?.id).toBe(1)
+  })
+
+  it('treats the exactly-90-day boundary as still needing attention', async () => {
+    mockToArray.mockResolvedValue([tracker(1, 90)])
+    const r = await getReminders()
+    expect(r.within90).toBe(1)
+    expect(r.needAttention).toBe(1)
   })
 })

@@ -12,7 +12,9 @@ import {
   computeExpiry,
   daysUntil,
   trackerStatus,
+  getReminders,
   type TrackerStatus,
+  type ReminderSummary,
 } from '@/lib/w8benTrackers'
 
 function toDateInput(d: Date): string {
@@ -38,9 +40,17 @@ const STATUS_KEY: Record<TrackerStatus, 'trackers.statusExpired' | 'trackers.sta
   ok: 'trackers.statusOk',
 }
 
+const ROW_BORDER: Record<TrackerStatus, string> = {
+  expired: 'border-l-red-400',
+  urgent: 'border-l-orange-400',
+  soon: 'border-l-amber-400',
+  ok: 'border-l-emerald-300',
+}
+
 export function W8BenTracker() {
   const { t } = useI18n()
   const [trackers, setTrackers] = useState<Tracker[]>([])
+  const [reminders, setReminders] = useState<ReminderSummary | null>(null)
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [editing, setEditing] = useState<Tracker | null>(null)
@@ -54,7 +64,9 @@ export function W8BenTracker() {
   const load = useCallback(async () => {
     setLoading(true)
     try {
-      setTrackers(await listTrackers())
+      const [trackerList, reminderSummary] = await Promise.all([listTrackers(), getReminders()])
+      setTrackers(trackerList)
+      setReminders(reminderSummary)
     } catch (err) {
       console.error('Failed to load W-8BEN trackers:', err)
     } finally {
@@ -228,6 +240,23 @@ export function W8BenTracker() {
         <p>{t('trackers.irsRule')}</p>
       </div>
 
+      {reminders && reminders.needAttention > 0 && (
+        <div className="flex items-start gap-2 mb-6 p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-700">
+          <AlertTriangle size={16} className="mt-0.5 shrink-0" />
+          <p>
+            <span className="font-semibold">{t('trackers.alertTitle')}</span>
+            <br />
+            {t('trackers.alertSummary', {
+              expired: String(reminders.expired),
+              dueWithin30: String(reminders.within7 + reminders.within30),
+              dueWithin90: String(reminders.needAttention - reminders.expired),
+            })}
+            <br />
+            <span className="text-red-600">{t('trackers.renewHint')}</span>
+          </p>
+        </div>
+      )}
+
       {loading ? (
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
@@ -248,7 +277,7 @@ export function W8BenTracker() {
             const status = trackerStatus(tracker.expiresAt)
             const days = daysUntil(tracker.expiresAt)
             return (
-              <div key={tracker.id} className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+              <div key={tracker.id} className={`bg-white rounded-xl shadow-sm border border-slate-200 p-5 border-l-4 ${ROW_BORDER[status]}`}>
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <h3 className="font-semibold">{tracker.platform}</h3>

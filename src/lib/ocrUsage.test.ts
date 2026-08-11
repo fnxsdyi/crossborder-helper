@@ -17,6 +17,7 @@ vi.mock('./subscription', () => ({
 
 vi.mock('./config', () => ({
   isAdmin: (...args: unknown[]) => mockIsAdmin(...args),
+  OCR_FREE_LIMIT: 3,
 }))
 
 // Import after mocks are set up

@@ -47,6 +47,12 @@ type TranslationKeys = {
   'trackers.statusOk': string
   'trackers.daysLeft': string
   'trackers.expiredDaysAgo': string
+  'trackers.alertTitle': string
+  'trackers.alertSummary': string
+  'trackers.renewHint': string
+  'dashboard.w8benReminder': string
+  'dashboard.w8benReminderDesc': string
+  'dashboard.viewTrackers': string
 
   // Guest
   'guest.bannerTitle': string
@@ -494,6 +500,12 @@ const translations: Record<Locale, TranslationKeys> = {
     'trackers.statusOk': 'Valid',
     'trackers.daysLeft': '{days} days left',
     'trackers.expiredDaysAgo': 'Expired {days} days ago',
+    'trackers.alertTitle': 'Expiry reminders',
+    'trackers.alertSummary': '{expired} expired · {dueWithin30} due within 30 days · {dueWithin90} due within 90 days',
+    'trackers.renewHint': 'Re-sign before expiry to keep withholding at 0%.',
+    'dashboard.w8benReminder': 'W-8BEN expiring soon',
+    'dashboard.w8benReminderDesc': 'You have {count} W-8BEN form(s) needing attention within 90 days.',
+    'dashboard.viewTrackers': 'View trackers',
 
     // Guest
     'guest.bannerTitle': "You're in Guest Mode",
@@ -938,6 +950,12 @@ const translations: Record<Locale, TranslationKeys> = {
     'trackers.statusOk': '有效',
     'trackers.daysLeft': '还剩 {days} 天',
     'trackers.expiredDaysAgo': '已过期 {days} 天',
+    'trackers.alertTitle': '到期提醒',
+    'trackers.alertSummary': '{expired} 份已过期 · {dueWithin30} 份 30 天内到期 · {dueWithin90} 份 90 天内到期',
+    'trackers.renewHint': '请在到期前重新签署，以维持 0% 预扣税。',
+    'dashboard.w8benReminder': 'W-8BEN 即将到期',
+    'dashboard.w8benReminderDesc': '你有 {count} 份 W-8BEN 表格需要在 90 天内处理。',
+    'dashboard.viewTrackers': '查看台账',
 
     // Guest
     'guest.bannerTitle': '您正在使用游客模式',
@@ -1382,6 +1400,12 @@ const translations: Record<Locale, TranslationKeys> = {
     'trackers.statusOk': '有効',
     'trackers.daysLeft': '残り {days} 日',
     'trackers.expiredDaysAgo': '{days} 日前に失効',
+    'trackers.alertTitle': '有効期限のお知らせ',
+    'trackers.alertSummary': '{expired} 件期限切れ · {dueWithin30} 件は30日以内に期限 · {dueWithin90} 件は90日以内に期限',
+    'trackers.renewHint': '有効期限前に再署名して、源泉徴収を0%に保ちましょう。',
+    'dashboard.w8benReminder': 'W-8BEN まもなく期限切れ',
+    'dashboard.w8benReminderDesc': '90日以内に対応が必要な W-8BEN フォームが {count} 件あります。',
+    'dashboard.viewTrackers': '台帳を表示',
 
     // Guest
     'guest.bannerTitle': 'ゲストモードです',
@@ -1825,6 +1849,12 @@ const translations: Record<Locale, TranslationKeys> = {
     'trackers.statusOk': '유효',
     'trackers.daysLeft': '{days}일 남음',
     'trackers.expiredDaysAgo': '{days}일 전 만료',
+    'trackers.alertTitle': '만료 알림',
+    'trackers.alertSummary': '{expired}건 만료 · {dueWithin30}건 30일 이내 만료 · {dueWithin90}건 90일 이내 만료',
+    'trackers.renewHint': '만료 전에 다시 서명하여 원천징수를 0%로 유지하세요.',
+    'dashboard.w8benReminder': 'W-8BEN 곧 만료',
+    'dashboard.w8benReminderDesc': '90일 이내에 조치가 필요한 W-8BEN 양식이 {count}건 있습니다.',
+    'dashboard.viewTrackers': '추적 목록 보기',
 
     // Guest
     'guest.bannerTitle': '게스트 모드입니다',
@@ -2249,6 +2279,12 @@ const translations: Record<Locale, TranslationKeys> = {
     'trackers.statusOk': 'Gültig',
     'trackers.daysLeft': 'Noch {days} Tage',
     'trackers.expiredDaysAgo': 'Vor {days} Tagen abgelaufen',
+    'trackers.alertTitle': 'Ablauf-Erinnerungen',
+    'trackers.alertSummary': '{expired} abgelaufen · {dueWithin30} in 30 Tagen fällig · {dueWithin90} in 90 Tagen fällig',
+    'trackers.renewHint': 'Vor Ablauf neu unterschreiben, um den Quellensteuerabzug bei 0% zu halten.',
+    'dashboard.w8benReminder': 'W-8BEN läuft bald ab',
+    'dashboard.w8benReminderDesc': 'Sie haben {count} W-8BEN-Formulare, die innerhalb von 90 Tagen Aufmerksamkeit benötigen.',
+    'dashboard.viewTrackers': 'Tracker ansehen',
 
     // Guest
     'guest.bannerTitle': 'Sie sind im Gastmodus',
@@ -2673,6 +2709,12 @@ const translations: Record<Locale, TranslationKeys> = {
     'trackers.statusOk': 'Valide',
     'trackers.daysLeft': '{days} jours restants',
     'trackers.expiredDaysAgo': 'Expiré depuis {days} jours',
+    'trackers.alertTitle': 'Rappels d\'expiration',
+    'trackers.alertSummary': '{expired} expiré(s) · {dueWithin30} à échéance sous 30 jours · {dueWithin90} à échéance sous 90 jours',
+    'trackers.renewHint': 'Re-signez avant expiration pour maintenir la retenue à la source à 0%.',
+    'dashboard.w8benReminder': 'W-8BEN expire bientôt',
+    'dashboard.w8benReminderDesc': 'Vous avez {count} formulaire(s) W-8BEN nécessitant une attention sous 90 jours.',
+    'dashboard.viewTrackers': 'Voir le suivi',
 
     // Guest
     'guest.bannerTitle': 'Vous êtes en mode Invité',
@@ -3097,6 +3139,12 @@ const translations: Record<Locale, TranslationKeys> = {
     'trackers.statusOk': 'Vigente',
     'trackers.daysLeft': 'Quedan {days} días',
     'trackers.expiredDaysAgo': 'Venció hace {days} días',
+    'trackers.alertTitle': 'Recordatorios de vencimiento',
+    'trackers.alertSummary': '{expired} vencido(s) · {dueWithin30} vencen en 30 días · {dueWithin90} vencen en 90 días',
+    'trackers.renewHint': 'Vuelva a firmar antes del vencimiento para mantener la retención en 0%.',
+    'dashboard.w8benReminder': 'W-8BEN vence pronto',
+    'dashboard.w8benReminderDesc': 'Tienes {count} formulario(s) W-8BEN que requieren atención en 90 días.',
+    'dashboard.viewTrackers': 'Ver seguimiento',
 
     // Guest
     'guest.bannerTitle': 'Estás en modo Invitado',
@@ -3521,6 +3569,12 @@ const translations: Record<Locale, TranslationKeys> = {
     'trackers.statusOk': 'Válido',
     'trackers.daysLeft': 'Faltam {days} dias',
     'trackers.expiredDaysAgo': 'Venceu há {days} dias',
+    'trackers.alertTitle': 'Lembretes de vencimento',
+    'trackers.alertSummary': '{expired} vencido(s) · {dueWithin30} vencem em 30 dias · {dueWithin90} vencem em 90 dias',
+    'trackers.renewHint': 'Re-assine antes do vencimento para manter a retenção em 0%.',
+    'dashboard.w8benReminder': 'W-8BEN expira em breve',
+    'dashboard.w8benReminderDesc': 'Você tem {count} formulário(s) W-8BEN que precisam de atenção em 90 dias.',
+    'dashboard.viewTrackers': 'Ver acompanhamento',
 
     // Guest
     'guest.bannerTitle': 'Você está no modo Convidado',

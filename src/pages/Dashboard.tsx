@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { getInvoices, getClients, type SyncInvoice } from '@/lib/sync'
-import { FileText, Users, DollarSign, Clock, Plus } from 'lucide-react'
+import { FileText, Users, DollarSign, Clock, Plus, AlertTriangle } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { useI18n } from '@/hooks/useI18n'
 import { useAppStore } from '@/stores/appStore'
@@ -12,6 +12,7 @@ import {
   computeDashboardSummary,
   type DashboardCurrencyStats,
 } from '@/lib/analytics'
+import { getReminders, type ReminderSummary } from '@/lib/w8benTrackers'
 
 export function Dashboard() {
   const { t } = useI18n()
@@ -25,7 +26,15 @@ export function Dashboard() {
   })
   const [recentInvoices, setRecentInvoices] = useState<SyncInvoice[]>([])
   const [currencyStats, setCurrencyStats] = useState<DashboardCurrencyStats[]>([])
+  const [reminders, setReminders] = useState<ReminderSummary | null>(null)
   const [loading, setLoading] = useState(true)
+
+  // W-8BEN expiry reminders are pure local data — check on open regardless of auth.
+  useEffect(() => {
+    getReminders()
+      .then(setReminders)
+      .catch(() => setReminders(null))
+  }, [])
 
   const loadStats = useCallback(async () => {
     if (!user) return
@@ -88,6 +97,28 @@ export function Dashboard() {
           </div>
         ))}
       </div>
+
+      {reminders && reminders.needAttention > 0 && (
+        <div className="bg-white rounded-xl shadow-sm border border-red-200 p-5 mb-8 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="bg-red-500 p-2.5 rounded-lg text-white">
+              <AlertTriangle size={20} />
+            </div>
+            <div>
+              <p className="font-semibold text-slate-900">{t('dashboard.w8benReminder')}</p>
+              <p className="text-sm text-slate-500">
+                {t('dashboard.w8benReminderDesc', { count: String(reminders.needAttention) })}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => setCurrentView('w8ben')}
+            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm shrink-0"
+          >
+            {t('dashboard.viewTrackers')}
+          </button>
+        </div>
+      )}
 
       {currencyStats.length > 1 && (
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5 mb-8">
