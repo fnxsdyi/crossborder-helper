@@ -4,6 +4,10 @@ const mockAdd = vi.fn()
 const mockUpdate = vi.fn()
 const mockDelete = vi.fn()
 const mockToArray = vi.fn()
+const mockGet = vi.fn()
+const mockVersionsAdd = vi.fn()
+const mockVersionsDelete = vi.fn()
+const mockVersionsToArray = vi.fn()
 
 vi.mock('@/db', () => ({
   default: {
@@ -12,6 +16,16 @@ vi.mock('@/db', () => ({
       update: (...args: unknown[]) => mockUpdate(...args),
       delete: (...args: unknown[]) => mockDelete(...args),
       toArray: () => mockToArray(),
+      get: (...args: unknown[]) => mockGet(...args),
+    },
+    w8benVersions: {
+      add: (...args: unknown[]) => mockVersionsAdd(...args),
+      where: () => ({
+        equals: () => ({
+          delete: (...args: unknown[]) => mockVersionsDelete(...args),
+          toArray: () => mockVersionsToArray(),
+        }),
+      }),
     },
   },
 }))
@@ -24,6 +38,8 @@ import {
   addTracker,
   updateTracker,
   deleteTracker,
+  renewTracker,
+  getVersions,
   getReminders,
 } from './w8benTrackers'
 
@@ -86,6 +102,9 @@ describe('CRUD', () => {
     vi.clearAllMocks()
     mockAdd.mockResolvedValue(1)
     mockToArray.mockResolvedValue([])
+    mockGet.mockResolvedValue({ id: 1, platform: 'X', submittedAt: new Date(2025, 0, 1), expiresAt: new Date(2028, 11, 31), renewalCount: undefined, country: undefined, notes: undefined })
+    mockVersionsAdd.mockResolvedValue(1)
+    mockVersionsToArray.mockResolvedValue([])
   })
 
   it('sorts trackers by expiry, soonest first', async () => {
@@ -121,9 +140,10 @@ describe('CRUD', () => {
     expect(mockUpdate).toHaveBeenCalledWith(7, expect.objectContaining({ platform: 'KDP' }))
   })
 
-  it('deletes a tracker', async () => {
+  it('deletes a tracker and cascades to its version history', async () => {
     await deleteTracker(7)
     expect(mockDelete).toHaveBeenCalledWith(7)
+    expect(mockVersionsDelete).toHaveBeenCalled()
   })
 })
 
@@ -173,5 +193,45 @@ describe('getReminders', () => {
     const r = await getReminders()
     expect(r.within90).toBe(1)
     expect(r.needAttention).toBe(1)
+  })
+})
+
+describe('renewTracker + getVersions', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockGet.mockResolvedValue({ id: 1, platform: 'Upwork', submittedAt: new Date(2020, 5, 1), expiresAt: new Date(2023, 11, 31), renewalCount: undefined, country: 'US', notes: 'a' })
+    mockVersionsAdd.mockResolvedValue(1)
+    mockVersionsToArray.mockResolvedValue([])
+  })
+
+  it('renewal resets signing date, recomputes 3-year expiry, and bumps the counter', async () => {
+    await renewTracker(1)
+    expect(mockUpdate).toHaveBeenCalledWith(1, expect.objectContaining({ renewalCount: 1 }))
+    const saved = mockUpdate.mock.calls[0][1] as { submittedAt: Date; expiresAt: Date }
+    expect(saved.submittedAt instanceof Date).toBe(true)
+    expect(saved.expiresAt.getFullYear()).toBe(new Date().getFullYear() + 3)
+    expect(saved.expiresAt.getMonth()).toBe(11)
+    expect(saved.expiresAt.getDate()).toBe(31)
+    expect(mockVersionsAdd).toHaveBeenCalledTimes(1)
+  })
+
+  it('increments an existing renewal count', async () => {
+    mockGet.mockResolvedValue({ id: 1, platform: 'Upwork', submittedAt: new Date(2020, 5, 1), expiresAt: new Date(2023, 11, 31), renewalCount: 2, country: 'US', notes: 'a' })
+    await renewTracker(1)
+    expect((mockUpdate.mock.calls[0][1] as { renewalCount: number }).renewalCount).toBe(3)
+  })
+
+  it('throws when the tracker does not exist', async () => {
+    mockGet.mockResolvedValue(undefined)
+    await expect(renewTracker(99)).rejects.toThrow()
+  })
+
+  it('returns version history newest-first', async () => {
+    mockVersionsToArray.mockResolvedValue([
+      { id: 1, trackerId: 1, op: 'create', changedAt: new Date(2024, 0, 1) },
+      { id: 2, trackerId: 1, op: 'renew', changedAt: new Date(2025, 0, 1) },
+    ])
+    const versions = await getVersions(1)
+    expect(versions.map(v => v.id)).toEqual([2, 1])
   })
 })

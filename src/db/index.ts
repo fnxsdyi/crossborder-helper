@@ -77,8 +77,29 @@ export interface W8BenTracker {
   submittedAt: Date
   expiresAt: Date
   notes?: string
+  /** Timestamp of the most recent renewal (undefined if never renewed). */
+  renewedAt?: Date
+  /** How many times this form has been renewed (0 = original submission only). */
+  renewalCount?: number
   createdAt: Date
   updatedAt: Date
+}
+
+/**
+ * Immutable snapshot of a W-8BEN tracker captured at the moment of a
+ * create / update / renew. Provides an audit trail so each renewal is
+ * traceable back to the prior validity window.
+ */
+export interface W8BenVersion {
+  id?: number
+  trackerId: number
+  platform: string
+  country?: string
+  submittedAt: Date
+  expiresAt: Date
+  notes?: string
+  op: 'create' | 'update' | 'renew'
+  changedAt: Date
 }
 
 export interface Settings {
@@ -104,6 +125,7 @@ const db = new Dexie('TaxFlowHelper') as Dexie & {
   taxProfiles: EntityTable<TaxProfile, 'id'>
   settings: EntityTable<Settings, 'id'>
   w8benTrackers: EntityTable<W8BenTracker, 'id'>
+  w8benVersions: EntityTable<W8BenVersion, 'id'>
 }
 
 db.version(1).stores({
@@ -129,6 +151,15 @@ db.version(3).stores({
   taxProfiles: '++id, country, createdAt',
   settings: '++id',
   w8benTrackers: '++id, platform, expiresAt, createdAt',
+})
+
+db.version(4).stores({
+  clients: '++id, name, email, country, createdAt',
+  invoices: '++id, invoiceNumber, clientId, status, currency, issueDate, createdAt',
+  taxProfiles: '++id, country, createdAt',
+  settings: '++id',
+  w8benTrackers: '++id, platform, expiresAt, createdAt, renewedAt',
+  w8benVersions: '++id, trackerId, changedAt',
 })
 
 export default db

@@ -1,4 +1,4 @@
-import db, { type W8BenTracker } from '@/db'
+import db, { type W8BenTracker, type W8BenVersion } from '@/db'
 
 export type TrackerStatus = 'expired' | 'urgent' | 'soon' | 'ok'
 
@@ -50,7 +50,9 @@ export async function addTracker(input: TrackerInput): Promise<number> {
     createdAt: now,
     updatedAt: now,
   })
-  return Number(id)
+  const numId = Number(id)
+  await pushVersion(numId, 'create')
+  return numId
 }
 
 export async function updateTracker(id: number, input: TrackerInput): Promise<void> {
@@ -62,10 +64,53 @@ export async function updateTracker(id: number, input: TrackerInput): Promise<vo
     notes: input.notes?.trim() || undefined,
     updatedAt: new Date(),
   })
+  await pushVersion(id, 'update')
 }
 
 export async function deleteTracker(id: number): Promise<void> {
+  await db.w8benVersions.where('trackerId').equals(id).delete()
   await db.w8benTrackers.delete(id)
+}
+
+/**
+ * Renew a form in place: reset the signing date to today, recompute the
+ * 3-year expiry, bump the renewal counter, and record a 'renew' snapshot.
+ * Pure Dexie — no backend needed.
+ */
+export async function renewTracker(id: number): Promise<void> {
+  const now = new Date()
+  const existing = await db.w8benTrackers.get(id)
+  if (!existing) throw new Error(`W-8BEN tracker ${id} not found`)
+  await db.w8benTrackers.update(id, {
+    submittedAt: now,
+    expiresAt: computeExpiry(now),
+    renewedAt: now,
+    renewalCount: (existing.renewalCount ?? 0) + 1,
+    updatedAt: now,
+  })
+  await pushVersion(id, 'renew')
+}
+
+/** History snapshots for one tracker, newest change first. */
+export async function getVersions(trackerId: number): Promise<W8BenVersion[]> {
+  const all = await db.w8benVersions.where('trackerId').equals(trackerId).toArray()
+  return all.sort((a, b) => b.changedAt.getTime() - a.changedAt.getTime())
+}
+
+/** Capture an immutable snapshot of a tracker's current state. */
+async function pushVersion(trackerId: number, op: W8BenVersion['op']): Promise<void> {
+  const tracker = await db.w8benTrackers.get(trackerId)
+  if (!tracker) return
+  await db.w8benVersions.add({
+    trackerId,
+    platform: tracker.platform,
+    country: tracker.country,
+    submittedAt: tracker.submittedAt,
+    expiresAt: tracker.expiresAt,
+    notes: tracker.notes,
+    op,
+    changedAt: new Date(),
+  })
 }
 
 export interface ReminderSummary {

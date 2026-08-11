@@ -1,14 +1,16 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { Plus, Edit, Trash2, Clock, AlertTriangle, Info } from 'lucide-react'
+import { Plus, Edit, Trash2, Clock, AlertTriangle, Info, RefreshCw, History } from 'lucide-react'
 import { useI18n } from '@/hooks/useI18n'
-import type { W8BenTracker as Tracker } from '@/db'
+import type { W8BenTracker as Tracker, W8BenVersion } from '@/db'
 import {
   listTrackers,
   addTracker,
   updateTracker,
   deleteTracker,
+  renewTracker,
+  getVersions,
   computeExpiry,
   daysUntil,
   trackerStatus,
@@ -47,6 +49,12 @@ const ROW_BORDER: Record<TrackerStatus, string> = {
   ok: 'border-l-emerald-300',
 }
 
+const OP_KEY: Record<W8BenVersion['op'], 'trackers.opCreate' | 'trackers.opUpdate' | 'trackers.opRenew'> = {
+  create: 'trackers.opCreate',
+  update: 'trackers.opUpdate',
+  renew: 'trackers.opRenew',
+}
+
 export function W8BenTracker() {
   const { t } = useI18n()
   const [trackers, setTrackers] = useState<Tracker[]>([])
@@ -60,6 +68,8 @@ export function W8BenTracker() {
   const [submittedAt, setSubmittedAt] = useState(toDateInput(new Date()))
   const [expiresAt, setExpiresAt] = useState('')
   const [notes, setNotes] = useState('')
+  const [openVersions, setOpenVersions] = useState<Record<number, boolean>>({})
+  const [versionsCache, setVersionsCache] = useState<Record<number, W8BenVersion[]>>({})
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -134,6 +144,32 @@ export function W8BenTracker() {
     } catch (err) {
       console.error('Failed to delete W-8BEN tracker:', err)
       alert(t('common.error'))
+    }
+  }
+
+  async function handleRenew(tracker: Tracker) {
+    if (!tracker.id) return
+    if (!confirm(t('common.confirm'))) return
+    try {
+      await renewTracker(tracker.id)
+      load()
+    } catch (err) {
+      console.error('Failed to renew W-8BEN tracker:', err)
+      alert(t('common.error'))
+    }
+  }
+
+  async function toggleHistory(tracker: Tracker) {
+    if (!tracker.id) return
+    const id = tracker.id
+    setOpenVersions((prev) => ({ ...prev, [id]: !prev[id] }))
+    if (!versionsCache[id]) {
+      try {
+        const versions = await getVersions(id)
+        setVersionsCache((prev) => ({ ...prev, [id]: versions }))
+      } catch (err) {
+        console.error('Failed to load W-8BEN versions:', err)
+      }
     }
   }
 
@@ -284,6 +320,12 @@ export function W8BenTracker() {
                     {tracker.country && <p className="text-sm text-slate-500">{tracker.country}</p>}
                   </div>
                   <div className="flex gap-1">
+                    <button onClick={() => handleRenew(tracker)} title={t('trackers.renew')} className="p-1.5 rounded hover:bg-emerald-50 text-slate-400 hover:text-emerald-600">
+                      <RefreshCw size={14} />
+                    </button>
+                    <button onClick={() => toggleHistory(tracker)} title={t('trackers.history')} className="p-1.5 rounded hover:bg-slate-100 text-slate-400">
+                      <History size={14} />
+                    </button>
                     <button onClick={() => handleEdit(tracker)} className="p-1.5 rounded hover:bg-slate-100 text-slate-400">
                       <Edit size={14} />
                     </button>
@@ -307,7 +349,26 @@ export function W8BenTracker() {
                       : t('trackers.daysLeft', { days: String(days) })}
                   </p>
                   {tracker.notes && <p className="text-xs text-slate-400">{tracker.notes}</p>}
+                  {tracker.renewalCount ? (
+                    <p className="text-xs text-emerald-600 mt-1">
+                      {t('trackers.renewedTimes', { count: String(tracker.renewalCount), date: toDateInput(tracker.renewedAt ?? tracker.updatedAt) })}
+                    </p>
+                  ) : null}
                 </div>
+                {openVersions[tracker.id ?? -1] && (
+                  <div className="mt-3 pt-3 border-t border-slate-100 space-y-2">
+                    {(versionsCache[tracker.id ?? -1] ?? []).map((v) => (
+                      <div key={v.id} className="text-xs text-slate-500 flex items-center justify-between gap-2">
+                        <span>
+                          <span className="font-medium">{t(OP_KEY[v.op])}</span>
+                          {' · '}
+                          {t('trackers.versionDate', { submitted: toDateInput(v.submittedAt), expires: toDateInput(v.expiresAt) })}
+                        </span>
+                        <span className="text-slate-400 shrink-0">{toDateInput(v.changedAt)}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )
           })}
