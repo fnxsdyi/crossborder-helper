@@ -2518,7 +2518,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.feature4Title': '100% Sicher',
     'landing.feature4Desc': 'Ihre Daten werden verschlüsselt und sicher in der Cloud synchronisiert. Überall zugänglich.',
  'landing.feature5Title': 'Rechnungsscanner',
- 'landing.feature5Desc': 'Fotografieren Sie eine Rechnung und es extrahiert alle Details automatisch. 3 kostenlose Scans, unlimited für $9/Monat.',
+ 'landing.feature5Desc': 'Fotografieren Sie eine Rechnung und es extrahiert alle Details automatisch. 3 kostenlose Scans, Unbegrenzte Scans für $9/Monat.',
     'landing.pricingTitle': 'Einfache, transparente Preise',
     'landing.pricingDesc': 'Kostenlos starten. Bei Bedarf upgraden.',
     'landing.freePlan': 'Kostenloser Plan',
