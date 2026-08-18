@@ -321,6 +321,8 @@ type TranslationKeys = {
   'landing.feature4Desc': string
   'landing.feature5Title': string
   'landing.feature5Desc': string
+  'landing.feature6Title': string
+  'landing.feature6Desc': string
   'landing.pricingTitle': string
   'landing.pricingDesc': string
   'landing.freePlan': string
@@ -341,6 +343,7 @@ type TranslationKeys = {
   'landing.proFeature4': string
   'landing.proFeature5': string
   'landing.proFeature6': string
+  'landing.proFeature7': string
   'landing.monthlyPrice': string
   'landing.annualPrice': string
   'landing.perMonth': string
@@ -771,6 +774,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.feature4Desc': 'Your data is encrypted and securely synced to the cloud. Access from anywhere, anytime.',
  'landing.feature5Title': 'Invoice Scanner',
  'landing.feature5Desc': 'Snap a photo of any invoice and it extracts all details instantly — vendor, amount, tax ID, date. 3 free scans included; Pro gets unlimited scans.',
+    'landing.feature6Title': 'W-8BEN Expiry Reminders',
+    'landing.feature6Desc': 'Track every W-8BEN you file. Get clear in-app alerts before a form expires, so you never lose your tax treaty benefits.',
     'landing.pricingTitle': 'Simple, Transparent Pricing',
     'landing.pricingDesc': 'Free to start. Pro adds unlimited invoice scans and watermark-free PDF export.',
     'landing.freePlan': 'Free',
@@ -791,6 +796,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.proFeature4': 'Multi-currency FX analysis',
     'landing.proFeature5': 'Priority email support',
     'landing.proFeature6': 'Cancel anytime, data kept',
+    'landing.proFeature7': 'W-8BEN expiry reminders',
     'landing.monthlyPrice': '$9',
     'landing.annualPrice': '$90',
     'landing.perMonth': '/month',
@@ -1218,6 +1224,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.feature4Desc': '您的数据加密并安全同步到云端，随时随地访问。',
  'landing.feature5Title': '发票扫描',
  'landing.feature5Desc': '拍摄发票照片，自动提取供应商、金额、税号、日期等所有信息。免费 3 次；专业版无限扫描。',
+    'landing.feature6Title': 'W-8BEN 到期提醒',
+    'landing.feature6Desc': '追踪你提交的每一份 W-8BEN。税表即将到期前，应用内清晰提醒，永不错过税收协定优惠。',
     'landing.pricingTitle': '简单透明的定价',
     'landing.pricingDesc': '免费开始。专业版提供无限发票扫描与无水印 PDF 导出。',
     'landing.freePlan': '免费版',
@@ -1238,6 +1246,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.proFeature4': '多币种汇率分析',
     'landing.proFeature5': '优先邮件支持',
     'landing.proFeature6': '随时取消，数据保留',
+    'landing.proFeature7': 'W-8BEN 到期提醒',
     'landing.monthlyPrice': '$9',
     'landing.annualPrice': '$90',
     'landing.perMonth': '/月',
@@ -1665,6 +1674,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.feature4Desc': 'データは暗号化されクラウドに安全に同期。どこからでもアクセス可能。',
  'landing.feature5Title': '請求書スキャナー',
  'landing.feature5Desc': '請求書の写真を撮るだけで、vendor・金額・税番号・日付を自動抽出。無料3回、$9/月で無制限。',
+    'landing.feature6Title': 'W-8BEN 期限リマインダー',
+    'landing.feature6Desc': '提出したすべての W-8BEN を管理。フォームの期限が近づくとアプリ内で明確に通知し、租税条約の優遇を逃しません。',
     'landing.pricingTitle': 'シンプルで透明な価格設定',
     'landing.pricingDesc': '無料で始めよう。必要に応じてアップグレード。',
     'landing.freePlan': '無料プラン',
@@ -1685,6 +1696,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.proFeature4': '多通貨為替分析',
     'landing.proFeature5': '実現損益追跡',
     'landing.proFeature6': '優先サポート',
+    'landing.proFeature7': 'W-8BEN 期限リマインダー',
     'landing.monthlyPrice': '$9',
     'landing.annualPrice': '$90',
     'landing.perMonth': '/月',
@@ -2092,6 +2104,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.feature4Desc': '데이터가 암호화되어 클라우드에 안전하게 동기화됩니다. 어디서든 접근 가능.',
  'landing.feature5Title': '송장 스캐너',
  'landing.feature5Desc': '송장 사진을 찍으면 공급자, 금액, 세금 번호, 날짜를 자동 추출합니다. 무료 3회, $9/월 무제한.',
+    'landing.feature6Title': 'W-8BEN 만료 알림',
+    'landing.feature6Desc': '제출한 모든 W-8BEN을 추적합니다. 서식 만료 전 앱 내에서 명확히 알려주어 조세 조약 혜택을 놓치지 않습니다.',
     'landing.pricingTitle': '간단하고 투명한 가격',
     'landing.pricingDesc': '무료로 시작하세요. 필요할 때 업그레이드하세요.',
     'landing.freePlan': '무료 플랜',
@@ -2112,6 +2126,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.proFeature4': '다중 통화 환율 분석',
     'landing.proFeature5': '실현 손익 추적',
     'landing.proFeature6': '우선 지원',
+    'landing.proFeature7': 'W-8BEN 만료 알림',
     'landing.monthlyPrice': '$9',
     'landing.annualPrice': '$90',
     'landing.perMonth': '/월',
@@ -2519,6 +2534,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.feature4Desc': 'Ihre Daten werden verschlüsselt und sicher in der Cloud synchronisiert. Überall zugänglich.',
  'landing.feature5Title': 'Rechnungsscanner',
  'landing.feature5Desc': 'Fotografieren Sie eine Rechnung und es extrahiert alle Details automatisch. 3 kostenlose Scans, Unbegrenzte Scans für $9/Monat.',
+    'landing.feature6Title': 'W-8BEN Ablauf-Erinnerungen',
+    'landing.feature6Desc': 'Behalten Sie jedes eingereichte W-8BEN im Blick. Klare In-App-Hinweise vor Ablauf, damit Ihre Steuerabkommen-Vorteile nie verfallen.',
     'landing.pricingTitle': 'Einfache, transparente Preise',
     'landing.pricingDesc': 'Kostenlos starten. Bei Bedarf upgraden.',
     'landing.freePlan': 'Kostenloser Plan',
@@ -2539,6 +2556,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.proFeature4': 'Mehrwährungs-FX-Analyse',
     'landing.proFeature5': 'Realisierte Gewinn/Verlust-Verfolgung',
     'landing.proFeature6': 'Prioritäts-Support',
+    'landing.proFeature7': 'W-8BEN Ablauf-Erinnerungen',
     'landing.monthlyPrice': '$9',
     'landing.annualPrice': '$90',
     'landing.perMonth': '/Monat',
@@ -2946,6 +2964,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.feature4Desc': 'Vos données sont chiffrées et synchronisées en toute sécurité dans le cloud. Accessibles partout.',
  'landing.feature5Title': 'Scanner de factures',
  'landing.feature5Desc': 'Prenez une photo de facture et elle extrait tous les détails automatiquement. 3 scans gratuits, illimité à $9/mois.',
+    'landing.feature6Title': "Rappels d'expiration W-8BEN",
+    'landing.feature6Desc': "Suivez chaque W-8BEN déposé. Recevez des alertes claires dans l'application avant expiration, pour ne jamais perdre vos avantages de traité fiscal.",
     'landing.pricingTitle': 'Des prix simples et transparents',
     'landing.pricingDesc': 'Commencez gratuitement. Passez à Pro quand vous en avez besoin.',
     'landing.freePlan': 'Plan gratuit',
@@ -2966,6 +2986,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.proFeature4': 'Analyse FX multi-devises',
     'landing.proFeature5': 'Suivi des gains/pertes réalisés',
     'landing.proFeature6': 'Support prioritaire',
+    'landing.proFeature7': "Rappels d'expiration W-8BEN",
     'landing.monthlyPrice': '9$',
     'landing.annualPrice': '90$',
     'landing.perMonth': '/mois',
@@ -3373,6 +3394,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.feature4Desc': 'Sus datos están cifrados y sincronizados de forma segura en la nube. Accesible desde cualquier lugar.',
  'landing.feature5Title': 'Escáner de facturas con',
  'landing.feature5Desc': 'Tome una foto de cualquier factura y nuestra extrae todos los detalles al instante. 3 escaneos gratis, ilimitado por $9/mes.',
+    'landing.feature6Title': 'Recordatorios de vencimiento W-8BEN',
+    'landing.feature6Desc': 'Haz seguimiento a cada W-8BEN que presentes. Recibe alertas claras en la app antes de que caduque, para no perder tus beneficios de tratado fiscal.',
     'landing.pricingTitle': 'Precios simples y transparentes',
     'landing.pricingDesc': 'Empieza gratis. Actualiza cuando necesites más.',
     'landing.freePlan': 'Plan gratuito',
@@ -3393,6 +3416,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.proFeature4': 'Análisis FX multi-divisa',
     'landing.proFeature5': 'Seguimiento de ganancias/pérdidas realizadas',
     'landing.proFeature6': 'Soporte prioritario',
+    'landing.proFeature7': 'Recordatorios de vencimiento W-8BEN',
     'landing.monthlyPrice': '$9',
     'landing.annualPrice': '$90',
     'landing.perMonth': '/mes',
@@ -3800,6 +3824,8 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.feature4Desc': 'Seus dados são criptografados e sincronizados com segurança na nuvem. Acessível de qualquer lugar.',
  'landing.feature5Title': 'Scanner de faturas com',
  'landing.feature5Desc': 'Tire uma foto de qualquer fatura e nossa extrai todos os detalhes automaticamente. 3 escaneamentos grátis, ilimitado por $9/mês.',
+    'landing.feature6Title': 'Lembretes de vencimento W-8BEN',
+    'landing.feature6Desc': 'Acompanhe cada W-8BEN enviado. Receba alertas claros no app antes do vencimento, para nunca perder seus benefícios de tratado fiscal.',
     'landing.pricingTitle': 'Preços simples e transparentes',
     'landing.pricingDesc': 'Comece grátis. Faça upgrade quando precisar de mais.',
     'landing.freePlan': 'Plano gratuito',
@@ -3820,6 +3846,7 @@ const translations: Record<Locale, TranslationKeys> = {
     'landing.proFeature4': 'Análise FX multi-moeda',
     'landing.proFeature5': 'Rastreamento de ganhos/perdas realizados',
     'landing.proFeature6': 'Suporte prioritário',
+    'landing.proFeature7': 'Lembretes de vencimento W-8BEN',
     'landing.monthlyPrice': '$9',
     'landing.annualPrice': '$90',
     'landing.perMonth': '/mês',
