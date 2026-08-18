@@ -11,6 +11,8 @@ export function isAdmin(email: string | null | undefined): boolean {
 /** PayPal Subscription Plan IDs */
 export const PRO_MONTHLY_PLAN_ID = 'P-29E1204392902382CNJCROFI'
 export const PRO_ANNUAL_PLAN_ID = 'P-3D915014J7223963ENJDBLSY'
+/** FlowingPulse referral — exclusive $49/year member plan */
+export const FLOWINGPULSE_PLAN_ID = 'P-158046208S2020443NKCDPGI'
 
 /** OCR free tier limit */
 export const OCR_FREE_LIMIT = 3

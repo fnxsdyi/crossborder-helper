@@ -19,6 +19,9 @@ const paypalWebhookId = process.env.PAYPAL_WEBHOOK_ID!
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
+// FlowingPulse referral — exclusive $49/year member plan (treated as annual)
+const FLOWINGPULSE_PLAN_ID = 'P-158046208S2020443NKCDPGI'
+
 // Get PayPal access token
 async function getPayPalAccessToken(): Promise<string> {
   const auth = Buffer.from(`${paypalClientId}:${paypalClientSecret}`).toString('base64')
@@ -117,7 +120,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       case 'BILLING.SUBSCRIPTION.CREATED':
       case 'BILLING.SUBSCRIPTION.ACTIVATED': {
         const resource = event.resource
-        const planType = resource?.plan?.plan_id === process.env.PAYPAL_ANNUAL_PLAN_ID ? 'annual' : 'monthly'
+        const planType = (resource?.plan?.plan_id === process.env.PAYPAL_ANNUAL_PLAN_ID || resource?.plan?.plan_id === FLOWINGPULSE_PLAN_ID) ? 'annual' : 'monthly'
         const status = mapStatus(resource?.status || 'ACTIVE')
 
         // Get user_id from custom_id or metadata
