@@ -101,12 +101,12 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
             </div>
             <span className="font-bold text-xl text-white">TaxFlow</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <div className="relative">
               <button onClick={() => setShowLangMenu(!showLangMenu)} className="flex items-center gap-2 px-3 py-2 text-sm text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"><Globe size={14} /> {currentLang?.nativeName || 'English'}</button>
               {showLangMenu && (<div className="absolute top-full right-0 mt-1 py-1 bg-slate-900 border border-white/10 rounded-lg shadow-xl z-50 min-w-[120px]">{locales.map((lang) => (<button key={lang.code} onClick={() => { changeLocale(lang.code); setShowLangMenu(false) }} className={'w-full px-3 py-2 text-left text-sm hover:bg-white/5 transition-colors ' + (locale === lang.code ? 'text-cyan-400 bg-white/5' : 'text-slate-400')}>{lang.nativeName}</button>))}</div>)}
             </div>
-            <button onClick={onMemberLogin} className="text-sm text-slate-400 hover:text-white transition-colors font-medium">{t('landing.memberLogin')}</button>
+            <button onClick={onMemberLogin} className="hidden sm:inline text-sm text-slate-400 hover:text-white transition-colors font-medium">{t('landing.memberLogin')}</button>
             <button onClick={onEnterApp} className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-cyan-400 text-white rounded-lg text-sm font-medium hover:shadow-lg hover:shadow-cyan-500/30 transition-all">{t('landing.openApp')}</button>
           </div>
         </div>
@@ -267,6 +267,7 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
         <div className="flex items-center justify-center gap-6 mt-3 text-xs">
           <button onClick={() => setShowPrivacy(true)} className="text-slate-500 hover:text-slate-300 transition-colors">{t('landing.privacyPolicy')}</button>
           <button onClick={() => setShowTerms(true)} className="text-slate-500 hover:text-slate-300 transition-colors">{t('landing.termsOfService')}</button>
+          <a href="/tools" className="text-slate-500 hover:text-slate-300 transition-colors">{t('landing.freeTools')}</a>
           <span className="text-slate-600">{t('landing.ourProjects')}</span>
         </div>
       </footer>

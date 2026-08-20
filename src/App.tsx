@@ -7,6 +7,8 @@ const LandingPage = lazy(() => import('./pages/LandingPage').then(m => ({ defaul
 const AuthPage = lazy(() => import('./pages/AuthPage').then(m => ({ default: m.AuthPage })))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })))
 const TermsPage = lazy(() => import('./pages/TermsPage').then(m => ({ default: m.TermsPage })))
+const FreeToolsPage = lazy(() => import('./pages/FreeToolsPage').then(m => ({ default: m.FreeToolsPage })))
+const W8BenCalculator = lazy(() => import('./pages/W8BenCalculator').then(m => ({ default: m.W8BenCalculator })))
 
 function Loading() {
   return (
@@ -16,7 +18,7 @@ function Loading() {
   )
 }
 
-const KNOWN_ROUTES = ['/', '/login', '/register', '/pricing', '/terms']
+const KNOWN_ROUTES = ['/', '/login', '/register', '/pricing', '/terms', '/tools', '/tools/w8ben-withholding-calculator']
 
 function App() {
   const [showLanding, setShowLanding] = useState(true)
@@ -50,6 +52,10 @@ function App() {
         window.history.replaceState({}, '', window.location.pathname)
       } else {
         const path = window.location.pathname
+        if (path === '/tools' || path === '/tools/w8ben-withholding-calculator') {
+          setShowLanding(false)
+          return
+        }
         if (path === '/login' || path === '/register') {
           setShowLanding(false)
           if (path === '/register') setIsRegister(true)
@@ -122,6 +128,22 @@ function App() {
     return (
       <Suspense fallback={<Loading />}>
         <NotFoundPage />
+      </Suspense>
+    )
+  }
+
+  const toolPath = window.location.pathname
+  if (toolPath === '/tools/w8ben-withholding-calculator') {
+    return (
+      <Suspense fallback={<Loading />}>
+        <W8BenCalculator />
+      </Suspense>
+    )
+  }
+  if (toolPath === '/tools') {
+    return (
+      <Suspense fallback={<Loading />}>
+        <FreeToolsPage />
       </Suspense>
     )
   }
