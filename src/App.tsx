@@ -9,6 +9,7 @@ const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then(m => ({ defa
 const TermsPage = lazy(() => import('./pages/TermsPage').then(m => ({ default: m.TermsPage })))
 const FreeToolsPage = lazy(() => import('./pages/FreeToolsPage').then(m => ({ default: m.FreeToolsPage })))
 const W8BenCalculator = lazy(() => import('./pages/W8BenCalculator').then(m => ({ default: m.W8BenCalculator })))
+const InvoiceGenerator = lazy(() => import('./pages/InvoiceGenerator').then(m => ({ default: m.InvoiceGenerator })))
 
 function Loading() {
   return (
@@ -18,7 +19,7 @@ function Loading() {
   )
 }
 
-const KNOWN_ROUTES = ['/', '/login', '/register', '/pricing', '/terms', '/tools', '/tools/w8ben-withholding-calculator']
+const KNOWN_ROUTES = ['/', '/login', '/register', '/pricing', '/terms', '/tools', '/tools/w8ben-withholding-calculator', '/tools/invoice-generator']
 
 function App() {
   const [showLanding, setShowLanding] = useState(true)
@@ -52,7 +53,7 @@ function App() {
         window.history.replaceState({}, '', window.location.pathname)
       } else {
         const path = window.location.pathname
-        if (path === '/tools' || path === '/tools/w8ben-withholding-calculator') {
+        if (path === '/tools' || path === '/tools/w8ben-withholding-calculator' || path === '/tools/invoice-generator') {
           setShowLanding(false)
           return
         }
@@ -137,6 +138,13 @@ function App() {
     return (
       <Suspense fallback={<Loading />}>
         <W8BenCalculator />
+      </Suspense>
+    )
+  }
+  if (toolPath === '/tools/invoice-generator') {
+    return (
+      <Suspense fallback={<Loading />}>
+        <InvoiceGenerator />
       </Suspense>
     )
   }

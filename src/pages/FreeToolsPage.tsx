@@ -33,9 +33,9 @@ export function FreeToolsPage() {
     {
       icon: Receipt,
       title: 'Invoice Generator',
-      desc: 'Create a clean, compliant invoice in seconds. Multi-currency, tax-ready, downloadable as PDF.',
-      href: '#',
-      live: false,
+      desc: 'Create a clean, professional invoice in seconds. Multi-currency, tax-ready, downloadable as PDF.',
+      href: '/tools/invoice-generator',
+      live: true,
     },
   ]
 
