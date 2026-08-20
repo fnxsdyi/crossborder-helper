@@ -93,6 +93,9 @@ export function InvoiceGenerator() {
           <p className="text-slate-400 max-w-2xl leading-relaxed">
             Create a clean, professional invoice in seconds — multi-currency, tax-ready, and ready to download as PDF. No account, no watermarks, no fees.
           </p>
+          <p className="text-xs text-slate-500 mt-3">
+            Lightweight, no-signup tool. For full invoice management — cloud sync, US/EU/UK templates, VAT, batch PDF export, and client history — try TaxFlow free.
+          </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
@@ -286,15 +289,25 @@ export function InvoiceGenerator() {
         </div>
 
         <div className="no-print mt-12 bg-gradient-to-br from-cyan-500/15 to-cyan-500/5 border border-cyan-500/30 rounded-2xl p-8 text-center">
-          <h2 className="text-xl font-bold text-white mb-2">Want invoices that file themselves?</h2>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs bg-white/5 border border-white/10 text-slate-400 mb-4">
+            Free tool vs. full version
+          </div>
+          <h2 className="text-xl font-bold text-white mb-2">This is the lightweight version</h2>
           <p className="text-slate-400 text-sm mb-5 max-w-lg mx-auto">
-            TaxFlow scans your invoices, tracks every W-8BEN, and manages multi-currency taxes in one place — so you spend less time on paperwork.
+            The generator above is a fast, no-signup tool. TaxFlow is the full invoice &amp; tax workspace — your invoices sync to the cloud, with US/EU/UK templates, VAT handling, batch PDF export, client history, and W-8BEN tracking.
           </p>
+          <div className="flex flex-wrap justify-center gap-2 mb-6 text-xs text-slate-300">
+            <span className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10">Cloud sync</span>
+            <span className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10">US / EU / UK templates</span>
+            <span className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10">VAT &amp; multi-currency</span>
+            <span className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10">Batch PDF export</span>
+            <span className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10">Client &amp; history</span>
+          </div>
           <a
-            href="/#pricing"
+            href="/register"
             className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-cyan-400 text-white rounded-xl font-semibold text-sm hover:shadow-lg hover:shadow-cyan-500/30 transition-all"
           >
-            Start free with TaxFlow
+            Get the full version — free
           </a>
         </div>
       </main>
