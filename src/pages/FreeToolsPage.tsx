@@ -27,8 +27,8 @@ export function FreeToolsPage() {
       icon: FileText,
       title: 'W-8BEN Form Checklist',
       desc: 'Step-by-step checklist for filling out Form W-8BEN correctly — avoid the mistakes that trigger 30% backup withholding.',
-      href: '#',
-      live: false,
+      href: '/tools/w8ben-checklist',
+      live: true,
     },
     {
       icon: Receipt,
