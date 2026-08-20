@@ -107,6 +107,7 @@ export function OcrUsageLimit({ used, limit }: OcrUsageLimitProps) {
               <p className="text-center text-xs font-semibold mb-2 dark:text-white">{t('premium.payPalMonthly')}</p>
               <PayPalSubscriptionButton
                 planId={PRO_MONTHLY_PLAN_ID}
+                customId={user?.id}
                 onSuccess={(id) => handleSuccess(id, 'monthly')}
                 onError={handleError}
               />
@@ -115,6 +116,7 @@ export function OcrUsageLimit({ used, limit }: OcrUsageLimitProps) {
               <p className="text-center text-xs font-semibold mb-2 dark:text-white">{t('premium.payPalAnnual')}</p>
               <PayPalSubscriptionButton
                 planId={PRO_ANNUAL_PLAN_ID}
+                customId={user?.id}
                 onSuccess={(id) => handleSuccess(id, 'annual')}
                 onError={handleError}
               />

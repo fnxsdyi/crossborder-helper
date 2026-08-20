@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { useI18n } from '@/hooks/useI18n'
 import { PRO_MONTHLY_PLAN_ID } from '@/lib/config'
+import { supabase } from '@/lib/supabase'
 import { PayPalSubscriptionButton } from '@/components/PayPalSubscriptionButton'
 import { Mail, Lock, LogIn, Globe, UserPlus } from 'lucide-react'
 
@@ -17,7 +18,7 @@ export function AuthPage({ onAuth, showWelcome: initialShowWelcome }: AuthPagePr
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [isRegister, setIsRegister] = useState(initialShowWelcome || false)
-  const { signIn, signUp } = useAuthStore()
+  const { user, signIn, signUp } = useAuthStore()
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
@@ -30,6 +31,7 @@ export function AuthPage({ onAuth, showWelcome: initialShowWelcome }: AuthPagePr
     if (result.error) {
       setError(result.error)
     } else {
+      await flushPendingSubscription()
       onAuth()
     }
   }
@@ -45,8 +47,30 @@ export function AuthPage({ onAuth, showWelcome: initialShowWelcome }: AuthPagePr
     if (result.error) {
       setError(result.error)
     } else {
+      await flushPendingSubscription()
       onAuth()
     }
+  }
+
+  async function flushPendingSubscription() {
+    const pending = localStorage.getItem('paypal_pending_subscription')
+    if (!pending) return
+    const u = useAuthStore.getState().user
+    if (!u) return
+    try {
+      const { subscriptionId, planType } = JSON.parse(pending) as { subscriptionId: string; planType: 'monthly' | 'annual' }
+      await supabase.from('subscriptions').upsert({
+        user_id: u.id,
+        paypal_subscription_id: subscriptionId,
+        plan_type: planType,
+        status: 'active',
+        current_period_start: new Date().toISOString(),
+        current_period_end: new Date(Date.now() + (planType === 'annual' ? 365 : 30) * 24 * 60 * 60 * 1000).toISOString(),
+      }, { onConflict: 'paypal_subscription_id' })
+    } catch (e) {
+      console.error('Failed to flush pending subscription:', e)
+    }
+    localStorage.removeItem('paypal_pending_subscription')
   }
 
   return (
@@ -144,8 +168,21 @@ export function AuthPage({ onAuth, showWelcome: initialShowWelcome }: AuthPagePr
             <p className="text-sm text-center text-slate-500 mb-3">{t('auth.becomeMember')}</p>
             <PayPalSubscriptionButton
               planId={PRO_MONTHLY_PLAN_ID}
-              onSuccess={() => {
-                onAuth()
+              customId={user?.id}
+              onSuccess={(id) => {
+                if (user) {
+                  supabase.from('subscriptions').upsert({
+                    user_id: user.id,
+                    paypal_subscription_id: id,
+                    plan_type: 'monthly',
+                    status: 'active',
+                    current_period_start: new Date().toISOString(),
+                    current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+                  }, { onConflict: 'paypal_subscription_id' }).then(() => onAuth())
+                } else {
+                  localStorage.setItem('paypal_pending_subscription', JSON.stringify({ subscriptionId: id, planType: 'monthly' }))
+                  window.location.href = '/register'
+                }
               }}
               onError={(err) => console.error('Payment error:', err)}
             />

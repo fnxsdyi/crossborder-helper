@@ -157,6 +157,7 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
                       <p className="text-center text-sm font-semibold mb-2 dark:text-white">{t('premium.payPalMonthly')}</p>
                       <PayPalSubscriptionButton
                         planId={PRO_MONTHLY_PLAN_ID}
+                        customId={user?.id}
                         onSuccess={(id) => handleSubscriptionSuccess(id, 'monthly')}
                         onError={handleSubscriptionError}
                       />
@@ -170,6 +171,7 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
                       <p className="text-center text-sm font-semibold mb-2 dark:text-white">{t('premium.payPalAnnual')}</p>
                       <PayPalSubscriptionButton
                         planId={PRO_ANNUAL_PLAN_ID}
+                        customId={user?.id}
                         onSuccess={(id) => handleSubscriptionSuccess(id, 'annual')}
                         onError={handleSubscriptionError}
                       />

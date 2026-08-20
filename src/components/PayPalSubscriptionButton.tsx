@@ -100,6 +100,7 @@ function loadPayPalSDK(): Promise<void> {
 
 interface PayPalSubscriptionButtonProps {
   planId: string
+  customId?: string | null
   onSuccess?: (subscriptionId: string) => void
   onError?: (error: unknown) => void
 }
@@ -116,6 +117,7 @@ declare global {
 
 export function PayPalSubscriptionButton({
   planId,
+  customId,
   onSuccess,
   onError,
 }: PayPalSubscriptionButtonProps) {
@@ -143,8 +145,11 @@ export function PayPalSubscriptionButton({
             layout: 'vertical',
             label: 'subscribe',
           },
-          createSubscription: (_data: unknown, actions: { subscription: { create: (config: { plan_id: string }) => Promise<string> } }) => {
-            return actions.subscription.create({ plan_id: planId })
+          createSubscription: (_data: unknown, actions: { subscription: { create: (config: { plan_id: string; custom_id?: string }) => Promise<string> } }) => {
+            return actions.subscription.create({
+              plan_id: planId,
+              ...(customId ? { custom_id: customId } : {}),
+            })
           },
           onApprove: (data: { subscriptionID?: string }) => {
             if (data.subscriptionID && !cancelled) {
@@ -169,7 +174,7 @@ export function PayPalSubscriptionButton({
     return () => {
       cancelled = true
     }
-  }, [planId, onSuccess, onError, uniqueId])
+  }, [planId, onSuccess, onError, uniqueId, customId])
 
   return <div id={`paypal-btn-${uniqueId}`} ref={containerRef} className="paypal-button-container" />
 }

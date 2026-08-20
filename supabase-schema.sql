@@ -139,6 +139,8 @@ CREATE POLICY "Users can manage own settings" ON sf_settings
 CREATE TABLE ocr_usage (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  used_at TIMESTAMPTZ DEFAULT NOW(),
+  image_hash TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

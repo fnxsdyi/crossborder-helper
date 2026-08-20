@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+// @ts-expect-error lucide-react@1.21.0 type declarations omit Printer (runtime-valid). Do NOT upgrade to 0.x — different API breaks all icon imports.
 import { ArrowLeft, Plus, Trash2, Printer, FileText } from 'lucide-react'
 
 type LineItem = { id: number; desc: string; qty: number; price: number }

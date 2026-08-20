@@ -6,7 +6,6 @@ const Layout = lazy(() => import('./components/Layout').then(m => ({ default: m.
 const LandingPage = lazy(() => import('./pages/LandingPage').then(m => ({ default: m.LandingPage })))
 const AuthPage = lazy(() => import('./pages/AuthPage').then(m => ({ default: m.AuthPage })))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })))
-const TermsPage = lazy(() => import('./pages/TermsPage').then(m => ({ default: m.TermsPage })))
 const FreeToolsPage = lazy(() => import('./pages/FreeToolsPage').then(m => ({ default: m.FreeToolsPage })))
 const W8BenCalculator = lazy(() => import('./pages/W8BenCalculator').then(m => ({ default: m.W8BenCalculator })))
 const InvoiceGenerator = lazy(() => import('./pages/InvoiceGenerator').then(m => ({ default: m.InvoiceGenerator })))
@@ -61,8 +60,12 @@ function App() {
         if (path === '/login' || path === '/register') {
           setShowLanding(false)
           if (path === '/register') setIsRegister(true)
-        } else if (path === '/pricing' || path === '/terms') {
-          setShowLanding(false)
+        } else if (path === '/pricing') {
+          window.location.replace('/#pricing')
+          return
+        } else if (path === '/terms') {
+          window.location.replace('/terms.html')
+          return
         } else if (!KNOWN_ROUTES.includes(path)) {
           setNotFound(true)
           setShowLanding(false)
@@ -160,14 +163,6 @@ function App() {
     return (
       <Suspense fallback={<Loading />}>
         <FreeToolsPage />
-      </Suspense>
-    )
-  }
-
-  if (window.location.pathname === '/terms') {
-    return (
-      <Suspense fallback={<Loading />}>
-        <TermsPage />
       </Suspense>
     )
   }

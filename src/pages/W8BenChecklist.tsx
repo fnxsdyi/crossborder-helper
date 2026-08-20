@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+// @ts-expect-error lucide-react@1.21.0 type declarations omit CheckSquare/Square/ListChecks (runtime-valid). Do NOT upgrade to 0.x — different API breaks all icon imports.
 import { ArrowLeft, CheckSquare, Square, ListChecks, AlertTriangle, ArrowRight, ShieldCheck } from 'lucide-react'
 
 type ChecklistItem = { id: string; label: string; hint: string }

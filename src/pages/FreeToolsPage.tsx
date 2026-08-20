@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+// @ts-expect-error lucide-react@1.21.0 type declarations omit Receipt/Sparkles (runtime-valid). Do NOT upgrade to 0.x — different API breaks all icon imports.
 import { ArrowLeft, Calculator, FileText, Receipt, ArrowRight, Sparkles } from 'lucide-react'
 
 export function FreeToolsPage() {

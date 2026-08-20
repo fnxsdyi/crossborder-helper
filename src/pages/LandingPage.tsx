@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useI18n } from '@/hooks/useI18n'
 import { PRO_MONTHLY_PLAN_ID, PRO_ANNUAL_PLAN_ID, FLOWINGPULSE_PLAN_ID } from '@/lib/config'
+import { supabase } from '@/lib/supabase'
+import { useAuthStore } from '@/stores/authStore'
 import { PayPalSubscriptionButton } from '@/components/PayPalSubscriptionButton'
 import { Modal } from '@/components/Modal'
 import {
@@ -21,7 +23,47 @@ interface LandingPageProps {
   onMemberLogin?: () => void
 }
 
+function SubscribeCta({ user, onEnterApp, planId, planType, registerHref }: {
+  user: { id: string } | null
+  onEnterApp?: () => void
+  planId: string
+  planType: 'monthly' | 'annual'
+  registerHref: string
+}) {
+  if (user) {
+    return (
+      <PayPalSubscriptionButton
+        planId={planId}
+        customId={user.id}
+        onSuccess={async (id) => {
+          try {
+            await supabase.from('subscriptions').upsert({
+              user_id: user.id,
+              paypal_subscription_id: id,
+              plan_type: planType,
+              status: 'active',
+              current_period_start: new Date().toISOString(),
+              current_period_end: new Date(Date.now() + (planType === 'annual' ? 365 : 30) * 24 * 60 * 60 * 1000).toISOString(),
+            }, { onConflict: 'paypal_subscription_id' })
+          } catch (e) { console.error(e) }
+          onEnterApp?.()
+        }}
+        onError={(err) => console.error(err)}
+      />
+    )
+  }
+  return (
+    <button
+      onClick={() => { window.location.href = registerHref }}
+      className="w-full py-3 bg-[#ffc439] text-black font-semibold rounded-xl hover:bg-[#f5b828] transition-colors"
+    >
+      Subscribe with PayPal
+    </button>
+  )
+}
+
 export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
+  const { user } = useAuthStore()
   const { t, locale, changeLocale, locales } = useI18n()
   const [showPrivacy, setShowPrivacy] = useState(false)
   const [showTerms, setShowTerms] = useState(false)
@@ -212,7 +254,7 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
           <div className="text-center mb-16"><div className="text-sm font-semibold text-cyan-400 uppercase tracking-widest mb-4">{t('landing.pricingTitle')}</div><h2 className="text-4xl font-extrabold text-white mb-4">Simple, transparent pricing</h2><p className="text-slate-400">{t('landing.pricingDesc')}</p></div>
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-6"><h3 className="text-lg font-semibold text-white mb-1">{t('landing.freePlan')}</h3><p className="text-slate-400 text-sm mb-4">{t('landing.freePlanDesc')}</p><div className="text-3xl font-bold text-white mb-4"></div><ul className="space-y-2 mb-6 text-sm">{[1,2,3,4].map(i => (<li key={i} className="flex items-center gap-2 text-slate-400"><Check size={14} className="text-green-500 flex-shrink-0" />{t('landing.freeFeature' + i as never)}</li>))}</ul><button onClick={onEnterApp} className="w-full py-2.5 border border-white/10 text-slate-300 rounded-xl font-medium text-sm hover:bg-white/5 transition-all">{t('landing.freeTrial')}</button></div>
-            <div className="bg-white/[0.04] border border-white/10 rounded-2xl p-6 relative"><h3 className="text-lg font-semibold text-white mb-1">{t('landing.proPlan')}</h3><p className="text-slate-400 text-sm mb-4">{t('landing.proPlanMonthlyDesc')}</p><div className="flex items-baseline gap-1 mb-1"><span className="text-3xl font-bold text-white">{t('landing.monthlyPrice')}</span><span className="text-sm text-slate-500">{t('landing.perMonth')}</span></div><ul className="space-y-2 mb-6 text-sm">{[1,2,3,4,5,6,7].map(i => (<li key={i} className="flex items-center gap-2 text-slate-400"><Check size={14} className="text-green-500 flex-shrink-0" />{t('landing.proFeature' + i as never)}</li>))}</ul><PayPalSubscriptionButton planId={PRO_MONTHLY_PLAN_ID} onSuccess={()=>{window.location.href='/register'}} onError={(err)=>console.error(err)} /></div>
+            <div className="bg-white/[0.04] border border-white/10 rounded-2xl p-6 relative"><h3 className="text-lg font-semibold text-white mb-1">{t('landing.proPlan')}</h3><p className="text-slate-400 text-sm mb-4">{t('landing.proPlanMonthlyDesc')}</p><div className="flex items-baseline gap-1 mb-1"><span className="text-3xl font-bold text-white">{t('landing.monthlyPrice')}</span><span className="text-sm text-slate-500">{t('landing.perMonth')}</span></div><ul className="space-y-2 mb-6 text-sm">{[1,2,3,4,5,6,7].map(i => (<li key={i} className="flex items-center gap-2 text-slate-400"><Check size={14} className="text-green-500 flex-shrink-0" />{t('landing.proFeature' + i as never)}</li>))}</ul><SubscribeCta user={user} onEnterApp={onEnterApp} planId={PRO_MONTHLY_PLAN_ID} planType="monthly" registerHref="/register" /></div>
             {referralSource === 'flowingpulse' ? (
               <div className="bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-2xl p-6 text-white relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-8 -mt-8" />
@@ -222,11 +264,11 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
                 <div className="flex items-baseline gap-1 mb-1"><span className="text-3xl font-bold">$49</span><span className="text-sm text-white/70">{t('landing.perYear')}</span></div>
                 <p className="text-xs text-white/60 mb-4">Exclusive FlowingPulse price — regular founder rate is {t('landing.annualPrice')}/year. Cancel anytime.</p>
                 <ul className="space-y-2 mb-6 text-sm">{[1,2,3,4,5,6,7].map(i => (<li key={i} className="flex items-center gap-2 text-white/90"><Check size={14} className="text-green-300 flex-shrink-0" />{t('landing.proFeature' + i as never)}</li>))}</ul>
-                <PayPalSubscriptionButton planId={FLOWINGPULSE_PLAN_ID} onSuccess={()=>{window.location.href='/register?ref=flowingpulse&code=' + (referralCode || '')}} onError={(err)=>console.error(err)} />
+                <SubscribeCta user={user} onEnterApp={onEnterApp} planId={FLOWINGPULSE_PLAN_ID} planType="annual" registerHref={'/register?ref=flowingpulse&code=' + (referralCode || '')} />
                 <p className="text-xs text-white/60 text-center mt-3">Claim your FlowingPulse rate</p>
               </div>
             ) : (
-              <div className="bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-2xl p-6 text-white relative overflow-hidden"><div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-8 -mt-8" /><span className="inline-block px-2 py-0.5 bg-green-500 text-white text-[10px] font-bold rounded mb-2 uppercase tracking-wide">Founder</span><h3 className="text-lg font-semibold mb-1">Founder's Edition</h3><p className="text-white/70 text-sm mb-4">Founding-member rate — locked for life. Limited to first 100.</p><div className="flex items-baseline gap-1 mb-1"><span className="text-3xl font-bold">{t('landing.annualPrice')}</span><span className="text-sm text-white/70">{t('landing.perYear')}</span></div><p className="text-xs text-white/60 mb-4">Founding rate, locked for life. We don't sell lifetime plans — a subscription keeps the service funded and your data safe. Cancel anytime.</p><ul className="space-y-2 mb-6 text-sm">{[1,2,3,4,5,6,7].map(i => (<li key={i} className="flex items-center gap-2 text-white/90"><Check size={14} className="text-green-300 flex-shrink-0" />{t('landing.proFeature' + i as never)}</li>))}</ul><PayPalSubscriptionButton planId={PRO_ANNUAL_PLAN_ID} onSuccess={()=>{window.location.href='/register'}} onError={(err)=>console.error(err)} /><p className="text-xs text-white/60 text-center mt-3">Claim your founder rate</p></div>
+              <div className="bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-2xl p-6 text-white relative overflow-hidden"><div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-8 -mt-8" /><span className="inline-block px-2 py-0.5 bg-green-500 text-white text-[10px] font-bold rounded mb-2 uppercase tracking-wide">Founder</span><h3 className="text-lg font-semibold mb-1">Founder's Edition</h3><p className="text-white/70 text-sm mb-4">Founding-member rate — locked for life. Limited to first 100.</p><div className="flex items-baseline gap-1 mb-1"><span className="text-3xl font-bold">{t('landing.annualPrice')}</span><span className="text-sm text-white/70">{t('landing.perYear')}</span></div><p className="text-xs text-white/60 mb-4">Founding rate, locked for life. We don't sell lifetime plans — a subscription keeps the service funded and your data safe. Cancel anytime.</p><ul className="space-y-2 mb-6 text-sm">{[1,2,3,4,5,6,7].map(i => (<li key={i} className="flex items-center gap-2 text-white/90"><Check size={14} className="text-green-300 flex-shrink-0" />{t('landing.proFeature' + i as never)}</li>))}</ul><SubscribeCta user={user} onEnterApp={onEnterApp} planId={PRO_ANNUAL_PLAN_ID} planType="annual" registerHref="/register" /><p className="text-xs text-white/60 text-center mt-3">Claim your founder rate</p></div>
             )}
           </div>
         </div>
@@ -274,7 +316,7 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
 
       <Modal open={showPrivacy} onClose={() => setShowPrivacy(false)} title={t('landing.privacyPolicy')}>
         <div className="text-sm text-slate-600 space-y-4">
-          <p><strong>{t('landing.lastUpdated')}</strong> June 30, 2026</p>
+          <p><strong>{t('landing.lastUpdated')}</strong> July 5, 2026</p>
           {[1,2,3,4,5,6,7,8,9,10,11,12].map(i => (
             <div key={i}>
               <h3 className="font-semibold text-slate-900">{t(`landing.privacySection${i}Title` as never)}</h3>
@@ -286,7 +328,7 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
 
       <Modal open={showTerms} onClose={() => setShowTerms(false)} title={t('landing.termsOfService')}>
         <div className="text-sm text-slate-600 space-y-4">
-          <p><strong>{t('landing.lastUpdated')}</strong> June 30, 2026</p>
+          <p><strong>{t('landing.lastUpdated')}</strong> July 5, 2026</p>
           {[1,2,3,4,5,6,7,8,9,10,11,12,13].map(i => (
             <div key={i}>
               <h3 className="font-semibold text-slate-900">{t(`landing.termsSection${i}Title` as never)}</h3>

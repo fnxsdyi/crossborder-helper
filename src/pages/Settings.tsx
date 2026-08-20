@@ -276,6 +276,7 @@ export function SettingsPage({ isGuest }: SettingsPageProps) {
                   <p className="text-sm font-medium mb-2">{t('settings.proMonthly')}</p>
                   <PayPalSubscriptionButton
                     planId={PRO_MONTHLY_PLAN_ID}
+                    customId={user?.id}
                     onSuccess={async (id) => {
                       if (user) {
                         await supabase.from('subscriptions').upsert({
@@ -297,6 +298,7 @@ export function SettingsPage({ isGuest }: SettingsPageProps) {
                   <p className="text-sm font-medium mb-2">{t('settings.proAnnual')}</p>
                   <PayPalSubscriptionButton
                     planId={PRO_ANNUAL_PLAN_ID}
+                    customId={user?.id}
                     onSuccess={async (id) => {
                       if (user) {
                         await supabase.from('subscriptions').upsert({
