@@ -310,7 +310,7 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
           <button onClick={() => setShowPrivacy(true)} className="text-slate-500 hover:text-slate-300 transition-colors">{t('landing.privacyPolicy')}</button>
           <button onClick={() => setShowTerms(true)} className="text-slate-500 hover:text-slate-300 transition-colors">{t('landing.termsOfService')}</button>
           <a href="/tools" className="text-slate-500 hover:text-slate-300 transition-colors">{t('landing.freeTools')}</a>
-          <span className="text-slate-600">{t('landing.ourProjects')}</span>
+          <a href="https://kaki.llc" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-slate-300 transition-colors">Kaki — SaaS Platform</a>
         </div>
       </footer>
 
