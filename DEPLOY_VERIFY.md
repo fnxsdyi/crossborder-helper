@@ -57,12 +57,16 @@
 
 ---
 
-## 3. Supabase `licenses` 表与 RLS
+## 3. Supabase `licenses` 表与 RLS（已部分实锤 ✅）
 
-- [ ] 表已存在（`licenses`：建议字段 `id` / `user_id` / `key` / `active` / 时间戳）
-- [ ] **RLS 已开启**，且已登录用户可 `INSERT` 自己的 license（策略示例见附录 A）
-- [ ] RLS `SELECT` 允许本人读取自己的 license（供 `checkSubscriptionWithFallback` 判断）
-- [ ] 实测：§1.3 的 insert 未报 `401 / permission denied`；若报权限错即 RLS 未配好
+> 已用**生产只读 API** 确认：`licenses` 表**存在**（当前 0 行）、`subscriptions` 表存在（1 行存量）。但 RLS / policy 配置**无法用只读 API 确认**（查询用的 service_role key 会绕过 RLS）。真实用户付款后能否解锁，取决于下方 SQL 是否执行。
+
+- [ ] 在 Supabase SQL Editor **执行一次** `supabase/migrations/20260912_ensure_licenses_rls.sql`（幂等：建表 if not exists + 开启 RLS + 本人 insert/select policy）
+  - 入口：https://supabase.com/dashboard/project/vwqhsztsyycmfizyslbh/sql
+  - ⚠️ 小福（小福）**无法**用现有凭据代执行 DDL（supabase-js 不能跑建表/策略语句，也无 SQL Editor access token）——此步必须由船长在后台点一次
+- [ ] 验证：执行后运行 `select * from pg_policies where tablename='licenses'` 应返回 **2 条** policy（`insert own license` / `select own license`）
+- [ ] 验证：`licenses` 表 RLS 已开启（无 policy 时 anon 可读到谁买了，属隐私漏洞；有 policy 才安全可用）
+- [ ] （§1.3 真实付款 insert 跳过，由船长择期做）若不执行本 SQL，买断用户付款后将 `paid but not unlocked`
 
 ---
 
@@ -97,6 +101,8 @@
 ---
 
 ## 附录 A：Supabase `licenses` 表 RLS 参考 SQL
+
+> 实际执行请以迁移文件 [`supabase/migrations/20260912_ensure_licenses_rls.sql`](https://github.com/fnxsdyi/crossborder-helper/blob/master/supabase/migrations/20260912_ensure_licenses_rls.sql) 为准（幂等、字段贴合 `recordLicense` 实际写入）。下方为同义参考。
 
 ```sql
 -- 建表（如尚未建）
