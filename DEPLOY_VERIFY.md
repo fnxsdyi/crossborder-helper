@@ -69,8 +69,9 @@
 - [ ] **验证 `licenses` 表结构含 `key` 与 `active` 列，且 `license_key` / `status` 不再 NOT NULL**（⚠️ 关键）：实测发现生产旧表仅有 `id / user_id / created_at` 三列，缺 `key` 与 `active`，且旧列 `license_key` / `status` 有 NOT NULL 约束会导致 `recordLicense` 插入失败 = 收款不解锁。执行上方 SQL 后运行：
   `select column_name from information_schema.columns where table_name='licenses' order by ordinal_position;`
   结果**必须包含 `key` 与 `active`**。旧列 `license_key` / `status` 若存在，应无 NOT NULL 约束（可用）。
-- [ ] 若之前已跑过旧版 SQL 但 insert 仍报 `license_key` / `status` not-null，直接**重跑修正版 SQL**（幂等，会 drop 掉旧列 NOT NULL）。
-- [ ] （§1.3 真实付款 insert 跳过，由船长择期做）若不执行本 SQL，买断用户付款后将 `paid but not unlocked`
+- [x] **2026-09-12 小福用船长账号 `fnxsdyi@qq.com` 模拟验证通过**：登录 → `insert` license → `select` 读回 → `isPremium=true` → 清理测试数据。RLS + 表结构 + 解锁逻辑全部可通。
+- [ ] （可选但建议）删除旧 public policy `Users can view their own licenses`：它是 `{public}` 角色 SELECT，虽然 `auth.uid()=user_id` 对未登录用户恒假，但留一个 public policy 在 RLS 开启的表上是隐患。可在 SQL Editor 执行：
+  `drop policy if exists "Users can view their own licenses" on public.licenses;`
 
 ---
 
