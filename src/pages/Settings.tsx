@@ -6,9 +6,9 @@ import { getSettings, upsertSettings, type SyncSettings } from '@/lib/sync'
 import { Settings as SettingsIcon, LogOut, User, X } from 'lucide-react'
 import { useI18n } from '@/hooks/useI18n'
 import { usePremium } from '@/hooks/usePremium'
-import { PayPalSubscriptionButton } from '@/components/PayPalSubscriptionButton'
-import { PRO_MONTHLY_PLAN_ID, PRO_ANNUAL_PLAN_ID } from '@/lib/config'
-import { supabase } from '@/lib/supabase'
+import { PayPalOneTimeButton } from '@/components/PayPalOneTimeButton'
+import { getTaxflowPrice } from '@/lib/config'
+import { recordLicense } from '@/lib/subscription'
 
 interface SettingsPageProps {
   isGuest?: boolean
@@ -271,51 +271,19 @@ export function SettingsPage({ isGuest }: SettingsPageProps) {
             </div>
             <div className="p-6">
               <p className="text-slate-600 mb-4">{t('settings.selectPlan')}</p>
-              <div className="space-y-4">
-                <div>
-                  <p className="text-sm font-medium mb-2">{t('settings.proMonthly')}</p>
-                  <PayPalSubscriptionButton
-                    planId={PRO_MONTHLY_PLAN_ID}
-                    customId={user?.id}
-                    onSuccess={async (id) => {
-                      if (user) {
-                        await supabase.from('subscriptions').upsert({
-                          user_id: user.id,
-                          paypal_subscription_id: id,
-                          plan_type: 'monthly',
-                          status: 'active',
-                          current_period_start: new Date().toISOString(),
-                          current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-                        }, { onConflict: 'paypal_subscription_id' })
-                      }
-                      setShowUpgradeModal(false)
-                      window.location.reload()
-                    }}
-                    onError={(err) => console.error('Payment error:', err)}
-                  />
-                </div>
-                <div>
-                  <p className="text-sm font-medium mb-2">{t('settings.proAnnual')}</p>
-                  <PayPalSubscriptionButton
-                    planId={PRO_ANNUAL_PLAN_ID}
-                    customId={user?.id}
-                    onSuccess={async (id) => {
-                      if (user) {
-                        await supabase.from('subscriptions').upsert({
-                          user_id: user.id,
-                          paypal_subscription_id: id,
-                          plan_type: 'annual',
-                          status: 'active',
-                          current_period_start: new Date().toISOString(),
-                          current_period_end: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-                        }, { onConflict: 'paypal_subscription_id' })
-                      }
-                      setShowUpgradeModal(false)
-                      window.location.reload()
-                    }}
-                    onError={(err) => console.error('Payment error:', err)}
-                  />
-                </div>
+              <div>
+                <PayPalOneTimeButton
+                  amount={getTaxflowPrice()}
+                  customId={user?.id}
+                  onSuccess={async (id) => {
+                    if (user) {
+                      await recordLicense(user.id, `TAXFLOW-LIFETIME-${id}`)
+                    }
+                    setShowUpgradeModal(false)
+                    window.location.reload()
+                  }}
+                  onError={(err) => console.error('Payment error:', err)}
+                />
               </div>
             </div>
           </div>

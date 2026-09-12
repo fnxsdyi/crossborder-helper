@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { useI18n } from '@/hooks/useI18n'
-import { PRO_MONTHLY_PLAN_ID } from '@/lib/config'
-import { supabase } from '@/lib/supabase'
-import { PayPalSubscriptionButton } from '@/components/PayPalSubscriptionButton'
+import { getTaxflowPrice } from '@/lib/config'
+import { recordLicense } from '@/lib/subscription'
+import { PayPalOneTimeButton } from '@/components/PayPalOneTimeButton'
 import { Mail, Lock, LogIn, Globe, UserPlus } from 'lucide-react'
 
 interface AuthPageProps {
@@ -31,7 +31,7 @@ export function AuthPage({ onAuth, showWelcome: initialShowWelcome }: AuthPagePr
     if (result.error) {
       setError(result.error)
     } else {
-      await flushPendingSubscription()
+      await flushPendingLicense()
       onAuth()
     }
   }
@@ -47,30 +47,23 @@ export function AuthPage({ onAuth, showWelcome: initialShowWelcome }: AuthPagePr
     if (result.error) {
       setError(result.error)
     } else {
-      await flushPendingSubscription()
+      await flushPendingLicense()
       onAuth()
     }
   }
 
-  async function flushPendingSubscription() {
-    const pending = localStorage.getItem('paypal_pending_subscription')
+  async function flushPendingLicense() {
+    const pending = localStorage.getItem('paypal_pending_license')
     if (!pending) return
     const u = useAuthStore.getState().user
     if (!u) return
     try {
-      const { subscriptionId, planType } = JSON.parse(pending) as { subscriptionId: string; planType: 'monthly' | 'annual' }
-      await supabase.from('subscriptions').upsert({
-        user_id: u.id,
-        paypal_subscription_id: subscriptionId,
-        plan_type: planType,
-        status: 'active',
-        current_period_start: new Date().toISOString(),
-        current_period_end: new Date(Date.now() + (planType === 'annual' ? 365 : 30) * 24 * 60 * 60 * 1000).toISOString(),
-      }, { onConflict: 'paypal_subscription_id' })
+      const { orderId } = JSON.parse(pending) as { orderId: string }
+      await recordLicense(u.id, `TAXFLOW-LIFETIME-${orderId}`)
     } catch (e) {
-      console.error('Failed to flush pending subscription:', e)
+      console.error('Failed to flush pending license:', e)
     }
-    localStorage.removeItem('paypal_pending_subscription')
+    localStorage.removeItem('paypal_pending_license')
   }
 
   return (
@@ -166,21 +159,14 @@ export function AuthPage({ onAuth, showWelcome: initialShowWelcome }: AuthPagePr
 
           <div className="mt-6 pt-4 border-t border-slate-200">
             <p className="text-sm text-center text-slate-500 mb-3">{t('auth.becomeMember')}</p>
-            <PayPalSubscriptionButton
-              planId={PRO_MONTHLY_PLAN_ID}
+            <PayPalOneTimeButton
+              amount={getTaxflowPrice()}
               customId={user?.id}
               onSuccess={(id) => {
                 if (user) {
-                  supabase.from('subscriptions').upsert({
-                    user_id: user.id,
-                    paypal_subscription_id: id,
-                    plan_type: 'monthly',
-                    status: 'active',
-                    current_period_start: new Date().toISOString(),
-                    current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-                  }, { onConflict: 'paypal_subscription_id' }).then(() => onAuth())
+                  recordLicense(user.id, `TAXFLOW-LIFETIME-${id}`).then(() => onAuth())
                 } else {
-                  localStorage.setItem('paypal_pending_subscription', JSON.stringify({ subscriptionId: id, planType: 'monthly' }))
+                  localStorage.setItem('paypal_pending_license', JSON.stringify({ orderId: id }))
                   window.location.href = '/register'
                 }
               }}

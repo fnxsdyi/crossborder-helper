@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import { checkSubscription } from './subscription'
+import { checkSubscriptionWithFallback } from './subscription'
 import { isAdmin } from './config'
 
 const BATCH_EXPORT_FREE_LIMIT = 5
@@ -48,7 +48,7 @@ export async function checkBatchExportUsage(userId?: string, userEmail?: string)
     }
 
     if (userId) {
-      const subResult = await checkSubscription(userId)
+      const subResult = await checkSubscriptionWithFallback(userId)
       if (subResult.isPremium) {
         return { allowed: true, used: 0, limit: Infinity, hasSubscription: true }
       }

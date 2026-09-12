@@ -64,9 +64,9 @@ function loadPayPalSDK(): Promise<void> {
       return
     }
 
-    // Load SDK
+    // Load SDK (one-time payments — no vault / no subscription intent)
     const script = document.createElement('script')
-    script.src = `${PAYPAL_SDK_URL}?client-id=${CLIENT_ID}&vault=true&intent=subscription&locale=en_US`
+    script.src = `${PAYPAL_SDK_URL}?client-id=${CLIENT_ID}&currency=USD`
     script.async = true
     script.onload = () => {
       // Wait for window.paypal to be defined
@@ -98,10 +98,11 @@ function loadPayPalSDK(): Promise<void> {
   })
 }
 
-interface PayPalSubscriptionButtonProps {
-  planId: string
+interface PayPalOneTimeButtonProps {
+  amount: number
+  currency?: string
   customId?: string | null
-  onSuccess?: (subscriptionId: string) => void
+  onSuccess?: (orderId: string) => void
   onError?: (error: unknown) => void
 }
 
@@ -115,12 +116,13 @@ declare global {
   }
 }
 
-export function PayPalSubscriptionButton({
-  planId,
+export function PayPalOneTimeButton({
+  amount,
+  currency = 'USD',
   customId,
   onSuccess,
   onError,
-}: PayPalSubscriptionButtonProps) {
+}: PayPalOneTimeButtonProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const renderedRef = useRef(false)
   const uniqueId = useId().replace(/:/g, '-')
@@ -129,7 +131,7 @@ export function PayPalSubscriptionButton({
     if (renderedRef.current) return
     if (!containerRef.current) return
 
-    const containerId = `paypal-btn-${uniqueId}`
+    const containerId = `paypal-onetime-${uniqueId}`
     let cancelled = false
 
     async function init() {
@@ -143,28 +145,42 @@ export function PayPalSubscriptionButton({
             shape: 'rect',
             color: 'gold',
             layout: 'vertical',
-            label: 'subscribe',
+            label: 'pay',
           },
-          createSubscription: (_data: unknown, actions: { subscription: { create: (config: { plan_id: string; custom_id?: string }) => Promise<string> } }) => {
-            return actions.subscription.create({
-              plan_id: planId,
-              ...(customId ? { custom_id: customId } : {}),
+          createOrder: (_data: unknown, actions: { order: { create: (config: Record<string, unknown>) => Promise<string> } }) => {
+            return actions.order.create({
+              intent: 'CAPTURE',
+              purchase_units: [
+                {
+                  amount: {
+                    value: amount.toFixed(2),
+                    currency_code: currency,
+                  },
+                  ...(customId ? { custom_id: customId } : {}),
+                },
+              ],
             })
           },
-          onApprove: (data: { subscriptionID?: string }) => {
-            if (data.subscriptionID && !cancelled) {
-              onSuccess?.(data.subscriptionID)
+          onApprove: async (data: { orderID?: string }, actions: { order: { capture: () => Promise<unknown> } }) => {
+            // Capture the funds client-side
+            try {
+              await actions.order.capture()
+            } catch (captureErr) {
+              console.error('[TaxFlow] PayPal capture failed:', captureErr)
+            }
+            if (data.orderID && !cancelled) {
+              onSuccess?.(data.orderID)
             }
           },
           onError: (err: unknown) => {
-            console.error('PayPal button error:', err)
+            console.error('PayPal one-time button error:', err)
             if (!cancelled) onError?.(err)
           },
         }).render(`#${containerId}`)
 
         renderedRef.current = true
       } catch (err) {
-        console.error('PayPal init error:', err)
+        console.error('PayPal one-time init error:', err)
         if (!cancelled) onError?.(err)
       }
     }
@@ -174,7 +190,7 @@ export function PayPalSubscriptionButton({
     return () => {
       cancelled = true
     }
-  }, [planId, onSuccess, onError, uniqueId, customId])
+  }, [amount, currency, customId, onSuccess, onError, uniqueId])
 
-  return <div id={`paypal-btn-${uniqueId}`} ref={containerRef} className="paypal-button-container" />
+  return <div id={`paypal-onetime-${uniqueId}`} ref={containerRef} className="paypal-button-container" />
 }

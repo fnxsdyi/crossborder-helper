@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import { checkSubscription } from './subscription'
+import { checkSubscriptionWithFallback } from './subscription'
 import { isAdmin, OCR_FREE_LIMIT } from './config'
 
 /** Local midnight on the 1st of the current month, as ISO — free quota resets monthly. */
@@ -21,7 +21,7 @@ export async function checkOcrUsage(userId: string, userEmail?: string): Promise
     }
 
     // Check subscription
-    const subResult = await checkSubscription(userId)
+    const subResult = await checkSubscriptionWithFallback(userId)
     if (subResult.isPremium) {
       return { allowed: true, used: 0, limit: Infinity, hasSubscription: true }
     }
