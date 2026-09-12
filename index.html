@@ -7,15 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- SEO Meta Tags -->
-    <title>TaxFlow - W-8BEN Expiry Tracker, Tax Form Wizard & Invoice Tools | Pro from $9/month</title>
-    <meta name="description" content="Track every W-8BEN you file, get expiry reminders before you lose treaty benefits, and generate compliant US tax forms. Invoice scanning and multi-currency tracking for freelancers and digital nomads. Free plan available, Pro from $9/month." />
+    <title>TaxFlow - W-8BEN Expiry Tracker, Tax Form Wizard & Invoice Tools | One-time $29 (Founder $19)</title>
+    <meta name="description" content="Track every W-8BEN you file, get expiry reminders before you lose US treaty benefits, and generate compliant tax forms. Invoice scanning and multi-currency tracking for freelancers and digital nomads. One-time buyout $29 (Founder launch $19), no subscription." />
     <meta name="keywords" content="W-8BEN tracker, W-8BEN tax form, W-8BEN form, W-8BEN vs 1099, W-8BEN instructions, W-8BEN withholding 30%, tax treaty rate, withholding tax calculator, free tools, invoice scanner, freelancer invoice, cross-border tax, foreign freelancer taxes, VAT, GST, multi-currency, contractor invoice, self-employed taxes, invoice OCR, receipt scanner, tax compliance, invoice generator" />
     <meta name="author" content="TaxFlow" />
 
     <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="TaxFlow - Invoice & Tax Helper for Global Freelancers" />
-    <meta property="og:description" content="Invoice scanning, professional invoicing, W-8BEN tax forms, and multi-currency tracking for freelancers. Free plan available, Pro from $9/month." />
+    <meta property="og:description" content="Invoice scanning, W-8BEN tax forms, and multi-currency tracking for freelancers. One-time buyout $29 (Founder $19), no subscription." />
     <meta property="og:url" content="https://tax.flowingpulse.com" />
     <meta property="og:image" content="https://tax.flowingpulse.com/og-image.png" />
 
@@ -23,7 +23,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@TaxFlowApp" />
     <meta name="twitter:title" content="TaxFlow - Invoice & Tax Helper for Global Freelancers" />
-    <meta name="twitter:description" content="Invoice scanning, W-8BEN tax forms, and multi-currency tracking for freelancers. Pro from $9/month." />
+    <meta name="twitter:description" content="Invoice scanning, W-8BEN tax forms, and multi-currency tracking for freelancers. One-time buyout $29 (Founder $19)." />
     <meta name="twitter:image" content="https://tax.flowingpulse.com/og-image.png" />
 
     <!-- Canonical URL -->
@@ -46,14 +46,14 @@
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
       "name": "TaxFlow - Invoice & Tax Helper",
-      "description": "Invoice scanning, professional invoicing, W-8BEN tax forms, and multi-currency tracking for cross-border freelancers and digital nomads",
+      "description": "Invoice scanning, professional invoicing, W-8BEN tax form wizard, and multi-currency tracking for cross-border freelancers and digital nomads",
       "url": "https://tax.flowingpulse.com",
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web Browser",
       "offers": {
         "@type": "AggregateOffer",
         "lowPrice": "0",
-        "highPrice": "90",
+        "highPrice": "49",
         "priceCurrency": "USD",
         "offers": [
           {
@@ -64,15 +64,21 @@
           },
           {
             "@type": "Offer",
-            "price": "9",
+            "price": "29",
             "priceCurrency": "USD",
-            "description": "Pro Monthly subscription"
+            "description": "One-time lifetime buyout"
           },
           {
             "@type": "Offer",
-            "price": "90",
+            "price": "19",
             "priceCurrency": "USD",
-            "description": "Pro Annual subscription (save $18/year)"
+            "description": "Founder launch price with code FOUNDER19"
+          },
+          {
+            "@type": "Offer",
+            "price": "49",
+            "priceCurrency": "USD",
+            "description": "FlowingPulse member price"
           }
         ]
       },
@@ -106,7 +112,7 @@
           "name": "How much does TaxFlow cost?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "TaxFlow offers a free plan with basic features. Pro plans start at $9/month or $90/year (saving $18/year). Pro includes unlimited invoice scans, watermark-free PDF export, and multi-currency FX analysis."
+            "text": "TaxFlow offers a free plan with basic features. The full toolkit is a one-time lifetime buyout of $29. Use code FOUNDER19 for the $19 founder launch price. FlowingPulse members get it for $49. No monthly subscription."
           }
         },
         {
@@ -166,26 +172,30 @@
   </head>
   <body>
     <div id="root">
-      <main>
-        <h1>TaxFlow — W-8BEN Expiry Tracker, Invoice Scanner &amp; Tax Forms for Global Freelancers</h1>
-        <p>Track every W-8BEN you file, get expiry reminders before you lose US treaty benefits, and generate compliant tax forms. Scan invoices with OCR, send professional PDF invoices, and monitor multi-currency income — all in one private dashboard built for cross-border freelancers and digital nomads.</p>
-        <ul>
-          <li>W-8BEN expiry tracker with reminder alerts so you never lose 30% treaty-rate benefits</li>
-          <li>Invoice scanner (OCR) that turns photos into clean, professional PDF invoices</li>
-          <li>W-8BEN tax form wizard with automatic treaty-rate matching</li>
-          <li>Multi-currency dashboard with real-time FX rates and VAT/GST support</li>
-        </ul>
-        <p>Free tools, no account required:</p>
-        <nav>
-          <a href="/tools/w8ben-withholding-calculator">W-8BEN Withholding Calculator</a> ·
-          <a href="/tools/invoice-generator">Free Invoice Generator</a> ·
-          <a href="/tools/w8ben-checklist">W-8BEN Filing Checklist</a> ·
-          <a href="/tools">All free tax tools</a>
-        </nav>
-      </main>
-      <footer style="text-align:center;padding:1.5rem 1rem;color:#64748b;font-size:12px;font-family:system-ui,sans-serif">
-        <a href="https://kaki.llc" rel="noopener noreferrer" style="color:#64748b;text-decoration:none">Kaki — SaaS Platform</a>
-      </footer>
+      <!-- Prerendered SEO shell kept off-screen so it is invisible to users (no flash)
+           but still present in the raw HTML for crawlers / curl. React replaces this on mount. -->
+      <div aria-hidden="true" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">
+        <main>
+          <h1>TaxFlow — W-8BEN Expiry Tracker, Invoice Scanner &amp; Tax Forms for Global Freelancers</h1>
+          <p>Track every W-8BEN you file, get expiry reminders before you lose US treaty benefits, and generate compliant tax forms. Scan invoices with OCR, send professional PDF invoices, and monitor multi-currency income — all in one private dashboard built for cross-border freelancers and digital nomads.</p>
+          <ul>
+            <li>W-8BEN expiry tracker with reminder alerts so you never lose 30% treaty-rate benefits</li>
+            <li>Invoice scanner (OCR) that turns photos into clean, professional PDF invoices</li>
+            <li>W-8BEN tax form wizard with automatic treaty-rate matching</li>
+            <li>Multi-currency dashboard with real-time FX rates and VAT/GST support</li>
+          </ul>
+          <p>Free tools, no account required:</p>
+          <nav>
+            <a href="/tools/w8ben-withholding-calculator">W-8BEN Withholding Calculator</a> ·
+            <a href="/tools/invoice-generator">Free Invoice Generator</a> ·
+            <a href="/tools/w8ben-checklist">W-8BEN Filing Checklist</a> ·
+            <a href="/tools">All free tax tools</a>
+          </nav>
+        </main>
+        <footer style="text-align:center;padding:1.5rem 1rem;color:#64748b;font-size:12px;font-family:system-ui,sans-serif">
+          <a href="https://kaki.llc" rel="noopener noreferrer" style="color:#64748b;text-decoration:none">Kaki — SaaS Platform</a>
+        </footer>
+      </div>
     </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
