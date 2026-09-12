@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react'
-import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/authStore'
 import { isAdmin, getTaxflowPrice } from '@/lib/config'
 import { checkSubscriptionWithFallback, recordLicense } from '@/lib/subscription'

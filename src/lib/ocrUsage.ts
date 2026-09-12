@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import { checkSubscription } from './subscription'
+import { checkSubscriptionWithFallback } from './subscription'
 import { isAdmin, OCR_FREE_LIMIT } from './config'
 
 /** Local midnight on the 1st of the current month, as ISO — free quota resets monthly. */

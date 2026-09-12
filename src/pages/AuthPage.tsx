@@ -3,6 +3,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { useI18n } from '@/hooks/useI18n'
 import { getTaxflowPrice } from '@/lib/config'
 import { recordLicense } from '@/lib/subscription'
+import { PayPalOneTimeButton } from '@/components/PayPalOneTimeButton'
 import { Mail, Lock, LogIn, Globe, UserPlus } from 'lucide-react'
 
 interface AuthPageProps {

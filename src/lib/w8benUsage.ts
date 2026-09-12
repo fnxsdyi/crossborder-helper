@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import { checkSubscription } from './subscription'
+import { checkSubscriptionWithFallback } from './subscription'
 import { isAdmin, W8BEN_FREE_LIMIT } from './config'
 
 const STORAGE_KEY = 'w8ben_usage'
