@@ -73,6 +73,7 @@
 - [ ] Settings / Auth 付费区显示买断按钮，**无**旧 `PayPalSubscriptionButton` 痕迹
 - [ ] 价格计算正确：`getTaxflowPrice('FOUNDER19')=19`、无码 `=29`、会员 `=49`
 - [ ] 全仓搜索确认无 `perMonth` / `proPlanMonthlyDesc` / `annualPrice` / `$9/month` 残留（代码 + 8 语言 i18n）
+- [ ] `index.html` 的 `<head>` 元数据（`title` / `description` / `og:` / `twitter:` / JSON-LD）显示买断价（$29 / $19 FOUNDER19 / $49），**无** `$9/month` 等订阅定价残留 —— `curl https://tax.flowingpulse.com` 抓取首访 HTML 核验（避免 Google 搜到错误价、与页面矛盾）
 
 ---
 
