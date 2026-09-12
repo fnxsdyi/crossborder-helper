@@ -66,9 +66,10 @@
   - ⚠️ 小福（小福）**无法**用现有凭据代执行 DDL（supabase-js 不能跑建表/策略语句，也无 SQL Editor access token）——此步必须由船长在后台点一次
 - [ ] 验证：执行后运行 `select * from pg_policies where tablename='licenses'` 应返回 **2 条** policy（`insert own license` / `select own license`）
 - [ ] 验证：`licenses` 表 RLS 已开启（无 policy 时 anon 可读到谁买了，属隐私漏洞；有 policy 才安全可用）
-- [ ] **验证 `licenses` 表结构含 `key` 与 `active` 列**（⚠️ 关键）：实测发现生产旧表仅有 `id / user_id / created_at` 三列，缺 `key` 与 `active`，会导致 `recordLicense` 插入报"列不存在"=收款不解锁。执行上方 SQL（含 `ALTER ... ADD COLUMN IF NOT EXISTS`）后运行：
+- [ ] **验证 `licenses` 表结构含 `key` 与 `active` 列，且 `license_key` / `status` 不再 NOT NULL**（⚠️ 关键）：实测发现生产旧表仅有 `id / user_id / created_at` 三列，缺 `key` 与 `active`，且旧列 `license_key` / `status` 有 NOT NULL 约束会导致 `recordLicense` 插入失败 = 收款不解锁。执行上方 SQL 后运行：
   `select column_name from information_schema.columns where table_name='licenses' order by ordinal_position;`
-  结果**必须包含 `key` 与 `active`**（理想五列：`id, user_id, key, active, created_at`）。若仍缺列，说明 ALTER 未执行，需重跑本 SQL。
+  结果**必须包含 `key` 与 `active`**。旧列 `license_key` / `status` 若存在，应无 NOT NULL 约束（可用）。
+- [ ] 若之前已跑过旧版 SQL 但 insert 仍报 `license_key` / `status` not-null，直接**重跑修正版 SQL**（幂等，会 drop 掉旧列 NOT NULL）。
 - [ ] （§1.3 真实付款 insert 跳过，由船长择期做）若不执行本 SQL，买断用户付款后将 `paid but not unlocked`
 
 ---

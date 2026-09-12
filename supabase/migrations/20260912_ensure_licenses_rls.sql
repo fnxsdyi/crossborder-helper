@@ -27,9 +27,17 @@ create table if not exists public.licenses (
 
 -- 1b) Patch the live table: add any columns the broken manual table is missing.
 --     add column if not exists is a no-op for columns that already exist.
+--     Defaults backfill existing rows so NOT NULL is safe.
 alter table if exists public.licenses
   add column if not exists key text not null default '',
   add column if not exists active boolean not null default true;
+
+-- 1c) Drop NOT NULL on legacy columns that the old manual table may enforce.
+--     The buyout code does NOT write license_key / status; leaving them NOT NULL
+--     would break inserts. These columns are kept for safety but no longer required.
+alter table if exists public.licenses
+  alter column license_key drop not null,
+  alter column status drop not null;
 
 -- 2) Enable Row Level Security
 alter table public.licenses enable row level security;
