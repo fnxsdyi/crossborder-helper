@@ -21,7 +21,7 @@ export async function checkOcrUsage(userId: string, userEmail?: string): Promise
     }
 
     // Check subscription
-    const subResult = await checkSubscription(userId)
+    const subResult = await checkSubscriptionWithFallback(userId)
     if (subResult.isPremium) {
       return { allowed: true, used: 0, limit: Infinity, hasSubscription: true }
     }

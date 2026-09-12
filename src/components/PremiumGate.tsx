@@ -1,12 +1,11 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/authStore'
-import { isAdmin } from '@/lib/config'
-import { PRO_MONTHLY_PLAN_ID, PRO_ANNUAL_PLAN_ID } from '@/lib/config'
-import { checkSubscriptionWithFallback } from '@/lib/subscription'
+import { isAdmin, getTaxflowPrice } from '@/lib/config'
+import { checkSubscriptionWithFallback, recordLicense } from '@/lib/subscription'
 import { Lock, X, CheckCircle } from 'lucide-react'
 import { useI18n } from '@/hooks/useI18n'
-import { PayPalSubscriptionButton } from './PayPalSubscriptionButton'
+import { PayPalOneTimeButton } from './PayPalOneTimeButton'
 
 interface PremiumGateProps {
   children: React.ReactNode
@@ -43,22 +42,11 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
     }
   }, [user, checkPremiumStatus])
 
-  async function handleSubscriptionSuccess(subscriptionId: string, _planType: string) {
+  async function handleBuyoutSuccess(orderId: string) {
     if (!user) return
 
-    // Create subscription record (webhook will also do this, but we do it here for immediate UX)
-    try {
-      await supabase.from('subscriptions').upsert({
-        user_id: user.id,
-        paypal_subscription_id: subscriptionId,
-        plan_type: _planType as 'monthly' | 'annual',
-        status: 'active',
-        current_period_start: new Date().toISOString(),
-        current_period_end: new Date(Date.now() + (_planType === 'annual' ? 365 : 30) * 24 * 60 * 60 * 1000).toISOString(),
-      }, { onConflict: 'paypal_subscription_id' })
-    } catch (err) {
-      console.error('Failed to record subscription:', err)
-    }
+    // Record the one-time (buyout) license — this immediately unlocks premium
+    await recordLicense(user.id, `TAXFLOW-LIFETIME-${orderId}`)
 
     setSuccess(true)
     await checkPremiumStatus()
@@ -68,7 +56,7 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
     }, 2000)
   }
 
-  function handleSubscriptionError(error: unknown) {
+  function handleBuyoutError(error: unknown) {
     console.error('Payment failed:', error)
   }
 
@@ -151,39 +139,15 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
                     </ul>
                   </div>
 
-                  <div className="flex gap-4">
-                    {/* Monthly */}
-                    <div className="flex-1">
-                      <p className="text-center text-sm font-semibold mb-2 dark:text-white">{t('premium.payPalMonthly')}</p>
-                      <PayPalSubscriptionButton
-                        planId={PRO_MONTHLY_PLAN_ID}
-                        customId={user?.id}
-                        onSuccess={(id) => handleSubscriptionSuccess(id, 'monthly')}
-                        onError={handleSubscriptionError}
-                      />
-                    </div>
-
-                    {/* Annual */}
-                    <div className="flex-1 relative">
-                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded whitespace-nowrap">
-                        {t('landing.bestValue')}
-                      </span>
-                      <p className="text-center text-sm font-semibold mb-2 dark:text-white">{t('premium.payPalAnnual')}</p>
-                      <PayPalSubscriptionButton
-                        planId={PRO_ANNUAL_PLAN_ID}
-                        customId={user?.id}
-                        onSuccess={(id) => handleSubscriptionSuccess(id, 'annual')}
-                        onError={handleSubscriptionError}
-                      />
-                      <p className="text-center text-xs text-green-600 dark:text-green-400 mt-1">
-                        {t('premium.annualSave')}
-                      </p>
-                    </div>
+                  <div className="text-center">
+                    <p className="text-sm font-semibold mb-2 dark:text-white">{t('premium.lifetimeAccess')}</p>
+                    <PayPalOneTimeButton
+                      amount={getTaxflowPrice()}
+                      customId={user?.id}
+                      onSuccess={handleBuyoutSuccess}
+                      onError={handleBuyoutError}
+                    />
                   </div>
-
-                  <p className="mt-4 text-xs text-slate-400 text-center">
-                    {t('landing.cancelAnytime')}
-                  </p>
                 </>
               )}
             </div>

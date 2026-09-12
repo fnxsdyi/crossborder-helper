@@ -116,3 +116,26 @@ export async function checkSubscriptionWithFallback(userId: string): Promise<{
 
   return { isPremium: false, planType: null, expiresAt: null }
 }
+
+/**
+ * Record a one-time (buyout) license for a user.
+ * Buyout users are unlocked via the `licenses` table — checkSubscriptionWithFallback
+ * already treats an active license as `planType: 'lifetime'` premium.
+ */
+export async function recordLicense(userId: string, key: string): Promise<boolean> {
+  try {
+    const { error } = await supabase.from('licenses').insert({
+      user_id: userId,
+      key,
+      active: true,
+    })
+    if (error) {
+      console.error('[TaxFlow] recordLicense failed:', error)
+      return false
+    }
+    return true
+  } catch (err) {
+    console.error('[TaxFlow] recordLicense failed:', err)
+    return false
+  }
+}

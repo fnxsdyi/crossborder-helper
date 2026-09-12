@@ -3,9 +3,9 @@ import { useState } from 'react'
 import { useI18n } from '@/hooks/useI18n'
 import { useAppStore } from '@/stores/appStore'
 import { useAuthStore } from '@/stores/authStore'
-import { supabase } from '@/lib/supabase'
-import { PRO_MONTHLY_PLAN_ID, PRO_ANNUAL_PLAN_ID } from '@/lib/config'
-import { PayPalSubscriptionButton } from './PayPalSubscriptionButton'
+import { getTaxflowPrice } from '@/lib/config'
+import { recordLicense } from '@/lib/subscription'
+import { PayPalOneTimeButton } from './PayPalOneTimeButton'
 
 interface OcrUsageLimitProps {
   used: number
@@ -18,20 +18,9 @@ export function OcrUsageLimit({ used, limit }: OcrUsageLimitProps) {
   const { user } = useAuthStore()
   const [success, setSuccess] = useState(false)
 
-  async function handleSuccess(subscriptionId: string, planType: string) {
+  async function handleSuccess(orderId: string) {
     if (user) {
-      try {
-        await supabase.from('subscriptions').upsert({
-          user_id: user.id,
-          paypal_subscription_id: subscriptionId,
-          plan_type: planType as 'monthly' | 'annual',
-          status: 'active',
-          current_period_start: new Date().toISOString(),
-          current_period_end: new Date(Date.now() + (planType === 'annual' ? 365 : 30) * 24 * 60 * 60 * 1000).toISOString(),
-        }, { onConflict: 'paypal_subscription_id' })
-      } catch (err) {
-        console.error('Failed to record subscription:', err)
-      }
+      await recordLicense(user.id, `TAXFLOW-LIFETIME-${orderId}`)
     }
     setSuccess(true)
     setTimeout(() => setCurrentView('ocr'), 2000)
@@ -102,26 +91,12 @@ export function OcrUsageLimit({ used, limit }: OcrUsageLimitProps) {
             {t('premium.unlock')}
           </button>
         ) : (
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <p className="text-center text-xs font-semibold mb-2 dark:text-white">{t('premium.payPalMonthly')}</p>
-              <PayPalSubscriptionButton
-                planId={PRO_MONTHLY_PLAN_ID}
-                customId={user?.id}
-                onSuccess={(id) => handleSuccess(id, 'monthly')}
-                onError={handleError}
-              />
-            </div>
-            <div className="flex-1">
-              <p className="text-center text-xs font-semibold mb-2 dark:text-white">{t('premium.payPalAnnual')}</p>
-              <PayPalSubscriptionButton
-                planId={PRO_ANNUAL_PLAN_ID}
-                customId={user?.id}
-                onSuccess={(id) => handleSuccess(id, 'annual')}
-                onError={handleError}
-              />
-            </div>
-          </div>
+          <PayPalOneTimeButton
+            amount={getTaxflowPrice()}
+            customId={user?.id}
+            onSuccess={handleSuccess}
+            onError={handleError}
+          />
         )}
       </div>
 

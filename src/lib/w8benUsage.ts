@@ -52,7 +52,7 @@ export async function checkW8BENUsage(userId?: string, userEmail?: string): Prom
     }
 
     if (userId) {
-      const subResult = await checkSubscription(userId)
+      const subResult = await checkSubscriptionWithFallback(userId)
       if (subResult.isPremium) {
         return { allowed: true, used: 0, limit: Infinity, hasSubscription: true }
       }
