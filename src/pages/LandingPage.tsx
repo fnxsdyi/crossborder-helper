@@ -273,7 +273,7 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
           <div className="space-y-3">{[1,2,3,4,5].map(i => {
             const isOpen = openFaq === i
             const q = i === 5 ? 'Do you offer refunds?' : t('landing.faq' + i + 'Q' as never)
-            const a = i === 5 ? "Yes — if TaxFlow isn't right for you within 14 days of your first payment, email support for a full refund. No questions asked." : t('landing.faq' + i + 'A' as never)
+            const a = i === 5 ? "Yes — if TaxFlow isn't right for you within 30 days of your first payment, email support for a full refund. No questions asked." : t('landing.faq' + i + 'A' as never)
             return (
               <div key={i} className="bg-white/[0.03] border border-white/5 rounded-xl overflow-hidden">
                 <button onClick={() => setOpenFaq(isOpen ? null : i)} className="w-full flex items-center justify-between p-5 text-left text-white font-medium text-sm hover:bg-white/[0.02] transition-colors">
