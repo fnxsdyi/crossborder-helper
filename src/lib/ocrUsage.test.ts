@@ -12,7 +12,7 @@ vi.mock('./supabase', () => ({
 }))
 
 vi.mock('./subscription', () => ({
-  checkSubscription: (...args: unknown[]) => mockCheckSubscription(...args),
+  checkSubscriptionWithFallback: (...args: unknown[]) => mockCheckSubscription(...args),
 }))
 
 vi.mock('./config', () => ({
