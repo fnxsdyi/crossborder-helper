@@ -15,7 +15,7 @@ vi.mock('./supabase', () => ({
 
 // Mock subscription
 vi.mock('./subscription', () => ({
-  checkSubscription: vi.fn().mockResolvedValue({ isPremium: false }),
+  checkSubscriptionWithFallback: vi.fn().mockResolvedValue({ isPremium: false }),
 }))
 
 // Mock config
@@ -41,8 +41,8 @@ describe('checkW8BENUsage', () => {
   })
 
   it('returns unlimited for premium users', async () => {
-    const { checkSubscription } = await import('./subscription')
-    vi.mocked(checkSubscription).mockResolvedValue({ isPremium: true } as any)
+    const { checkSubscriptionWithFallback } = await import('./subscription')
+    vi.mocked(checkSubscriptionWithFallback).mockResolvedValue({ isPremium: true } as any)
 
     const result = await checkW8BENUsage('user1')
     expect(result.allowed).toBe(true)
@@ -56,8 +56,8 @@ describe('checkW8BENUsage', () => {
   })
 
   it('returns allowed when under free limit for users', async () => {
-    const { checkSubscription } = await import('./subscription')
-    vi.mocked(checkSubscription).mockResolvedValue({ isPremium: false } as any)
+    const { checkSubscriptionWithFallback } = await import('./subscription')
+    vi.mocked(checkSubscriptionWithFallback).mockResolvedValue({ isPremium: false } as any)
 
     const mockSupabase = await import('./supabase')
     vi.mocked(mockSupabase.supabase.from).mockReturnValue({
@@ -72,8 +72,8 @@ describe('checkW8BENUsage', () => {
   })
 
   it('logs warning when query fails', async () => {
-    const { checkSubscription } = await import('./subscription')
-    vi.mocked(checkSubscription).mockResolvedValue({ isPremium: false } as any)
+    const { checkSubscriptionWithFallback } = await import('./subscription')
+    vi.mocked(checkSubscriptionWithFallback).mockResolvedValue({ isPremium: false } as any)
 
     const mockSupabase = await import('./supabase')
     const mockSelect = vi.fn().mockReturnThis()
@@ -96,8 +96,8 @@ describe('checkW8BENUsage', () => {
   })
 
   it('catches and logs errors', async () => {
-    const { checkSubscription } = await import('./subscription')
-    vi.mocked(checkSubscription).mockRejectedValue(new Error('Unexpected error'))
+    const { checkSubscriptionWithFallback } = await import('./subscription')
+    vi.mocked(checkSubscriptionWithFallback).mockRejectedValue(new Error('Unexpected error'))
 
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
