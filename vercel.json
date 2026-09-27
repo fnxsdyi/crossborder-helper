@@ -5,6 +5,10 @@
     { "source": "/disclaimer", "destination": "/disclaimer.html" },
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/assets/(.*)", "destination": "/assets/$1" },
+    { "source": "/tools", "destination": "/tools/index.html" },
+    { "source": "/tools/w8ben-withholding-calculator", "destination": "/tools/w8ben-withholding-calculator/index.html" },
+    { "source": "/tools/invoice-generator", "destination": "/tools/invoice-generator/index.html" },
+    { "source": "/tools/w8ben-checklist", "destination": "/tools/w8ben-checklist/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "functions": {
