@@ -11,7 +11,7 @@ export function isAdmin(email: string | null | undefined): boolean {
 /** PayPal Subscription Plan IDs (legacy — retained for backward compatibility) */
 export const PRO_MONTHLY_PLAN_ID = 'P-29E1204392902382CNJCROFI'
 export const PRO_ANNUAL_PLAN_ID = 'P-3D915014J7223963ENJDBLSY'
-/** FlowingPulse referral — exclusive $49/year member plan */
+/** Legacy FlowingPulse referral subscription plan ($49/year, pre-buyout era — no longer sold). */
 export const FLOWINGPULSE_PLAN_ID = 'P-158046208S2020443NKCDPGI'
 
 /**
@@ -23,8 +23,8 @@ export const TAXFLOW_BUYOUT_PRICE = 29
 export const TAXFLOW_LAUNCH_PRICE = 19
 /** Founder launch discount code — unlocks the $19 price. */
 export const TAXFLOW_LAUNCH_CODE = 'FOUNDER19'
-/** FlowingPulse member one-time buyout price. */
-export const TAXFLOW_MEMBER_PRICE = 49
+/** FlowingPulse member one-time buyout price — members lock the founder rate ($19) for life. */
+export const TAXFLOW_MEMBER_PRICE = 19
 
 /** Resolve the buyout price for a given promo code (case-insensitive). */
 export function getTaxflowPrice(code?: string | null): number {
