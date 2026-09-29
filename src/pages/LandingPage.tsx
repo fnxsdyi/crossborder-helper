@@ -253,9 +253,9 @@ export function LandingPage({ onEnterApp, onMemberLogin }: LandingPageProps) {
                 <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-8 -mt-8" />
                 <span className="inline-block px-2 py-0.5 bg-green-500 text-white text-[10px] font-bold rounded mb-2 uppercase tracking-wide">FlowingPulse</span>
                 <h3 className="text-lg font-semibold mb-1">Your Member Rate</h3>
-                <p className="text-white/70 text-sm mb-4">Welcome from FlowingPulse — your $49 one-time member rate is reserved. Locked for life.</p>
+                <p className="text-white/70 text-sm mb-4">Welcome from FlowingPulse — your member rate locks the founder price for life.</p>
                 <div className="flex items-baseline gap-1 mb-1"><span className="text-3xl font-bold">${TAXFLOW_MEMBER_PRICE}</span><span className="text-sm text-white/70">one-time</span></div>
-                <p className="text-xs text-white/60 mb-4">Exclusive FlowingPulse price — regular founder rate is ${getTaxflowPrice(TAXFLOW_LAUNCH_CODE)}. No subscription, no recurring fees.</p>
+                <p className="text-xs text-white/60 mb-4">Exclusive FlowingPulse member rate — ${TAXFLOW_MEMBER_PRICE} instead of the regular ${getTaxflowPrice()}. No subscription, no recurring fees.</p>
                 <ul className="space-y-2 mb-6 text-sm">{[1,2,3,4,5,6,7].map(i => (<li key={i} className="flex items-center gap-2 text-white/90"><Check size={14} className="text-green-300 flex-shrink-0" />{t('landing.proFeature' + i as never)}</li>))}</ul>
                 <BuyoutCta user={user} onEnterApp={onEnterApp} amount={TAXFLOW_MEMBER_PRICE} licenseKeyPrefix="TAXFLOW-LIFETIME" registerHref={'/register?ref=flowingpulse&code=' + (referralCode || '')} />
                 <p className="text-xs text-white/60 text-center mt-3">Claim your FlowingPulse rate</p>
