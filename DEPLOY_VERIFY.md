@@ -43,7 +43,7 @@
 ### 1.4 折扣码与会员价
 
 - [ ] 输入 `FOUNDER19` → 价格由 $29 变为 **$19**，按钮金额同步更新
-- [ ] （可选）FlowingPulse 会员路径 → 显示 **$49**
+- [ ] （可选）FlowingPulse 会员路径 → 显示 **$19**（锁定 founder 价）
 - [ ] （可选）无码默认 **$29**
 
 ---
@@ -77,12 +77,12 @@
 
 ## 4. 视觉与文案核对（无订阅残留）
 
-- [ ] Landing 页显示买断价：**$29** 标准 / **$19** `FOUNDER19` / **$49** 会员
+- [ ] Landing 页显示买断价：**$29** 标准 / **$19** `FOUNDER19` / **$19** FP 会员（锁定 founder 价）
 - [ ] 文案为「one-time / lifetime / no subscription」，无 `$9/month`、`per month`、`subscribe`
 - [ ] Settings / Auth 付费区显示买断按钮，**无**旧 `PayPalSubscriptionButton` 痕迹
-- [ ] 价格计算正确：`getTaxflowPrice('FOUNDER19')=19`、无码 `=29`、会员 `=49`
+- [ ] 价格计算正确：`getTaxflowPrice('FOUNDER19')=19`、无码 `=29`、会员 `=19`（FP 会员锁定 founder 价）
 - [ ] 全仓搜索确认无 `perMonth` / `proPlanMonthlyDesc` / `annualPrice` / `$9/month` 残留（代码 + 8 语言 i18n）
-- [ ] `index.html` 的 `<head>` 元数据（`title` / `description` / `og:` / `twitter:` / JSON-LD）显示买断价（$29 / $19 FOUNDER19 / $49），**无** `$9/month` 等订阅定价残留 —— `curl https://tax.flowingpulse.com` 抓取首访 HTML 核验（避免 Google 搜到错误价、与页面矛盾）
+- [ ] `index.html` 的 `<head>` 元数据（`title` / `description` / `og:` / `twitter:` / JSON-LD）显示买断价（$29 / $19 FOUNDER19 / $19 FP会员），**无** `$9/month` 等订阅定价残留 —— `curl https://tax.flowingpulse.com` 抓取首访 HTML 核验（避免 Google 搜到错误价、与页面矛盾）
 
 ---
 
