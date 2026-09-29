@@ -19,7 +19,8 @@ const paypalWebhookId = process.env.PAYPAL_WEBHOOK_ID!
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
-// FlowingPulse referral — exclusive $49/year member plan (treated as annual)
+// Legacy FlowingPulse referral $49/year plan — retained for backward-compat with any old annual subscribers only.
+// Current FlowingPulse member buyout = $19 one-time (see TAXFLOW_MEMBER_PRICE in src/lib/config.ts); this plan ID is no longer sold.
 const FLOWINGPULSE_PLAN_ID = 'P-158046208S2020443NKCDPGI'
 
 // Get PayPal access token
