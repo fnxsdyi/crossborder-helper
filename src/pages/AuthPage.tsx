@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { useI18n } from '@/hooks/useI18n'
 import { getTaxflowPrice } from '@/lib/config'
-import { recordLicense } from '@/lib/subscription'
+import { recordLicenseAndWait } from '@/lib/subscription'
 import { PayPalOneTimeButton } from '@/components/PayPalOneTimeButton'
 import { Mail, Lock, LogIn, Globe, UserPlus } from 'lucide-react'
 
@@ -59,7 +59,7 @@ export function AuthPage({ onAuth, showWelcome: initialShowWelcome }: AuthPagePr
     if (!u) return
     try {
       const { orderId } = JSON.parse(pending) as { orderId: string }
-      await recordLicense(u.id, `TAXFLOW-LIFETIME-${orderId}`)
+      await recordLicenseAndWait(u.id, `TAXFLOW-LIFETIME-${orderId}`)
     } catch (e) {
       console.error('Failed to flush pending license:', e)
     }
@@ -164,7 +164,7 @@ export function AuthPage({ onAuth, showWelcome: initialShowWelcome }: AuthPagePr
               customId={user?.id}
               onSuccess={(id) => {
                 if (user) {
-                  recordLicense(user.id, `TAXFLOW-LIFETIME-${id}`).then(() => onAuth())
+                  recordLicenseAndWait(user.id, `TAXFLOW-LIFETIME-${id}`).then(() => onAuth())
                 } else {
                   localStorage.setItem('paypal_pending_license', JSON.stringify({ orderId: id }))
                   window.location.href = '/register'

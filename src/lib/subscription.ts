@@ -139,3 +139,39 @@ export async function recordLicense(userId: string, key: string): Promise<boolea
     return false
   }
 }
+
+/**
+ * Record a one-time (buyout) license AND wait for it to become active.
+ *
+ * Client-side entry point after a successful PayPal capture. It performs an
+ * optimistic local insert (which becomes a harmless no-op once server-side
+ * issuance is enforced via RLS — see supabase/migrations/20261003_lock_license_issuance.sql,
+ * the TF-02 hardening) and then POLLS the authoritative state until the
+ * webhook-issued license appears.
+ *
+ * This makes the unlock reliable even if:
+ *  - the tab closed before the original recordLicense() call fired, or
+ *  - client inserts are disabled (TF-02), because the webhook (PR #12) is the
+ *    authoritative issuer and this helper waits for it.
+ *
+ * Returns true once premium is detected, false on timeout.
+ */
+export async function recordLicenseAndWait(
+  userId: string,
+  key: string,
+  opts?: { timeoutMs?: number; pollIntervalMs?: number },
+): Promise<boolean> {
+  // Optimistic local insert — succeeds today, no-op once RLS blocks it.
+  await recordLicense(userId, key)
+
+  const timeoutMs = opts?.timeoutMs ?? 15000
+  const pollIntervalMs = opts?.pollIntervalMs ?? 1000
+  const deadline = Date.now() + timeoutMs
+
+  while (Date.now() < deadline) {
+    const result = await checkSubscriptionWithFallback(userId)
+    if (result.isPremium) return true
+    await new Promise((resolve) => setTimeout(resolve, pollIntervalMs))
+  }
+  return false
+}

@@ -3,7 +3,7 @@ import { useI18n } from '@/hooks/useI18n'
 import { getTaxflowPrice, TAXFLOW_MEMBER_PRICE, TAXFLOW_LAUNCH_CODE } from '@/lib/config'
 import { useAuthStore } from '@/stores/authStore'
 import { PayPalOneTimeButton } from '@/components/PayPalOneTimeButton'
-import { recordLicense } from '@/lib/subscription'
+import { recordLicenseAndWait } from '@/lib/subscription'
 import { Modal } from '@/components/Modal'
 import {
   FileText,
@@ -37,7 +37,7 @@ function BuyoutCta({ user, onEnterApp, amount, licenseKeyPrefix, registerHref }:
         customId={user.id}
         onSuccess={async (id) => {
           try {
-            await recordLicense(user.id, `${licenseKeyPrefix}-${id}`)
+            await recordLicenseAndWait(user.id, `${licenseKeyPrefix}-${id}`)
           } catch (e) { console.error(e) }
           onEnterApp?.()
         }}

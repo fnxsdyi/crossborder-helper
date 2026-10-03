@@ -4,7 +4,7 @@ import { useI18n } from '@/hooks/useI18n'
 import { useAppStore } from '@/stores/appStore'
 import { useAuthStore } from '@/stores/authStore'
 import { getTaxflowPrice } from '@/lib/config'
-import { recordLicense } from '@/lib/subscription'
+import { recordLicenseAndWait } from '@/lib/subscription'
 import { PayPalOneTimeButton } from './PayPalOneTimeButton'
 
 interface OcrUsageLimitProps {
@@ -20,7 +20,7 @@ export function OcrUsageLimit({ used, limit }: OcrUsageLimitProps) {
 
   async function handleSuccess(orderId: string) {
     if (user) {
-      await recordLicense(user.id, `TAXFLOW-LIFETIME-${orderId}`)
+      await recordLicenseAndWait(user.id, `TAXFLOW-LIFETIME-${orderId}`)
     }
     setSuccess(true)
     setTimeout(() => setCurrentView('ocr'), 2000)
