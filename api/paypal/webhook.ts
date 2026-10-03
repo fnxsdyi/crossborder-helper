@@ -219,11 +219,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
 
       case 'PAYMENT.CAPTURE.COMPLETED': {
-        // Payment successful - reactivate if was past_due
         const resource = event.resource
         const subId = resource?.subscription_id || subscriptionId
 
         if (subId) {
+          // Legacy subscription plan: reactivate if it was past_due
           const { error } = await supabase
             .from('subscriptions')
             .update({
@@ -236,6 +236,46 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           if (error) {
             console.error('[Webhook] Reactivate error:', error)
           }
+          break
+        }
+
+        // One-time buyout capture. TaxFlow switched to one-time lifetime on
+        // 2026-09-12 (buyout-pricing). The PayPal order is created with
+        // custom_id = user_id (see PayPalOneTimeButton.tsx:159), so we map the
+        // capture back to the buyer and grant a lifetime license server-side.
+        //
+        // This is the authoritative issuance path (service-role key bypasses
+        // RLS) and fixes the "paid but not unlocked" gap where the client-side
+        // recordLicense() call was the ONLY way to unlock — lost whenever the
+        // buyer closed the tab before onSuccess fired.
+        const userId =
+          resource?.custom_id ||
+          resource?.purchase_units?.[0]?.custom_id ||
+          event?.resource?.invoice_id ||
+          null
+        const captureId = resource?.id || subscriptionId
+
+        if (userId) {
+          // Idempotent: skip if a license for this exact capture already exists
+          // (PayPal may redeliver the webhook).
+          const { data: existing } = await supabase
+            .from('licenses')
+            .select('id')
+            .eq('key', captureId)
+            .maybeSingle()
+
+          if (!existing) {
+            const { error } = await supabase
+              .from('licenses')
+              .insert({ user_id: userId, key: captureId, active: true })
+            if (error) {
+              console.error('[Webhook] License issuance failed:', error)
+              return res.status(500).json({ error: 'License issuance failed' })
+            }
+          }
+          console.log(`[Webhook] Lifetime license ensured for ${userId}`)
+        } else {
+          console.error('[Webhook] One-time capture missing custom_id (userId)')
         }
         break
       }
