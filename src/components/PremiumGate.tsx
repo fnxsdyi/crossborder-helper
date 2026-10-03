@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 import { isAdmin, getTaxflowPrice } from '@/lib/config'
-import { checkSubscriptionWithFallback, recordLicense } from '@/lib/subscription'
+import { checkSubscriptionWithFallback, recordLicenseAndWait } from '@/lib/subscription'
 import { Lock, X, CheckCircle } from 'lucide-react'
 import { useI18n } from '@/hooks/useI18n'
 import { PayPalOneTimeButton } from './PayPalOneTimeButton'
@@ -44,11 +44,14 @@ export function PremiumGate({ children, feature = 'this feature' }: PremiumGateP
   async function handleBuyoutSuccess(orderId: string) {
     if (!user) return
 
-    // Record the one-time (buyout) license — this immediately unlocks premium
-    await recordLicense(user.id, `TAXFLOW-LIFETIME-${orderId}`)
+    // Record + wait for the authoritative (webhook-issued) license so the
+    // unlock is reliable even if client inserts are disabled (TF-02).
+    const unlocked = await recordLicenseAndWait(user.id, `TAXFLOW-LIFETIME-${orderId}`)
 
     setSuccess(true)
-    await checkPremiumStatus()
+    if (unlocked) {
+      await checkPremiumStatus()
+    }
     setTimeout(() => {
       setShowUpgrade(false)
       setSuccess(false)

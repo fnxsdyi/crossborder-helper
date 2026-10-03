@@ -8,7 +8,7 @@ import { useI18n } from '@/hooks/useI18n'
 import { usePremium } from '@/hooks/usePremium'
 import { PayPalOneTimeButton } from '@/components/PayPalOneTimeButton'
 import { getTaxflowPrice } from '@/lib/config'
-import { recordLicense } from '@/lib/subscription'
+import { recordLicenseAndWait } from '@/lib/subscription'
 
 interface SettingsPageProps {
   isGuest?: boolean
@@ -277,7 +277,7 @@ export function SettingsPage({ isGuest }: SettingsPageProps) {
                   customId={user?.id}
                   onSuccess={async (id) => {
                     if (user) {
-                      await recordLicense(user.id, `TAXFLOW-LIFETIME-${id}`)
+                      await recordLicenseAndWait(user.id, `TAXFLOW-LIFETIME-${id}`)
                     }
                     setShowUpgradeModal(false)
                     window.location.reload()
