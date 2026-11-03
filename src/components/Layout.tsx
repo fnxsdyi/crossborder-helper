@@ -66,7 +66,7 @@ export function Layout({ onSignOut, isGuest }: LayoutProps) {
       case 'settings':
         return <SettingsPage isGuest={isGuest} />
       case 'contract':
-        window.open('https://shield.kaki.llc', '_blank', 'noopener,noreferrer')
+        window.open('https://shield.kaki.llc?utm_source=taxflow&utm_medium=app', '_blank', 'noopener,noreferrer')
         setTimeout(() => useAppStore.setState({ currentView: 'dashboard' }), 0)
         return <Dashboard />
       default:
