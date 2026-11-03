@@ -40,7 +40,7 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
     { id: 'currency' as const, labelKey: 'nav.currency' as const, icon: ArrowRightLeft },
     { id: 'tax' as const, labelKey: 'nav.tax' as const, icon: Calculator },
     { id: 'w8ben' as const, labelKey: 'nav.trackers' as const, icon: Clock },
-    { id: 'contract' as const, labelKey: 'nav.contractScanner' as const, icon: ShieldCheck, external: true, href: 'https://shield.kaki.llc' },
+    { id: 'contract' as const, labelKey: 'nav.contractScanner' as const, icon: ShieldCheck, external: true, href: 'https://shield.kaki.llc?utm_source=taxflow&utm_medium=app' },
     { id: 'settings' as const, labelKey: 'nav.settings' as const, icon: Settings },
   ]
 
@@ -215,22 +215,22 @@ export function Sidebar({ onSignOut, isGuest }: SidebarProps) {
               Our Projects
             </p>
             <div className="space-y-0.5 px-3">
-              <a href="https://hooki.io" target="_blank" rel="noopener noreferrer" className="block text-[11px] hover:opacity-80 transition-opacity" style={{ color: 'var(--text-muted)' }}>
+              <a href="https://hooki.io?utm_source=taxflow&utm_medium=footer" target="_blank" rel="noopener noreferrer" className="block text-[11px] hover:opacity-80 transition-opacity" style={{ color: 'var(--text-muted)' }}>
                 Hooki — Webhook Console
               </a>
-              <a href="https://chart.flowingpulse.com" target="_blank" rel="noopener noreferrer" className="block text-[11px] hover:opacity-80 transition-opacity" style={{ color: 'var(--text-muted)' }}>
+              <a href="https://chart.flowingpulse.com?utm_source=taxflow&utm_medium=footer" target="_blank" rel="noopener noreferrer" className="block text-[11px] hover:opacity-80 transition-opacity" style={{ color: 'var(--text-muted)' }}>
                 ChartFlow — Notion Charts
               </a>
-              <a href="https://kaki.llc" target="_blank" rel="noopener noreferrer" className="block text-[11px] hover:opacity-80 transition-opacity" style={{ color: 'var(--text-muted)' }}>
+              <a href="https://kaki.llc?utm_source=taxflow&utm_medium=footer" target="_blank" rel="noopener noreferrer" className="block text-[11px] hover:opacity-80 transition-opacity" style={{ color: 'var(--text-muted)' }}>
                 Kaki — SaaS Platform
               </a>
-              <a href="https://flowingpulse.com" target="_blank" rel="noopener noreferrer" className="block text-[11px] hover:opacity-80 transition-opacity" style={{ color: 'var(--text-muted)' }}>
+              <a href="https://flowingpulse.com?utm_source=taxflow&utm_medium=footer" target="_blank" rel="noopener noreferrer" className="block text-[11px] hover:opacity-80 transition-opacity" style={{ color: 'var(--text-muted)' }}>
                 FlowingPulse — Studio
               </a>
-              <a href="https://dash.kaki.llc" target="_blank" rel="noopener noreferrer" className="block text-[11px] hover:opacity-80 transition-opacity" style={{ color: 'var(--text-muted)' }}>
+              <a href="https://dash.kaki.llc?utm_source=taxflow&utm_medium=footer" target="_blank" rel="noopener noreferrer" className="block text-[11px] hover:opacity-80 transition-opacity" style={{ color: 'var(--text-muted)' }}>
                 DashCore — Unified Console
               </a>
-              <a href="https://comply.kaki.llc" target="_blank" rel="noopener noreferrer" className="block text-[11px] hover:opacity-80 transition-opacity" style={{ color: 'var(--text-muted)' }}>
+              <a href="https://comply.kaki.llc?utm_source=taxflow&utm_medium=footer" target="_blank" rel="noopener noreferrer" className="block text-[11px] hover:opacity-80 transition-opacity" style={{ color: 'var(--text-muted)' }}>
                 Comply — Compliance Scanner
               </a>
             </div>
