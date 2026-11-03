@@ -50,7 +50,7 @@ const HIDDEN_STYLE =
   'position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0'
 
 const FOOTER = `      <footer style="text-align:center;padding:1.5rem 1rem;color:#64748b;font-size:12px;font-family:system-ui,sans-serif">
-        <a href="https://kaki.llc" rel="noopener noreferrer" style="color:#64748b;text-decoration:none">Kaki — SaaS Platform</a>
+        <a href="https://kaki.llc?utm_source=taxflow&utm_medium=footer" rel="noopener noreferrer" style="color:#64748b;text-decoration:none">Kaki — SaaS Platform</a>
       </footer>`
 
 const TOOL_NAV = `        <nav aria-label="Free tools">
