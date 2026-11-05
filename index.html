@@ -170,10 +170,37 @@
     <meta name="robots" content="index, follow" />
     <meta name="googlebot" content="index, follow" />
 
-    <!-- Umami Analytics — self-hosted, privacy-first (TaxFlow website_id) -->
-    <script async src="https://a.kaki.llc/script.js" data-website-id="2ad347b7-c3ee-4688-9067-992d9360da05"></script>
   </head>
   <body>
+    <!-- Cookie consent banner (SSR-visible, GDPR/CCPA) — Umami injected only after Accept -->
+    <div id="tf-cookie-banner" role="dialog" aria-label="Cookie consent banner" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0f172a;color:#e2e8f0;padding:14px 18px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;font-size:14px;line-height:1.5;box-shadow:0 -2px 12px rgba(0,0,0,0.35);">
+      <span style="flex:1 1 320px;">We use self-hosted, privacy-friendly analytics (Umami) to improve our product. No third-party tracking, no data selling, and we respect Do-Not-Track. See our <a href="/privacy" style="color:#60a5fa;text-decoration:underline;">Privacy Policy</a>.</span>
+      <span style="display:flex;gap:8px;">
+        <button type="button" id="tf-decline" style="background:transparent;color:#cbd5e1;border:1px solid #475569;border-radius:6px;padding:8px 14px;cursor:pointer;">Decline</button>
+        <button type="button" id="tf-accept" style="background:#3b82f6;color:#fff;border:none;border-radius:6px;padding:8px 14px;cursor:pointer;">Accept</button>
+      </span>
+    </div>
+    <script>
+    (function(){
+      var KEY='taxflow-consent';
+      var banner=document.getElementById('tf-cookie-banner');
+      var stored=null; try{stored=localStorage.getItem(KEY);}catch(e){}
+      if(stored){ banner.style.display='none'; if(stored==='accepted'){ loadUmami(); } return; }
+      function loadUmami(){
+        if(document.getElementById('tf-umami'))return;
+        var s=document.createElement('script');
+        s.id='tf-umami'; s.defer=true; s.src='https://a.kaki.llc/script.js';
+        s.setAttribute('data-website-id','2ad347b7-c3ee-4688-9067-992d9360da05');
+        document.head.appendChild(s);
+      }
+      function removeUmami(){ var s=document.getElementById('tf-umami'); if(s)s.remove();
+        try{Object.keys(localStorage).forEach(function(k){if(k.toLowerCase().indexOf('umami')>=0)localStorage.removeItem(k);});
+        document.cookie.split(';').forEach(function(c){var n=c.split('=')[0].trim();if(n.toLowerCase().indexOf('umami')>=0){document.cookie=n+'=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';}});}catch(e){}
+      }
+      document.getElementById('tf-accept').addEventListener('click',function(){ try{localStorage.setItem(KEY,'accepted');}catch(e){} banner.style.display='none'; loadUmami(); });
+      document.getElementById('tf-decline').addEventListener('click',function(){ try{localStorage.setItem(KEY,'rejected');}catch(e){} banner.style.display='none'; removeUmami(); });
+    })();
+    </script>
     <div id="root">
       <!-- Prerendered SEO shell kept off-screen so it is invisible to users (no flash)
            but still present in the raw HTML for crawlers / curl. React replaces this on mount. -->
