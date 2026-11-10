@@ -1,39 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Dev fallback only. Production sitemap is generated at build time by scripts/generate-sitemap.mjs. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://tax.flowingpulse.com/</loc>
-    <lastmod>2026-09-27</lastmod>
+    <lastmod>2026-11-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://tax.flowingpulse.com/tools</loc>
-    <lastmod>2026-09-27</lastmod>
+    <lastmod>2026-11-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://tax.flowingpulse.com/tools/w8ben-withholding-calculator</loc>
-    <lastmod>2026-09-27</lastmod>
+    <lastmod>2026-11-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://tax.flowingpulse.com/tools/invoice-generator</loc>
-    <lastmod>2026-09-27</lastmod>
+    <lastmod>2026-11-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://tax.flowingpulse.com/tools/w8ben-checklist</loc>
-    <lastmod>2026-09-27</lastmod>
+    <lastmod>2026-11-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://tax.flowingpulse.com/terms</loc>
-    <lastmod>2026-09-27</lastmod>
+    <lastmod>2026-11-10</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://tax.flowingpulse.com/privacy</loc>
+    <lastmod>2026-11-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://tax.flowingpulse.com/disclaimer</loc>
+    <lastmod>2026-11-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
 </urlset>
